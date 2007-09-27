@@ -5,9 +5,11 @@ from zope import interface
 from zope import component
 from zope.app.annotation import interfaces as annointerfaces
 
+from persistent.dict import PersistentDict
+
 from p4a.ploneevent.recurrence import interfaces
 from p4a.calendar import interfaces as calendarinterfaces
-
+from p4a.common.descriptors import anno
 
 def DT2dt(date, tznaive=False):
     # XXX Test.
@@ -21,14 +23,27 @@ def DT2dt(date, tznaive=False):
     return dt
 
 
+ANNO_KEY = 'p4a.ploneevent.recurrence'
+IIR = interfaces.IRecurrenceSupport
+
 class RecurrenceSupport(object):
     """Recurrence support"""
 
-    interface.implements(interfaces.IRecurringEvent)
-    component.adapts(calendarinterfaces.IEvent)
+    interface.implements(interfaces.IRecurrenceSupport)
+    component.adapts(interfaces.IRecurringEvent)
+
+    recurrence_frequency = anno(ANNO_KEY, IIR['recurrence_frequency'], 'context')
 
     def __init__(self, context):
         self.context = context
+        #annotations = annointerfaces.IAnnotations(context)
+        #self.data = annotations.get(self.ANNO_KEY, None)
+        #if self.audio_data is None:
+            #import pdb;pdb.set_trace()
+            #self.audio_data = PersistentDict()
+            #annotations[self.ANNO_KEY] = self.audio_data
+            #event.notify(AudioAnnotationAddedEvent(self))
+
 
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""

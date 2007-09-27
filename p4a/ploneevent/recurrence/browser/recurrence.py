@@ -6,7 +6,7 @@ class RecurrenceView(formbase.PageEditForm):
     """Calendar configuration.
     """
 
-    form_fields = form.FormFields(interfaces.IRecurrenceSchema)
+    form_fields = form.FormFields(interfaces.IRecurrenceSupport)
 
     
 class RecurrenceConfigView(formbase.PageEditForm):

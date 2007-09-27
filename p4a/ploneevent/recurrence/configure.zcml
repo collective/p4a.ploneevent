@@ -14,16 +14,16 @@
 
   <browser:page
       name="recurrence.html"
-      for=".interfaces.IRecurringEvent"
+      for="p4a.calendar.interfaces.IEvent"
       permission="zope2.View"
-      class=".browser.recurrence.RecurrenceView"
+      class=".browser.recurrence.RecurrenceConfigView"
       />
 
   <browser:page
       name="recurrence.html"
-      for="p4a.calendar.interfaces.IEvent"
+      for="p4a.ploneevent.recurrence.interfaces.IRecurringEvent"
       permission="zope2.View"
-      class=".browser.recurrence.RecurrenceConfigView"
+      class=".browser.recurrence.RecurrenceView"
       />
 
   <five:implements
@@ -33,5 +33,13 @@
       
   <adapter factory=".recurrence.RecurrenceSupport" />
   <adapter factory=".recurrence.EventRecurrenceConfig" />
+
+  <include package="zope.app.annotation" />
+
+  <adapter
+      for=".interfaces.IRecurringEvent"
+      provides="zope.app.annotation.interfaces.IAnnotations"
+      factory="zope.app.annotation.attribute.AttributeAnnotations"
+      />
 
 </configure>

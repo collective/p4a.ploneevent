@@ -35,10 +35,8 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         # Set the recurrence info
         event.recurrence_frequency=rrule.DAILY
         event.recurrence_until=DateTime('2002/02/01')
-        
-        import pdb
-        pdb.set_trace()
-        recur = interfaces.IRecurringEvent(event)
+    
+        recur = interfaces.IRecurrenceSupport(event)
         dates = recur.getOccurrenceDays()
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2002, 2, 1).toordinal())
@@ -57,7 +55,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         event.recurrence_frequency=rrule.DAILY
         event.recurrence_until=DateTime('2001/02/04')
         
-        recur = interfaces.IRecurringEvent(event)
+        recur = interfaces.IRecurrenceSupport(event)
         dates = recur.getOccurrenceDays()
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
