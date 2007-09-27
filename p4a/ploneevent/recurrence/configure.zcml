@@ -1,0 +1,37 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="Plone4Artists">
+      
+  <browser:menuItem
+      menu="object_buttons"
+      for="p4a.calendar.interfaces.IEvent"
+      title="Recurrence"
+      action="${object_url}/recurrence.html"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      name="recurrence.html"
+      for=".interfaces.IRecurringEvent"
+      permission="zope2.View"
+      class=".browser.recurrence.RecurrenceView"
+      />
+
+  <browser:page
+      name="recurrence.html"
+      for="p4a.calendar.interfaces.IEvent"
+      permission="zope2.View"
+      class=".browser.recurrence.RecurrenceConfigView"
+      />
+
+  <five:implements
+      class="Products.ATContentTypes.content.event.ATEvent"
+      interface="p4a.calendar.interfaces.IEvent"
+      />
+      
+  <adapter factory=".recurrence.RecurrenceSupport" />
+  <adapter factory=".recurrence.EventRecurrenceConfig" />
+
+</configure>

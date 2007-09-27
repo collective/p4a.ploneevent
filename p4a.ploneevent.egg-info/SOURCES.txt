@@ -1,0 +1,15 @@
+README.txt
+setup.cfg
+setup.py
+p4a/__init__.py
+p4a.ploneevent.egg-info/PKG-INFO
+p4a.ploneevent.egg-info/SOURCES.txt
+p4a.ploneevent.egg-info/dependency_links.txt
+p4a.ploneevent.egg-info/entry_points.txt
+p4a.ploneevent.egg-info/namespace_packages.txt
+p4a.ploneevent.egg-info/not-zip-safe
+p4a.ploneevent.egg-info/top_level.txt
+p4a/ploneevent/__init__.py
+p4a/ploneevent/interfaces.py
+p4a/ploneevent/tests/__init__.py
+p4a/ploneevent/tests/test_recurrence.py
