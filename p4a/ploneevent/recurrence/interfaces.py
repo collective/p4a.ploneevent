@@ -14,35 +14,19 @@ class IRecurrenceSupport(interface.Interface):
 
     # Dateutil.rrule also accepts hourly, minutely and secondly,
     # but that's silly in a calendar.
-    recurrence_frequency = schema.Choice(title=u'Recurrence frequency',
-                                    values=[(YEARLY, u'Yearly'),
-                                            (MONTHLY, u'Monthly'),
-                                            (WEEKLY, u'Weekly'),
-                                            (DAILY, u'Daily'),
-                                            ],
-                                    required=True,
-                                    )
-    #description = schema.Text(title=u'Description',
-                              #required=False,
-                              #readonly=True)
-    #start = schema.Datetime(title=u'Start Time',
-                            #required=True,
-                            #readonly=True)
-    #end = schema.Datetime(title=u'End Time',
-                          #required=False,
-                          #readonly=True)
-    #location = schema.TextLine(title=u'Location',
-                               #required=False,
-                               #readonly=True)
-    #local_url = schema.TextLine(title=u'URL',
-                                #required=True,
-                                #readonly=True)
-    #type = schema.TextLine(title=u'Type',
-                           #required=True,
-                           #readonly=False)
-    #timezone = schema.TextLine(title=u'Timezone',
-                               #required=True,
-                               #readonly=True)
+    frequency = schema.Choice(title=u'Recurrence frequency',
+        vocabulary=schema.vocabulary.SimpleVocabulary.fromDictionary(
+            {YEARLY: u'Yearly',
+             MONTHLY: u'Monthly',
+             WEEKLY: u'Weekly',
+             DAILY: u'Daily',
+             }),
+        required=True)
+    until = schema.Datetime(title=u'Recur until', default=None)
+    
+    interval = schema.Int(title=u'Interval', default=1)
+
+    count = schema.Int(title=u'Count', default=None)
 
 
 class IRecurringEvent(interface.Interface):    
@@ -58,38 +42,3 @@ class IRecurrenceConfig(interface.Interface):
         description=u'This event recurs'
         )
 
-
-#class IRecurrenceSchema(interface.Interface):
-    #"""The schema for a recurrence rule"""
-        
-    ## Dateutil.rrule also accepts hourly, minutely and secondly,
-    ## but that's silly in a calendar.
-    #recurrence_frequency = schema.Choice(title=u'Recurrence frequency',
-                                    #values=[(YEARLY, u'Yearly'),
-                                            #(MONTHLY, u'Monthly'),
-                                            #(WEEKLY, u'Weekly'),
-                                            #(DAILY, u'Daily'),
-                                            #],
-                                    #required=True,
-                                    #)
-    #description = schema.Text(title=u'Description',
-                              #required=False,
-                              #readonly=True)
-    #start = schema.Datetime(title=u'Start Time',
-                            #required=True,
-                            #readonly=True)
-    #end = schema.Datetime(title=u'End Time',
-                          #required=False,
-                          #readonly=True)
-    #location = schema.TextLine(title=u'Location',
-                               #required=False,
-                               #readonly=True)
-    #local_url = schema.TextLine(title=u'URL',
-                                #required=True,
-                                #readonly=True)
-    #type = schema.TextLine(title=u'Type',
-                           #required=True,
-                           #readonly=False)
-    #timezone = schema.TextLine(title=u'Timezone',
-                               #required=True,
-                               #readonly=True)

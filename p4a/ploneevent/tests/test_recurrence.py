@@ -31,16 +31,35 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         event = getattr(self.folder, 'event')
         event.update(startDate = DateTime('2001/02/01 10:00'),
                      endDate = DateTime('2001/02/01 14:00'))
-        
+
+        # Mark as recurring
+        config = interfaces.IRecurrenceConfig(event)
+        config.is_recurring = 1
+        recurrence = interfaces.IRecurrenceSupport(event)
+
         # Set the recurrence info
-        event.recurrence_frequency=rrule.DAILY
-        event.recurrence_until=DateTime('2002/02/01')
-    
-        recur = interfaces.IRecurrenceSupport(event)
-        dates = recur.getOccurrenceDays()
+        recurrence.frequency=rrule.DAILY
+        recurrence.until=DateTime('2002/02/01')
+        recurrence.interval = 1
+        recurrence.count = None
+        
+        # Test
+        dates = recurrence.getOccurrenceDays()
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2002, 2, 1).toordinal())
         self.failUnlessEqual(len(dates), 365)
+        
+        # Try with an interval
+        recurrence.interval = 3
+        dates = recurrence.getOccurrenceDays()
+        self.failUnlessEqual(dates[0], datetime.date(2001, 2, 4).toordinal())
+        self.failUnlessEqual(dates[-1], datetime.date(2002, 1, 30).toordinal())
+        self.failUnlessEqual(len(dates), 121)
+
+        # Have a max count:
+        recurrence.count = 25
+        dates = recurrence.getOccurrenceDays()
+        self.failUnlessEqual(len(dates), 24)
 
     def testRecurranceMidnight(self):
         # Check that the recurrence works correctly with events starting
@@ -51,12 +70,17 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         event.update(startDate = DateTime('2001/02/01 00:00'),
                      endDate = DateTime('2001/02/01 04:00'))
         
+        # Mark as recurring
+        config = interfaces.IRecurrenceConfig(event)
+        config.is_recurring = 1
+        recurrence = interfaces.IRecurrenceSupport(event)
+
         # Set the recurrence info
-        event.recurrence_frequency=rrule.DAILY
-        event.recurrence_until=DateTime('2001/02/04')
-        
-        recur = interfaces.IRecurrenceSupport(event)
-        dates = recur.getOccurrenceDays()
+        recurrence.frequency=rrule.DAILY
+        recurrence.until=DateTime('2001/02/04')
+
+        # Test
+        dates = recurrence.getOccurrenceDays()        
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
         self.failUnlessEqual(len(dates), 3)

@@ -32,29 +32,26 @@ class RecurrenceSupport(object):
     interface.implements(interfaces.IRecurrenceSupport)
     component.adapts(interfaces.IRecurringEvent)
 
-    recurrence_frequency = anno(ANNO_KEY, IIR['recurrence_frequency'], 'context')
+    frequency = anno(ANNO_KEY, IIR['frequency'], 'context')
+    until = anno(ANNO_KEY, IIR['until'], 'context')
+    interval = anno(ANNO_KEY, IIR['interval'], 'context')
+    count = anno(ANNO_KEY, IIR['count'], 'context')
 
     def __init__(self, context):
         self.context = context
-        #annotations = annointerfaces.IAnnotations(context)
-        #self.data = annotations.get(self.ANNO_KEY, None)
-        #if self.audio_data is None:
-            #import pdb;pdb.set_trace()
-            #self.audio_data = PersistentDict()
-            #annotations[self.ANNO_KEY] = self.audio_data
-            #event.notify(AudioAnnotationAddedEvent(self))
-
 
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""
         dtstart = DT2dt(self.context.startDate, tznaive=True)
-        until = DT2dt(self.context.recurrence_until, tznaive=True)
+        until = DT2dt(self.until, tznaive=True)
         # Make it end at the end of the day:
         until = until.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-        rule = rrule.rrule(self.context.recurrence_frequency,
+        rule = rrule.rrule(self.frequency,
                            dtstart=dtstart,
-                           #interval=1, wkst=None, count=None, 
+                           interval=self.interval,
+                           #wkst=None, 
+                           count=self.count, 
                            until=until, 
                            #bysetpos=None,
                            #bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
