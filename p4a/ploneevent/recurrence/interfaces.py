@@ -3,6 +3,20 @@ from zope import schema
 
 from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
 
+class IRecurrenceConfig(interface.Interface):
+    """Configuration information for an event.
+    """
+    
+    is_recurring = schema.Bool(
+        title=u'Recurring event',
+        description=u'This event recurs'
+        )
+
+
+class IRecurringEvent(interface.Interface):    
+    """Marks the event as recurring"""
+
+
 class IRecurrenceSupport(interface.Interface):    
     """This interface provides the external API for recurrence"""
 
@@ -22,23 +36,10 @@ class IRecurrenceSupport(interface.Interface):
              DAILY: u'Daily',
              }),
         required=True)
-    until = schema.Datetime(title=u'Recur until', default=None)
+    
+    until = schema.Date(title=u'Recur until', required=False, default=None)
     
     interval = schema.Int(title=u'Interval', default=1)
 
-    count = schema.Int(title=u'Count', default=None)
-
-
-class IRecurringEvent(interface.Interface):    
-    """Marks the event as recurring"""
-
-
-class IRecurrenceConfig(interface.Interface):
-    """Configuration information for an event.
-    """
-    
-    is_recurring = schema.Bool(
-        title=u'Recurring event',
-        description=u'This event recurs'
-        )
+    count = schema.Int(title=u'Count', required=False, default=None)
 
