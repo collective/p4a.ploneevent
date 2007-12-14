@@ -11,11 +11,3 @@ class RecurrenceView(formbase.PageEditForm):
     form_fields = form.FormFields(interfaces.IRecurrenceSupport)
     form_fields["until"].custom_widget = DateWidget
 
-
-    
-class RecurrenceConfigView(formbase.PageEditForm):
-    """Calendar configuration.
-    """
-
-    form_fields = form.FormFields(interfaces.IRecurrenceConfig)
-    

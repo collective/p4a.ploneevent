@@ -78,7 +78,9 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         # Set the recurrence info
         recurrence.frequency=rrule.DAILY
         recurrence.until=DateTime('2001/02/04')
-
+        recurrence.interval=1
+        recurrence.count=None
+        
         # Test
         dates = recurrence.getOccurrenceDays()        
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
@@ -97,18 +99,17 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         form.getControl(name='startDate_year').value = ['2007']
         form.getControl(name='startDate_month').value = ['04']
         form.getControl(name='startDate_day').value = ['01']
-        form.getControl(name='startDate_hour').value = ['14']
+        form.getControl(name='startDate_hour').value = ['11']
         form.getControl(name='startDate_minute').value = ['00']
         form.getControl(name='endDate_year').value = ['2007']
         form.getControl(name='endDate_month').value = ['04']
         form.getControl(name='endDate_day').value = ['01']
-        form.getControl(name='endDate_hour').value = ['14']
+        form.getControl(name='endDate_hour').value = ['11']
         form.getControl(name='endDate_minute').value = ['00']
         form.getControl(name='form_submit').click()        
-        self.failUnlessEqual(browser.url, 
-            folder_url + '/an-event?portal_status_message=Changes%20saved.')
-
-        link = browser.getLink('Recurrence')
+        self.failUnless(browser.url.startswith(folder_url + '/an-event'))
+        
+        link = browser.getLink('RecurrenceEvent')
         link.click()
 
 
