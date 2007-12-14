@@ -28,7 +28,7 @@
 
   <!-- RecurrenceSupport needs annotatable events /-->
   <adapter
-      for=".interfaces.IRecurringEvent"
+      for="Products.ATContentTypes.content.event.ATEvent"
       provides="zope.app.annotation.interfaces.IAnnotations"
       factory="zope.app.annotation.attribute.AttributeAnnotations"
       />

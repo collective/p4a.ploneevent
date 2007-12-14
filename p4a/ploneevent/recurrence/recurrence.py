@@ -11,6 +11,8 @@ from p4a.ploneevent.recurrence import interfaces
 from p4a.calendar import interfaces as calendarinterfaces
 from p4a.common.descriptors import anno
 
+from Products.ATContentTypes.content.event import ATEvent
+
 def DT2dt(date, tznaive=False):
     # XXX Test.
     s, ms = divmod(date.second(), 1)
@@ -26,11 +28,13 @@ def DT2dt(date, tznaive=False):
 ANNO_KEY = 'p4a.ploneevent.recurrence'
 IIR = interfaces.IRecurrenceSupport
 
+from zope.app.annotation.interfaces import IAnnotations
+
 class RecurrenceSupport(object):
     """Recurrence support"""
 
     interface.implements(interfaces.IRecurrenceSupport)
-    component.adapts(interfaces.IRecurringEvent)
+    component.adapts(ATEvent)
 
     frequency = anno(ANNO_KEY, IIR['frequency'], 'context')
     until = anno(ANNO_KEY, IIR['until'], 'context')
@@ -38,7 +42,7 @@ class RecurrenceSupport(object):
     count = anno(ANNO_KEY, IIR['count'], 'context')
 
     def __init__(self, context):
-        self.context = context
+        self.context = IAnnotations(context)
 
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""
