@@ -25,7 +25,9 @@ Plone CMS.""",
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          # -*- Extra requirements: -*-
+          'setuptools',
+          'p4a.form'
+          'p4a.datetimewidgets',
       ],
       entry_points="""
       # -*- Entry points: -*-

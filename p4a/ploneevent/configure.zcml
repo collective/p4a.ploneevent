@@ -4,6 +4,9 @@
     xmlns:five="http://namespaces.zope.org/five"
     i18n_domain="Plone4Artists">
       
-  <include package="./recurrence" />
-  
+  <include package="p4a.datetimewidgets" />
+  <include package="p4a.form" />
+  <include package=".browser" />
+  <include package=".recurrence" />
+      
 </configure>

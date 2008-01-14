@@ -33,5 +33,13 @@
       factory="zope.app.annotation.attribute.AttributeAnnotations"
       />
 
+  <browser:menuItem
+      title="Recurrence"
+      action="recurrence.html"
+      for="p4a.ploneevent.recurrence.interfaces.IRecurringEvent"
+      menu="editforms"
+      permission="zope.Public"
+    />
+
 
 </configure>

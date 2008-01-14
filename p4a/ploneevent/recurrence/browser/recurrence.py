@@ -1,11 +1,11 @@
 from zope.formlib import form
-from Products.Five.formlib import formbase
-from p4a.ploneevent.recurrence import interfaces
-
+from p4a.form.editform import TabbedPageEditForm
 from p4a.datetimewidgets.widgets import DateWidget
 
-class RecurrenceView(formbase.PageEditForm):
-    """Calendar configuration.
+from p4a.ploneevent.recurrence import interfaces
+
+class RecurrenceView(TabbedPageEditForm):
+    """Recurrence view.
     """
 
     form_fields = form.FormFields(interfaces.IRecurrenceSupport)

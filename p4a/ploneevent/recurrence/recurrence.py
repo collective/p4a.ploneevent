@@ -28,7 +28,7 @@ def DT2dt(date, tznaive=False):
 ANNO_KEY = 'p4a.ploneevent.recurrence'
 IIR = interfaces.IRecurrenceSupport
 
-from zope.app.annotation.interfaces import IAnnotations
+from zope.app.annotation.interfaces import IAnnotatable
 
 class RecurrenceSupport(object):
     """Recurrence support"""
@@ -42,7 +42,7 @@ class RecurrenceSupport(object):
     count = anno(ANNO_KEY, IIR['count'], 'context')
 
     def __init__(self, context):
-        self.context = IAnnotations(context)
+        self.context = IAnnotatable(context)
 
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""
