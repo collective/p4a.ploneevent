@@ -19,6 +19,8 @@
     permission="cmf.ModifyPortalContent"
     />
 
-  <adapter factory=".editform.ATEventAdapter" />
-      
+  <five:implements
+    class="Products.ATContentTypes.content.event.ATEvent"
+    interface=".editform.IEventEditForm"/>
+
 </configure>
