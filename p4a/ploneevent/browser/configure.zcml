@@ -6,14 +6,14 @@
       
   <browser:page
     for="p4a.calendar.interfaces.IEvent"
-    name="default_edit.html"
+    name="event_edit.html"
     permission="cmf.ModifyPortalContent"
     class=".editform.EditForm"
     />
     
   <browser:menuItem
     title="Default"
-    action="default_edit.html"
+    action="event_edit.html"
     for="p4a.calendar.interfaces.IEvent"
     menu="editforms"
     permission="cmf.ModifyPortalContent"
