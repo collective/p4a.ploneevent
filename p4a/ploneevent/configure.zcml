@@ -10,7 +10,7 @@
   <include package=".recurrence" />
 
   <genericsetup:registerProfile
-    name="p4a.ploneevent"
+    name="default"
     title="P4A Event extensions"
     directory="profiles/default"
     description="Extension profile for extending the Plone event."
