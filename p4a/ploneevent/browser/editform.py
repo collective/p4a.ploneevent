@@ -26,10 +26,7 @@ class IEventEditForm(interface.Interface):
 
     
 class EditForm(TabbedPageEditForm):
-    """Main Editform
+    """Main edit form
     """
-
     form_fields = form.FormFields(IEventEditForm)
-    form_fields["startDate"].custom_widget = DatetimeWidget
-    form_fields["endDate"].custom_widget = DatetimeWidget
 
