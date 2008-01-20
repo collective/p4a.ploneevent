@@ -24,6 +24,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.addProduct('CMFonFive')
         zcml.load_config('configure.zcml', p4a.common)
         zcml.load_config('configure.zcml', p4a.ploneevent)
+        zcml.load_config('configure.zcml', p4a.subtyper)
 
     #def testRecurranceBasic(self):
         ## Basic recurrence, daily for one year:
@@ -108,11 +109,21 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         form.getControl(name='endDate_minute').value = ['00']
         form.getControl(name='form_submit').click()        
         self.failUnless(browser.url.startswith(folder_url + '/an-event'))
-        
-        link = browser.getLink('RecurrenceEvent')
+
+        # Make it recur.
+        link = browser.getLink(id='IRecurringEvent')
         link.click()
-
-
+        self.failUnless("Changed subtype to Recurring Event" in browser.contents)
+        
+        # Edit the recurrence info:
+        link = browser.getLink('Edit')
+        link.click()
+        form = browser.getForm('event-base-edit')
+        form.getControl(name='frequency').value = ['1']
+        form.getControl(name='interval').value = '6'
+        form.getControl(name='form_submit').click()        
+        
+        
 def test_suite():
     from unittest import TestSuite, makeSuite
     
