@@ -1,20 +1,18 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:five="http://namespaces.zope.org/five"
     i18n_domain="Plone4Artists">
       
-  <include package="p4a.datetimewidgets" />
-  <include package="p4a.form" />
-  <include package=".browser" />
+  <include package="archetypes.schemaextender" />
   <include package=".recurrence" />
 
-  <genericsetup:registerProfile
-    name="default"
-    title="P4A Event extensions"
-    directory="profiles/default"
-    description="Extension profile for extending the Plone event."
-    provides="Products.GenericSetup.interfaces.EXTENSION"
-    />
-    
+  <adapter factory=".schemaextender.EventSchemaExtender" />
+
+  <!-- Mark Archetype events as IEvents /-->
+  <five:implements
+      class="Products.ATContentTypes.content.event.ATEvent"
+      interface="p4a.calendar.interfaces.IEvent"
+      />
+      
 </configure>
