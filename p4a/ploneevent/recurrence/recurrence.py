@@ -36,26 +36,27 @@ class RecurrenceSupport(object):
     interface.implements(interfaces.IRecurrenceSupport)
     component.adapts(ATEvent)
 
-    frequency = anno(ANNO_KEY, IIR['frequency'], 'context')
-    until = anno(ANNO_KEY, IIR['until'], 'context')
-    interval = anno(ANNO_KEY, IIR['interval'], 'context')
-    count = anno(ANNO_KEY, IIR['count'], 'context')
-
     def __init__(self, context):
-        self.context = IAnnotatable(context)
+        self.context = context
 
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""
+        if getattr(self.context, 'frequency', None) is None:
+            return None
+        
         dtstart = DT2dt(self.context.startDate, tznaive=True)
-        until = DT2dt(self.until, tznaive=True)
+        if self.context.until is not None:
+            until = DT2dt(self.context.until, tznaive=True)
+            until = until.replace(hour=23, minute=59, second=59, microsecond=999999)
+        else:
+            until = None
         # Make it end at the end of the day:
-        until = until.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-        rule = rrule.rrule(self.frequency,
+        rule = rrule.rrule(self.context.frequency,
                            dtstart=dtstart,
-                           interval=self.interval,
+                           interval=self.context.interval,
                            #wkst=None, 
-                           count=self.count, 
+                           count=self.context.count, 
                            until=until, 
                            #bysetpos=None,
                            #bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
@@ -69,18 +70,21 @@ class RecurrenceSupport(object):
         """Days on which the event occurs. Used for indexing"""
         # XXX Handle when there is no occurrence.
         rule = self.getRecurrenceRule()
+        if rule is None:
+            return []
         if until is None:
             until = datetime.datetime.now() + \
                     datetime.timedelta(365*5)
 
-        # Make sure they are not one tznaive and one tzaware object:
-        if (until.tzinfo is None and rule._until.tzinfo is not None or
-            until.tzinfo is not None and rule._until.tzinfo is None):
-            until.replace(tzinfo=None)
+        if rule._until is not None:
+            # Make sure they are not one tznaive and one tzaware object:
+            if (until.tzinfo is None and rule._until.tzinfo is not None or
+                until.tzinfo is not None and rule._until.tzinfo is None):
+                until.replace(tzinfo=None)
             
         if rule._until is None or rule._until > until:
             rule._until = until
-
+        
         return [x.date().toordinal() for x in rule][1:]
 
 

@@ -14,8 +14,7 @@ import p4a.common
 import p4a.ploneevent
 from p4a.ploneevent.recurrence import interfaces
 
-ZopeTestCase.installProduct('CMFonFive')
-PloneTestCase.setupPloneSite()
+PloneTestCase.setupPloneSite(products=("p4a.ploneevent",))
 
 class RecurrenceTest(PloneTestCase.FunctionalTestCase):
     
@@ -88,8 +87,9 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         #self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
         #self.failUnlessEqual(len(dates), 3)
         
-    def test_ui(self):
+    def test_recurrence(self):
         browser = Browser()
+        browser.handleErrors = False
         browser.addHeader('Authorization', 'Basic %s:%s' % (portal_owner, default_password))
         folder_url = self.folder.absolute_url() 
         
@@ -121,8 +121,11 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         form = browser.getForm('event-base-edit')
         form.getControl(name='frequency').value = ['1']
         form.getControl(name='interval').value = '6'
-        form.getControl(name='form_submit').click()        
+        form.getControl(name='form_submit').click()
         
+        # Make sure it's properly indexed:
+        cat = self.portal.portal_catalog
+        self.failUnless(len(cat(portal_type='Event', recurrence_days=732950)) == 1)
         
 def test_suite():
     from unittest import TestSuite, makeSuite
@@ -132,4 +135,3 @@ def test_suite():
     suite.layer = layer.ZCMLLayer
 
     return suite
-

@@ -27,7 +27,7 @@ class RecurrenceExtension(object):
      interface.implements(IEventSchemaExtension)
 
      fields = [
-          TextField('frequency',
+          IntegerField('frequency',
                schemata="recurrence",
                required=True,
                vocabulary={YEARLY: u'Yearly',

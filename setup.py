@@ -26,6 +26,8 @@ Plone CMS.""",
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'dateutil',
+          'archetypes.schemaextender',
       ],
       entry_points="""
       # -*- Entry points: -*-

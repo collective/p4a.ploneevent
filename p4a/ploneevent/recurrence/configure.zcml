@@ -9,5 +9,7 @@
       factory=".subtype.RecurringEventDescriptor" />
 
   <adapter factory=".schemaextender.RecurrenceExtension" />
+
+  <adapter factory=".recurrence.RecurrenceSupport" />
   
 </configure>

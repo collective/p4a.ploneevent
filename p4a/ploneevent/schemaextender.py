@@ -8,7 +8,6 @@ from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes import atapi
 from Products.Archetypes.utils import OrderedDict
 from Products.ATContentTypes.content.event import ATEvent
-from p4a.ploneevent.recurrence.interfaces import IRecurrenceSupport
 
 from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
 from interfaces import IEventSchemaExtension
@@ -60,4 +59,3 @@ class EventSchemaExtender(object):
           res.update(original)
           self._order = res
           return res
-     
