@@ -21,7 +21,7 @@
   <!-- Mark Archetype events as IEvents /-->
   <five:implements
       class="Products.ATContentTypes.content.event.ATEvent"
-      interface="dateable.chronos.interfaces.IEvent"
+      interface="dateable.kalends.IEvent"
       />
 
 </configure>

@@ -8,7 +8,6 @@ from zope.app.annotation import interfaces as annointerfaces
 from persistent.dict import PersistentDict
 
 from p4a.ploneevent.recurrence import interfaces
-from dateable.chronos import interfaces as calendarinterfaces
 from p4a.common.descriptors import anno
 
 from Products.ATContentTypes.content.event import ATEvent
@@ -93,7 +92,7 @@ class EventRecurrenceConfig(object):
     """
     
     interface.implements(interfaces.IRecurrenceConfig)
-    component.adapts(calendarinterfaces.IEvent)
+    component.adapts(ATEvent)
 
     def __init__(self, context):
         self.context = context
