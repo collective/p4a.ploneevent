@@ -17,7 +17,7 @@ class IRecurringEvent(interface.Interface):
     """Marks the event as recurring"""
 
 
-class IRecurrenceSupport(interface.Interface):    
+class IRecurrence(interface.Interface):    
     """This interface provides the external API for recurrence"""
 
     def getRecurrenceRule():

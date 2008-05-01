@@ -25,14 +25,14 @@ def DT2dt(date, tznaive=False):
 
 
 ANNO_KEY = 'p4a.ploneevent.recurrence'
-IIR = interfaces.IRecurrenceSupport
+IIR = interfaces.IRecurrence
 
 from zope.app.annotation.interfaces import IAnnotatable
 
 class RecurrenceSupport(object):
     """Recurrence support"""
 
-    interface.implements(interfaces.IRecurrenceSupport)
+    interface.implements(interfaces.IRecurrence)
     component.adapts(ATEvent)
 
     def __init__(self, context):

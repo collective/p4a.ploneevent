@@ -25,67 +25,65 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         zcml.load_config('configure.zcml', p4a.ploneevent)
         zcml.load_config('configure.zcml', p4a.subtyper)
 
-    #def testRecurranceBasic(self):
-        ## Basic recurrence, daily for one year:
-        #self.folder.invokeFactory('Event', 'event')
-        #event = getattr(self.folder, 'event')
-        #event.update(startDate = DateTime('2001/02/01 10:00'),
-                     #endDate = DateTime('2001/02/01 14:00'))
+    def testRecurranceBasic(self):
+        # Basic recurrence, daily for one year:
+        self.folder.invokeFactory('Event', 'event')
+        event = getattr(self.folder, 'event')
+        event.update(startDate = DateTime('2001/02/01 10:00'),
+                     endDate = DateTime('2001/02/01 14:00'))
 
-        ## Mark as recurring
-        #config = interfaces.IRecurrenceConfig(event)
-        #config.is_recurring = 1
-        #recurrence = interfaces.IRecurrenceSupport(event)
+        # Mark as recurring
+        interface.alsoProvides(event, interfaces.IRecurringEvent)
+        recurrence = interfaces.IRecurrence(event)
 
-        ## Set the recurrence info
-        #recurrence.frequency=rrule.DAILY
-        #recurrence.until=DateTime('2002/02/01')
-        #recurrence.interval = 1
-        #recurrence.count = None
+        # Set the recurrence info
+        event.frequency=rrule.DAILY
+        event.until=DateTime('2002/02/01')
+        event.interval = 1
+        event.count = None
         
-        ## Test
-        #dates = recurrence.getOccurrenceDays()
-        #self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
-        #self.failUnlessEqual(dates[-1], datetime.date(2002, 2, 1).toordinal())
-        #self.failUnlessEqual(len(dates), 365)
+        # Test
+        dates = recurrence.getOccurrenceDays()
+        self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
+        self.failUnlessEqual(dates[-1], datetime.date(2002, 2, 1).toordinal())
+        self.failUnlessEqual(len(dates), 365)
         
-        ## Try with an interval
-        #recurrence.interval = 3
-        #dates = recurrence.getOccurrenceDays()
-        #self.failUnlessEqual(dates[0], datetime.date(2001, 2, 4).toordinal())
-        #self.failUnlessEqual(dates[-1], datetime.date(2002, 1, 30).toordinal())
-        #self.failUnlessEqual(len(dates), 121)
+        # Try with an interval
+        event.interval = 3
+        dates = recurrence.getOccurrenceDays()
+        self.failUnlessEqual(dates[0], datetime.date(2001, 2, 4).toordinal())
+        self.failUnlessEqual(dates[-1], datetime.date(2002, 1, 30).toordinal())
+        self.failUnlessEqual(len(dates), 121)
 
-        ## Have a max count:
-        #recurrence.count = 25
-        #dates = recurrence.getOccurrenceDays()
-        #self.failUnlessEqual(len(dates), 24)
+        # Have a max count:
+        event.count = 25
+        dates = recurrence.getOccurrenceDays()
+        self.failUnlessEqual(len(dates), 24)
 
-    #def testRecurranceMidnight(self):
-        ## Check that the recurrence works correctly with events starting
-        ## at midnight
-        #self.folder.invokeFactory('Event', 'event')
-        #event = getattr(self.folder, 'event')
+    def testRecurranceMidnight(self):
+        # Check that the recurrence works correctly with events starting
+        # at midnight
+        self.folder.invokeFactory('Event', 'event')
+        event = getattr(self.folder, 'event')
 
-        #event.update(startDate = DateTime('2001/02/01 00:00'),
-                     #endDate = DateTime('2001/02/01 04:00'))
+        event.update(startDate = DateTime('2001/02/01 00:00'),
+                     endDate = DateTime('2001/02/01 04:00'))
         
-        ## Mark as recurring
-        #config = interfaces.IRecurrenceConfig(event)
-        #config.is_recurring = 1
-        #recurrence = interfaces.IRecurrenceSupport(event)
+        # Mark as recurring
+        interface.alsoProvides(event, interfaces.IRecurringEvent)
+        recurrence = interfaces.IRecurrence(event)
 
-        ## Set the recurrence info
-        #recurrence.frequency=rrule.DAILY
-        #recurrence.until=DateTime('2001/02/04')
-        #recurrence.interval=1
-        #recurrence.count=None
+        # Set the recurrence info
+        event.frequency=rrule.DAILY
+        event.until=DateTime('2001/02/04')
+        event.interval=1
+        event.count=None
         
-        ## Test
-        #dates = recurrence.getOccurrenceDays()        
-        #self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
-        #self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
-        #self.failUnlessEqual(len(dates), 3)
+        # Test
+        dates = recurrence.getOccurrenceDays()        
+        self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
+        self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
+        self.failUnlessEqual(len(dates), 3)
         
     def test_recurrence(self):
         browser = Browser()

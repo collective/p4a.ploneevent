@@ -1,6 +1,6 @@
 # XXX I'm wondering if this could be moved to a separate product, or
 # p4a.subtyper or integrated into Archetypes SchemaExtender or something, as
-# it is quite generic except for the IRecurrenceSupport interface.
+# it is quite generic except for the IRecurrence interface.
 
 from zope import component, interface
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender

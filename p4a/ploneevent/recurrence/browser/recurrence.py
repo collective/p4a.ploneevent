@@ -8,6 +8,6 @@ class RecurrenceView(TabbedPageEditForm):
     """Recurrence view.
     """
 
-    form_fields = form.FormFields(interfaces.IRecurrenceSupport)
+    form_fields = form.FormFields(interfaces.IRecurrence)
     form_fields["until"].custom_widget = DateWidget
 
