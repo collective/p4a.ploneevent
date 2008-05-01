@@ -8,7 +8,7 @@ from zope.app.annotation import interfaces as annointerfaces
 from persistent.dict import PersistentDict
 
 from p4a.ploneevent.recurrence import interfaces
-from p4a.calendar import interfaces as calendarinterfaces
+from dateable.chronos import interfaces as calendarinterfaces
 from p4a.common.descriptors import anno
 
 from Products.ATContentTypes.content.event import ATEvent
