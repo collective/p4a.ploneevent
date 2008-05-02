@@ -84,6 +84,32 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
         self.failUnlessEqual(len(dates), 3)
+
+    def testRecurranceWeek(self):
+        self.folder.invokeFactory('Event', 'event')
+        event = getattr(self.folder, 'event')
+
+        event.update(startDate = DateTime('2007/02/01 00:00'),
+                     endDate = DateTime('2007/02/01 04:00'))
+        
+        # Mark as recurring
+        interface.alsoProvides(event, interfaces.IRecurringEvent)
+        recurrence = interfaces.IRecurrence(event)
+
+        # Set the recurrence info
+        event.frequency=rrule.WEEKLY
+        event.until=DateTime('2008/02/04')
+        event.interval=1
+        event.count=None
+        
+        # Test
+        dates = recurrence.getOccurrenceDays()
+        self.failUnlessEqual(dates[0], datetime.date(2007, 2, 8).toordinal())
+        self.failUnlessEqual(dates[1], datetime.date(2007, 2, 15).toordinal())
+        self.failUnlessEqual(dates[2], datetime.date(2007, 2, 22).toordinal())
+        self.failUnlessEqual(dates[-1], datetime.date(2008, 1, 31).toordinal())
+        self.failUnlessEqual(len(dates), 52)
+
         
     def test_recurrence(self):
         browser = Browser()
