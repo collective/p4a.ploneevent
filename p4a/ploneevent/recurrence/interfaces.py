@@ -30,11 +30,13 @@ class IRecurrence(interface.Interface):
     # but that's silly in a calendar.
     frequency = schema.Choice(title=u'Recurrence frequency',
         vocabulary=schema.vocabulary.SimpleVocabulary.fromDictionary(
-            {YEARLY: u'Yearly',
+            {-1: u'Does not recur',
+             YEARLY: u'Yearly',
              MONTHLY: u'Monthly',
              WEEKLY: u'Weekly',
              DAILY: u'Daily',
              }),
+        default=-1,
         required=True)
     
     until = schema.Date(title=u'Recur until', required=False, default=None)

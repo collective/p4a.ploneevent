@@ -40,7 +40,7 @@ class RecurrenceSupport(object):
 
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""
-        if getattr(self.context, 'frequency', None) is None:
+        if getattr(self.context, 'frequency', -1) is -1:
             return None
         
         dtstart = DT2dt(self.context.startDate, tznaive=True)
