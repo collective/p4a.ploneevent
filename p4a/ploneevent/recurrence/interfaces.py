@@ -12,36 +12,5 @@ class IRecurrenceConfig(interface.Interface):
         description=u'This event recurs'
         )
 
-
-class IRecurringEvent(interface.Interface):    
-    """Marks the event as recurring"""
-
-
-class IRecurrence(interface.Interface):    
-    """This interface provides the external API for recurrence"""
-
-    def getRecurrenceRule():
-        """Returns a dateutil.rrule"""
-
-    def getOccurrenceDays():
-        """Days on which the event occurs. Used for indexing"""
-
-    # Dateutil.rrule also accepts hourly, minutely and secondly,
-    # but that's silly in a calendar.
-    frequency = schema.Choice(title=u'Recurrence frequency',
-        vocabulary=schema.vocabulary.SimpleVocabulary.fromDictionary(
-            {-1: u'Does not recur',
-             YEARLY: u'Yearly',
-             MONTHLY: u'Monthly',
-             WEEKLY: u'Weekly',
-             DAILY: u'Daily',
-             }),
-        default=-1,
-        required=True)
-    
-    until = schema.Date(title=u'Recur until', required=False, default=None)
-    
-    interval = schema.Int(title=u'Interval', default=1)
-
-    count = schema.Int(title=u'Count', required=False, default=None)
-
+# BBB
+from dateable.kalends import IRecurringEvent

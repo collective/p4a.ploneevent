@@ -5,7 +5,7 @@ from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes import atapi
 from Products.Archetypes.utils import OrderedDict
 from Products.ATContentTypes.content.event import ATEvent
-from p4a.ploneevent.recurrence.interfaces import IRecurringEvent
+from dateable.kalends import IRecurringEvent
 from p4a.ploneevent.interfaces import IEventSchemaExtension
 from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
 

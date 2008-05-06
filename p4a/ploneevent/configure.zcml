@@ -5,10 +5,12 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="Plone4Artists">
       
+  <five:registerPackage package="." />
+  
   <include package="archetypes.schemaextender" />
-  <include package=".recurrence" />
-
   <adapter factory=".schemaextender.EventSchemaExtender" />
+  
+  <include package=".recurrence" />
 
   <genericsetup:registerProfile
       name="default"

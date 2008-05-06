@@ -4,6 +4,8 @@
     xmlns:five="http://namespaces.zope.org/five"
     i18n_domain="Plone4Artists">
 
+  <include package=".browser" />
+  
   <adapter factory=".schemaextender.RecurrenceExtension" />
 
   <adapter factory=".recurrence.RecurrenceSupport" />
@@ -11,7 +13,7 @@
   <!-- Mark Archetype events as IEvents /-->
   <five:implements
       class="Products.ATContentTypes.content.event.ATEvent"
-      interface=".interfaces.IRecurringEvent"
+      interface="dateable.kalends.IRecurringEvent"
       />
 
 </configure>

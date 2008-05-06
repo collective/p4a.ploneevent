@@ -12,7 +12,7 @@ from Products.Five import zcml
 
 import p4a.common
 import p4a.ploneevent
-from p4a.ploneevent.recurrence import interfaces
+from dateable import kalends
 
 PloneTestCase.setupPloneSite(products=("p4a.ploneevent",))
 
@@ -33,8 +33,8 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
                      endDate = DateTime('2001/02/01 14:00'))
 
         # Mark as recurring
-        interface.alsoProvides(event, interfaces.IRecurringEvent)
-        recurrence = interfaces.IRecurrence(event)
+        interface.alsoProvides(event, kalends.IRecurringEvent)
+        recurrence = kalends.IRecurrence(event)
 
         # Set the recurrence info
         event.frequency=rrule.DAILY
@@ -70,8 +70,8 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
                      endDate = DateTime('2001/02/01 04:00'))
         
         # Mark as recurring
-        interface.alsoProvides(event, interfaces.IRecurringEvent)
-        recurrence = interfaces.IRecurrence(event)
+        interface.alsoProvides(event, kalends.IRecurringEvent)
+        recurrence = kalends.IRecurrence(event)
 
         # Set the recurrence info
         event.frequency=rrule.DAILY
@@ -93,8 +93,8 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
                      endDate = DateTime('2007/02/01 04:00'))
         
         # Mark as recurring
-        interface.alsoProvides(event, interfaces.IRecurringEvent)
-        recurrence = interfaces.IRecurrence(event)
+        interface.alsoProvides(event, kalends.IRecurringEvent)
+        recurrence = kalends.IRecurrence(event)
 
         # Set the recurrence info
         event.frequency=rrule.WEEKLY

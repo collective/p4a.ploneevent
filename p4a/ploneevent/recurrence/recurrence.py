@@ -1,5 +1,4 @@
 import datetime
-
 from dateutil import rrule, tz
 from zope import interface
 from zope import component
@@ -9,30 +8,16 @@ from persistent.dict import PersistentDict
 
 from p4a.ploneevent.recurrence import interfaces
 from p4a.common.descriptors import anno
+from p4a.common.dtutils import DT2dt
 
 from Products.ATContentTypes.content.event import ATEvent
 
-def DT2dt(date, tznaive=False):
-    # XXX Test.
-    s, ms = divmod(date.second(), 1)
-    if tznaive:
-        _tz = None
-    else:
-        _tz = tz.tzoffset(date.timezone(), date.tzoffset())
-    dt = datetime.datetime(date.year(), date.month(), date.day(), date.hour(), 
-                           date.minute(), int(s), int(ms*1000000), _tz)
-    return dt
-
-
-ANNO_KEY = 'p4a.ploneevent.recurrence'
-IIR = interfaces.IRecurrence
-
-from zope.app.annotation.interfaces import IAnnotatable
+from dateable import kalends
 
 class RecurrenceSupport(object):
     """Recurrence support"""
 
-    interface.implements(interfaces.IRecurrence)
+    interface.implements(kalends.IRecurrence)
     component.adapts(ATEvent)
 
     def __init__(self, context):
@@ -43,9 +28,9 @@ class RecurrenceSupport(object):
         if getattr(self.context, 'frequency', -1) is -1:
             return None
         
-        dtstart = DT2dt(self.context.startDate, tznaive=True)
+        dtstart = DT2dt(self.context.startDate)
         if self.context.until is not None:
-            until = DT2dt(self.context.until, tznaive=True)
+            until = DT2dt(self.context.until)
             until = until.replace(hour=23, minute=59, second=59, microsecond=999999)
         else:
             until = None
@@ -75,12 +60,12 @@ class RecurrenceSupport(object):
             until = datetime.datetime.now() + \
                     datetime.timedelta(365*5)
 
-        if rule._until is not None:
-            # Make sure they are not one tznaive and one tzaware object:
-            if (until.tzinfo is None and rule._until.tzinfo is not None or
-                until.tzinfo is not None and rule._until.tzinfo is None):
-                until.replace(tzinfo=None)
+        if until.tzinfo is None and rule._dtstart.tzinfo is not None:
+            until = until.replace(tzinfo=rule._dtstart.tzinfo)
             
+        if until.tzinfo is not None and rule._dtstart.tzinfo is None:
+            until = until.replace(tzinfo=None)
+                            
         if rule._until is None or rule._until > until:
             rule._until = until
         
@@ -98,20 +83,20 @@ class EventRecurrenceConfig(object):
         self.context = context
 
     def __get_is_recurring(self):
-        return interfaces.IRecurringEvent.providedBy(self.context) and \
+        return kalends.IRecurringEvent.providedBy(self.context) and \
                annointerfaces.IAttributeAnnotatable.providedBy(self.context)
     def __set_is_recurring(self, activated):
         ifaces = interface.directlyProvidedBy(self.context)
         if activated:
-            if not interfaces.IRecurringEvent.providedBy(self.context):
-                ifaces += interfaces.IRecurringEvent
+            if not kalends.IRecurringEvent.providedBy(self.context):
+                ifaces += kalends.IRecurringEvent
             if not annointerfaces.IAttributeAnnotatable.providedBy(self.context):
                 ifaces += annointerfaces.IAttributeAnnotatable
             if getattr(self.context, 'layout', None) is not None:
                 self.context.layout = 'month.html'
         else:
-            if interfaces.IRecurringEvent in ifaces:
-                ifaces -= interfaces.IRecurringEvent
+            if kalends.IRecurringEvent in ifaces:
+                ifaces -= kalends.IRecurringEvent
             if getattr(self.context, 'layout', None) is not None:
                 delattr(self.context, 'layout')
         interface.directlyProvides(self.context, ifaces)
