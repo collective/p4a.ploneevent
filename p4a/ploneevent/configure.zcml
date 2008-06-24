@@ -14,7 +14,7 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="Plone4AArtists PloneEvent"
+      title="Plone4Artists PloneEvent"
       directory="profiles/default"
       description="Event extensions for plone"
       provides="Products.GenericSetup.interfaces.EXTENSION"
