@@ -1,4 +1,3 @@
-from dateable.chronos import interfaces
 from p4a.plonecalendar import content
 from p4a.common import site
 from p4a.z2utils import indexing

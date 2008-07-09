@@ -1,13 +1,20 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.0'
+version = '0.5'
+
+f = open('doc/README.txt')
+readme = f.read()
+f.close()
+
+f = open('doc/CHANGES.txt')
+changes = f.read()
+f.close()
 
 setup(name='p4a.ploneevent',
       version=version,
       description="Plone4Artists event extensions for Plone",
-      long_description="""p4a.ploneevent is a calendaring add-on for the
-Plone CMS.""",
+      long_description=readme + '\n\n' + changes,
       classifiers=[
           'Framework :: Zope3',
           'Framework :: Plone',
@@ -28,6 +35,7 @@ Plone CMS.""",
           'setuptools',
           'dateutil',
           'archetypes.schemaextender',
+          'dateable.kalends >= 0.3',
       ],
       entry_points="""
       # -*- Entry points: -*-
