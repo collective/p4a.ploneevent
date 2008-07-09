@@ -3,11 +3,11 @@ import sys, os
 
 version = '0.5'
 
-f = open('doc/README.txt')
+f = open('README.txt')
 readme = f.read()
 f.close()
 
-f = open('doc/CHANGES.txt')
+f = open('CHANGES.txt')
 changes = f.read()
 f.close()
 
