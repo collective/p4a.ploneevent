@@ -52,7 +52,7 @@ class EventView(BrowserView):
         return datetime_format.split(' ')[-1]
 
     def isRecurring(self):
-        return IRecurringEvent.isImplementedBy(self.context)
+        return IRecurringEvent.providedBy(self.context)
 
     def rrule(self):
         return IRecurrence(self.context, None).getRecurrenceRule()
