@@ -14,9 +14,9 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="Plone4Artists PloneEvent"
+      title="Recurring Events (p4a.ploneevent)"
       directory="profiles/default"
-      description="Event extensions for plone"
+      description="Event extensions for Plone"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
   
