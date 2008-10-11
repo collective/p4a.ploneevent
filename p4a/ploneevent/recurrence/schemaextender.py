@@ -37,21 +37,25 @@ class RecurrenceExtension(object):
                            DAILY: u'Daily',
                            }.items(),
                default=-1,
-               widget=atapi.SelectionWidget(label=u'Recurrence frequency')
-               ),
-          DateTimeField('until',
-               schemata="recurrence",
-               widget=atapi.CalendarWidget(label=u'Recur until')
+               widget=atapi.SelectionWidget(label=u'Repeats')
                ),
           IntegerField('interval',
                schemata="recurrence",
                required=True,
                default=1,
-               widget=atapi.IntegerWidget(label=u'Interval')
+               widget=atapi.IntegerWidget(label=u'Repeats every',
+                    description="Repeats every day/week/month/year.")
                ),
           IntegerField('count',
                schemata="recurrence",
-               widget=atapi.IntegerWidget(label=u'Count')
+               widget=atapi.IntegerWidget(label=u'Count',
+                    visible={'view': 'invisible', 'edit': 'invisible' })
+               ),
+          DateTimeField('until',
+               schemata="recurrence",
+               widget=atapi.CalendarWidget(label=u'End Date',
+                    description="The last date of the recurrence.",
+                    show_hm=True)
                ),
           ]
 
