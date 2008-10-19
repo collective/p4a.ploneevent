@@ -10,6 +10,20 @@
       class=".event_view.EventView"
       template="event_view.pt"
       />
+    
+    <browser:resource
+		name="ui.kss"
+		file="ui.kss"
+		/>
+		
+	<browser:page
+		for="plone.app.kss.interfaces.IPortalObject"
+	    class=".event_view.RecurrenceView"
+		attribute="updateRecurUI"
+		name="updateRecurUI"
+		permission="zope2.View"
+		     />
+		
 
 
 </configure>

@@ -30,7 +30,7 @@ class RecurrenceExtension(object):
           IntegerField('frequency',
                schemata="recurrence",
                required=True,
-               vocabulary={-1: u'Does not recur',
+               vocabulary={-1: u'Does not repeat',
                            YEARLY: u'Yearly',
                            MONTHLY: u'Monthly',
                            WEEKLY: u'Weekly',
@@ -44,19 +44,18 @@ class RecurrenceExtension(object):
                required=True,
                default=1,
                widget=atapi.IntegerWidget(label=u'Repeats every',
-                    description="Repeats every day/week/month/year.")
-               ),
-          IntegerField('count',
-               schemata="recurrence",
-               widget=atapi.IntegerWidget(label=u'Count',
-                    visible={'view': 'invisible', 'edit': 'invisible' })
+                    description=u"Repeats every day/week/month/year.")
                ),
           DateTimeField('until',
                schemata="recurrence",
-               widget=atapi.CalendarWidget(label=u'End Date',
-                    description="The last date of the recurrence.",
+               widget=atapi.CalendarWidget(label=u'Range',
+                    description=u"Event repeats until this date.",
                     show_hm=True)
                ),
+          IntegerField('count',
+                schemata="recurrence",
+                widget=atapi.IntegerWidget(label=u'Count',description=u'Maxinum number of times the event repeats ',)
+                ),
           ]
 
      def __init__(self, extender, context):

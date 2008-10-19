@@ -2,6 +2,8 @@ from zope.i18n import translate
 from Products.Five.browser import BrowserView
 from dateable.kalends import IRecurringEvent, IRecurrence
 from p4a.common.dtutils import dt2DT
+from kss.core import KSSView, kssaction
+from datetime import datetime
 
 FREQ = {0: 'year',
         1: 'month',
@@ -11,6 +13,13 @@ FREQ = {0: 'year',
         5: 'minute',
         6: 'second',
     }
+    
+    
+CALVOCAB = {   0: (u'Year', u'Years'),
+               1: (u'Month', u'Months'),
+               2: (u'Week', u'Weeks'),
+               3: (u'Day', u'Days'),
+                }
 
 class EventView(BrowserView):
     
@@ -79,4 +88,40 @@ class EventView(BrowserView):
         if rrule is not None and rrule._until:
             return self.context.toLocalizedTime(dt2DT(rrule._until), long_format=0)
         return ''
+
+
+class RecurrenceView(KSSView):
+
+    @kssaction
+    def updateRecurUI(self, frequency,interval):
+        # build HTML
+        content ='Repeats every %s  %s '
+        core = self.getCommandSet('core')
+
+        #check to see if single interval
+        frequency = int(frequency)
+        interval  = int(interval)
+        if frequency == -1:
+            caltext = 'day/week/month/year.'
+            interval = ''
+            display = 'none'
+        elif interval > 1:
+            caltext = CALVOCAB[frequency][1]
+            display = 'block'
+        elif interval == 0:
+            caltext = 'day/week/month/year.'
+            interval = ''
+            display = 'block'
+        else: 
+            caltext = CALVOCAB[frequency][0]
+            interval = '' 
+            display = 'block'
+         
+        core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
+        core.setStyle('#archetypes-fieldname-until', name='display', value=display)
+        core.setStyle('#archetypes-fieldname-count', name='display', value=display)
+        content = content % (interval, caltext)         
+        core.replaceInnerHTML('#interval_help', content)
+        
+        
         
