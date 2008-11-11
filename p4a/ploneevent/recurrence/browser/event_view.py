@@ -122,6 +122,3 @@ class RecurrenceView(KSSView):
         core.setStyle('#archetypes-fieldname-count', name='display', value=display)
         content = content % (interval, caltext)         
         core.replaceInnerHTML('#interval_help', content)
-        
-        
-        
