@@ -34,7 +34,7 @@ setup(name='p4a.ploneevent',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'dateutil',
+          'python-dateutil',
           'archetypes.schemaextender',
           'dateable.kalends >= 0.3',
       ],
