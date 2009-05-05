@@ -1,0 +1,10 @@
+;-*-rst-*-
+
+======================
+p4a.ploneevent Changes
+======================
+
+p4a.ploneevent 0.5 (2008-07-09)
+===============================
+
+* First release: Basic recurrence support.
