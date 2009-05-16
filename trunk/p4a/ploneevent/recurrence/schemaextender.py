@@ -22,10 +22,16 @@ class IntegerField(ExtensionField, atapi.IntegerField):
 class StringField(ExtensionField, atapi.StringField):
      pass
 
+class LinesField(ExtensionField, atapi.LinesField):
+      pass
+      
+class BooleanField(ExtensionField, atapi.BooleanField):
+      pass
+
 class RecurrenceExtension(object):
      component.adapts(IOrderableSchemaExtender, IRecurringEvent)
      interface.implements(IEventSchemaExtension)
-
+     
      fields = [
           IntegerField('frequency',
                schemata="recurrence",
@@ -38,7 +44,8 @@ class RecurrenceExtension(object):
                            }.items(),
                default=-1,
                widget=atapi.SelectionWidget(label=u'Repeats')
-               ),
+               ),               
+
           IntegerField('interval',
                schemata="recurrence",
                required=True,
@@ -46,9 +53,32 @@ class RecurrenceExtension(object):
                widget=atapi.IntegerWidget(label=u'Repeats every',
                     description=u"Repeats every day/week/month/year.")
                ),
+          LinesField('byweek',
+               schemata="recurrence",
+               multiValued=True,
+               vocabulary=[(u'0', u'Monday'),
+                           (u'1', u'Tuesday'),
+                           (u'2', u'Wednesday'),
+                           (u'3', u'Thursday'),
+                           (u'4', u'Friday'),
+                           (u'5', u'Saturday'), 
+                           (u'6', u'Sunday'), 
+                           ], 
+
+               widget=atapi.MultiSelectionWidget(label=u'Day of the week',
+               format="checkbox",
+               description=u"Days of the week")
+               ),             
+           BooleanField('ends',
+                  schemata="recurrence",
+                  default='on',
+                  widget=atapi.BooleanWidget(label=u'Repeat Forever',
+                       description=u"Event repeats idenfinitely.",
+                       )
+                  ),                    
           DateTimeField('until',
                schemata="recurrence",
-               widget=atapi.CalendarWidget(label=u'Range',
+               widget=atapi.CalendarWidget(label=u'Repeats Until',
                     description=u"Event repeats until this date.",
                     show_hm=True)
                ),
@@ -66,3 +96,5 @@ class RecurrenceExtension(object):
      
      def getOrders(self):
           return [(10, 'recurrence')]
+
+

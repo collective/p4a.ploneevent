@@ -1,4 +1,5 @@
 import datetime
+import calendar
 from dateutil import rrule, tz
 from zope import interface
 from zope import component
@@ -23,6 +24,17 @@ class RecurrenceSupport(object):
     def __init__(self, context):
         self.context = context
 
+    def getWeekNumber(self):
+        """returns the number of the week for specific date"""
+        #should remove dstart
+        dtstart = DT2dt(self.context.startDate)
+        
+        weeks = calendar.monthcalendar(dtstart.year,dtstart.month)
+        for week in weeks:
+            if week.count(dtstart.day):
+                return weeks.index(week)
+        
+        
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""
         if getattr(self.context, 'frequency', -1) is -1:
@@ -35,6 +47,8 @@ class RecurrenceSupport(object):
         else:
             until = None
         # Make it end at the end of the day:
+        # 
+        #need additional byweekday logic here, if the don't match the bysetpos won't work
 
         rule = rrule.rrule(self.context.frequency,
                            dtstart=dtstart,
@@ -42,9 +56,11 @@ class RecurrenceSupport(object):
                            #wkst=None, 
                            count=self.context.count, 
                            until=until, 
-                           #bysetpos=None,
+                           bysetpos= -1,
                            #bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
-                           #byweekno=None, byweekday=None,
+                           #byweekno=None, 
+                           #bymonthday= dtstart.day,
+                           byweekday=tuple([int(day) for day in self.context.byweek]),
                            #byhour=None, byminute=None, bysecond=None,
                            #cache=False
                        )

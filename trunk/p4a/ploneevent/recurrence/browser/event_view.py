@@ -93,9 +93,10 @@ class EventView(BrowserView):
 class RecurrenceView(KSSView):
 
     @kssaction
-    def updateRecurUI(self, frequency,interval):
+    def updateRecurUI(self, frequency,interval,ends=None):
         # build HTML
         content ='Repeats every %s  %s '
+        DAYOFWEEK =''
         core = self.getCommandSet('core')
 
         #check to see if single interval
@@ -116,9 +117,29 @@ class RecurrenceView(KSSView):
             caltext = CALVOCAB[frequency][0]
             interval = '' 
             display = 'block'
+            
+        if frequency == 1:
+            core.replaceInnerHTML('#byweek_help', 'Repeats on')
+            pass
          
+        if frequency == 3:
+            core.setStyle('#archetypes-fieldname-byweek', name='display', value='none') 
+    
+          
+        if ends:
+            core.setStyle('#archetypes-fieldname-until', name='display', value='block') 
+        
+        if not ends:
+            core.setStyle('#archetypes-fieldname-until', name='display', value='block')
+            
+        if frequency == 1:
+            core.setStyle('#archetypes-fieldname-byweek', name='display', value='none')
+             
+        
+                                  
+        core.setStyle('#archetypes-fieldname-byweek', name='display', value=display)                    
         core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
-        core.setStyle('#archetypes-fieldname-until', name='display', value=display)
         core.setStyle('#archetypes-fieldname-count', name='display', value=display)
         content = content % (interval, caltext)         
         core.replaceInnerHTML('#interval_help', content)
+        
