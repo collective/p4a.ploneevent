@@ -4,6 +4,18 @@
 p4a.ploneevent Changes
 ======================
 
+p4a.ploneevent 0.6 (2009-05-17)
+===============================
+
+* Fixed up dependencies (regebro, natea)
+
+* Added KSS UI enhancements, reordered and relabled recurrence fields 
+  to better describe field functions (aaronvanderlip)
+  
+* Cleaned up "Recurrence" schemata UI. Added new labels and descriptions. 
+  Removed 'count'. Reordered fields. (aaronvanderlip)
+
+
 p4a.ploneevent 0.5 (2008-07-09)
 ===============================
 
