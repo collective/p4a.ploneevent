@@ -15,6 +15,10 @@ from Products.ATContentTypes.content.event import ATEvent
 
 from dateable import kalends
 
+#temp import
+from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
+
+
 class RecurrenceSupport(object):
     """Recurrence support"""
 
@@ -24,15 +28,35 @@ class RecurrenceSupport(object):
     def __init__(self, context):
         self.context = context
 
+    def getDayofWeek(self):
+
+        dtstart = DT2dt(self.context.startDate)
+        
+        if self.context.frequency == 3:
+            return tuple([int(day) for day in self.context.byweek])       
+        if self.context.frequency != 1:
+            return None
+        if self.context.repeatday[0] == 'dayofmonth':
+            return None
+        if len(self.context.byweek) == 0 or self.context.frequency == 1:
+            return tuple([dtstart.weekday()])
+        
+                 
+
+        
     def getWeekNumber(self):
         """returns the number of the week for specific date"""
         #should remove dstart
         dtstart = DT2dt(self.context.startDate)
-        
+        #need to test if monthly otherwise return -1 ?
+        if self.context.repeatday[0] == 'dayofmonth':
+            return -1
+        if self.context.frequency != 1:
+            return -1
         weeks = calendar.monthcalendar(dtstart.year,dtstart.month)
         for week in weeks:
             if week.count(dtstart.day):
-                return weeks.index(week)
+                return weeks.index(week) + 1
         
         
     def getRecurrenceRule(self):
@@ -46,21 +70,18 @@ class RecurrenceSupport(object):
             until = until.replace(hour=23, minute=59, second=59, microsecond=999999)
         else:
             until = None
-        # Make it end at the end of the day:
-        # 
-        #need additional byweekday logic here, if the don't match the bysetpos won't work
-
+            
         rule = rrule.rrule(self.context.frequency,
                            dtstart=dtstart,
                            interval=self.context.interval,
                            #wkst=None, 
                            count=self.context.count, 
                            until=until, 
-                           bysetpos= -1,
+                           bysetpos= self.getWeekNumber(),
                            #bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
                            #byweekno=None, 
                            #bymonthday= dtstart.day,
-                           byweekday=tuple([int(day) for day in self.context.byweek]),
+                           byweekday= self.getDayofWeek(),
                            #byhour=None, byminute=None, bysecond=None,
                            #cache=False
                        )

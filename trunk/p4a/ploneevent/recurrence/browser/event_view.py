@@ -117,27 +117,36 @@ class RecurrenceView(KSSView):
             caltext = CALVOCAB[frequency][0]
             interval = '' 
             display = 'block'
+        
+        #hide initially
+        core.setStyle('#archetypes-fieldname-byweek', name='display', value='none') 
             
         if frequency == 1:
             core.replaceInnerHTML('#byweek_help', 'Repeats on')
             pass
          
         if frequency == 3:
-            core.setStyle('#archetypes-fieldname-byweek', name='display', value='none') 
+            core.setStyle('#archetypes-fieldname-byweek', name='display', value='block') 
     
           
         if ends:
-            core.setStyle('#archetypes-fieldname-until', name='display', value='block') 
+            core.setStyle('#archetypes-fieldname-until', name='display', value='none') 
         
         if not ends:
             core.setStyle('#archetypes-fieldname-until', name='display', value='block')
             
-        if frequency == 1:
+        if frequency != 1:
+            core.setStyle('#archetypes-fieldname-repeatday', name='display', value='none')
+            
+        if frequency != 3:
             core.setStyle('#archetypes-fieldname-byweek', name='display', value='none')
+            
+        if frequency == 1:
+            core.setStyle('#archetypes-fieldname-repeatday', name='display', value='block')
+            
+            
              
-        
-                                  
-        core.setStyle('#archetypes-fieldname-byweek', name='display', value=display)                    
+                            
         core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
         core.setStyle('#archetypes-fieldname-count', name='display', value=display)
         content = content % (interval, caltext)         
