@@ -46,18 +46,17 @@ class RecurrenceSupport(object):
         
     def getWeekNumber(self):
         """returns the number of the week for specific date"""
-        #should remove dstart
+        # Should remove dstart
         dtstart = DT2dt(self.context.startDate)
-        #need to test if monthly otherwise return -1 ?
-        if self.context.repeatday[0] == 'dayofmonth':
-            return -1
+        # Need to test if monthly otherwise return -1 ?
         if self.context.frequency != 1:
+            return -1
+        if self.context.repeatday[0] == 'dayofmonth':
             return -1
         weeks = calendar.monthcalendar(dtstart.year,dtstart.month)
         for week in weeks:
             if week.count(dtstart.day):
                 return weeks.index(week) + 1
-        
         
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""

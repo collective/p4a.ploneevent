@@ -70,6 +70,20 @@ class RecurrenceExtension(object):
         ),
 
         LinesField(
+            name='repeatday',
+            schemata='recurrence',
+            vocabulary=[
+                (u'dayofmonth', u'day of the month'),
+                (u'dayofweek', u'day of the week'),
+            ],
+            widget=atapi.SelectionWidget(
+                label=u'Repeats by',
+                description=u'Select day of week or date.',
+                format='radio',
+            ),
+        ),
+
+        LinesField(
             name='byweek',
             schemata='recurrence',
             multiValued=True,
@@ -84,33 +98,22 @@ class RecurrenceExtension(object):
             ],
             widget=atapi.MultiSelectionWidget(
                 label=u'Day of the week',
-                description=u'Days of the week.',
+                description=u'Only repeat in the selected days of the week.',
                 format='checkbox',
             ),
         ),
 
-        LinesField(
-            name='repeatday',
-            schemata="recurrence",
-            default='on',
-            vocabulary=[
-                (u'dayofmonth', u'day of the month'),
-                (u'dayofweek', u'day of the week'),
-            ],
-            widget=atapi.SelectionWidget(
-                label=u'Repeats by',
-                description=u'Select day of week or date.',
-                format='radio',
-            ),
-        ),
-
-        BooleanField(
+        StringField(
             name='ends',
             schemata='recurrence',
-            default='on',
-            widget=atapi.BooleanWidget(
-                label=u'Repeat Forever',
-                description=u'Event repeats indefinitely.',
+            default='0',
+            vocabulary=[
+                (u'0', u'No end date'),
+                (u'1', u'End after a number of occurrences'),
+                (u'2', u'End on a specific date'),
+            ],
+            widget=atapi.SelectionWidget(
+                label=u'Range of recurrence',
             ),
         ),
 
@@ -119,7 +122,7 @@ class RecurrenceExtension(object):
             schemata='recurrence',
             widget=atapi.IntegerWidget(
                 label=u'Count',
-                description=u'Maxinum number of times the event repeats.',
+                description=u'Event repeats this number of times.',
             ),
         ),
 

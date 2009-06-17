@@ -1,48 +1,43 @@
-select#frequency:change
-{
-action-server: updateRecurUI;
-updateRecurUI-frequency: currentFormVar(frequency);
-updateRecurUI-interval:  currentFormVar(interval);
-updateRecurUI-ends:  currentFormVar(ends);
-
-}
-
-#interval:change
-{
-action-server: updateRecurUI;
-updateRecurUI-frequency: currentFormVar(frequency);
-updateRecurUI-interval:  currentFormVar(interval);
-updateRecurUI-ends:  currentFormVar(ends);
-
-
-
-}
-
-
-
-#ends:change{
-
-action-client: alert;
-alert-message: currentFormVar(ends);
-updateRecurUI-frequency: currentFormVar(frequency);
-updateRecurUI-interval:  currentFormVar(interval);
-updateRecurUI-ends:  currentFormVar(ends);
-
-
-}
-
-
 a#fieldsetlegend-recurrence span:click {
-action-server: updateRecurUI;
-updateRecurUI-frequency: currentFormVar(frequency);
-updateRecurUI-interval:  currentFormVar(interval);
-updateRecurUI-ends:  currentFormVar(ends);
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-ends: currentFormVar(ends);
 }
 
-document:load
-{
-action-server: updateRecurUI;
-updateRecurUI-frequency: currentFormVar(frequency);
-updateRecurUI-interval:  currentFormVar(interval);
-updateRecurUI-ends:  currentFormVar(ends);
+select#frequency:change {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+input#interval:change {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+div#archetypes-fieldname-ends input:click {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+input#ends_1:click {
+  action-client: setAttribute css('#archetypes-fieldname-count input') alias(setCount);
+  setCount-name: value;
+  setCount-value: '';
+  action-client: setAttribute css('#archetypes-fieldname-until input[type=hidden]') alias(setUntil);
+  setUntil-name: value;
+  setUntil-value: '';
+}
+
+document:load {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-ends: currentFormVar(ends);
 }
