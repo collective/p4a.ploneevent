@@ -17,7 +17,7 @@ from dateable import kalends
 PloneTestCase.setupPloneSite(products=("p4a.ploneevent",))
 
 class RecurrenceTest(PloneTestCase.FunctionalTestCase):
-    
+
     def afterSetUp(self):
         ZopeTestCase.utils.setupCoreSessions(self.app)
         self.addProduct('CMFonFive')
@@ -41,13 +41,13 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         event.until=DateTime('2002/02/01')
         event.interval = 1
         event.count = None
-        
+
         # Test
         dates = recurrence.getOccurrenceDays()
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2002, 2, 1).toordinal())
         self.failUnlessEqual(len(dates), 365)
-        
+
         # Try with an interval
         event.interval = 3
         dates = recurrence.getOccurrenceDays()
@@ -68,7 +68,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         event.update(startDate = DateTime('2001/02/01 00:00'),
                      endDate = DateTime('2001/02/01 04:00'))
-        
+
         # Mark as recurring
         interface.alsoProvides(event, kalends.IRecurringEvent)
         recurrence = kalends.IRecurrence(event)
@@ -78,9 +78,9 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         event.until=DateTime('2001/02/04')
         event.interval=1
         event.count=None
-        
+
         # Test
-        dates = recurrence.getOccurrenceDays()        
+        dates = recurrence.getOccurrenceDays()
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
         self.failUnlessEqual(len(dates), 3)
@@ -91,7 +91,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         event.update(startDate = DateTime('2007/02/01 00:00'),
                      endDate = DateTime('2007/02/01 04:00'))
-        
+
         # Mark as recurring
         interface.alsoProvides(event, kalends.IRecurringEvent)
         recurrence = kalends.IRecurrence(event)
@@ -101,7 +101,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         event.until=DateTime('2008/02/04')
         event.interval=1
         event.count=None
-        
+
         # Test
         dates = recurrence.getOccurrenceDays()
         self.failUnlessEqual(dates[0], datetime.date(2007, 2, 8).toordinal())
@@ -110,13 +110,13 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnlessEqual(dates[-1], datetime.date(2008, 1, 31).toordinal())
         self.failUnlessEqual(len(dates), 52)
 
-        
+
     def test_recurrence(self):
         browser = Browser()
         browser.handleErrors = False
         browser.addHeader('Authorization', 'Basic %s:%s' % (portal_owner, default_password))
-        folder_url = self.folder.absolute_url() 
-        
+        folder_url = self.folder.absolute_url()
+
         # Add event
         browser.open(folder_url + '/createObject?type_name=Event')
         form = browser.getForm('event-base-edit')
@@ -135,14 +135,14 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         form.getControl(name='frequency').value = ['1']
         form.getControl(name='interval').value = '6'
         form.getControl(name='form_submit').click()
-        
+
         # Make sure it's properly indexed:
         cat = self.portal.portal_catalog
         self.failUnless(len(cat(portal_type='Event', recurrence_days=732950)) == 1)
-        
+
 def test_suite():
     from unittest import TestSuite, makeSuite
-    
+
     suite = TestSuite()
     suite.addTests(makeSuite(RecurrenceTest))
     suite.layer = layer.ZCMLLayer

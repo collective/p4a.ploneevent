@@ -8,7 +8,6 @@ from Products.CMFCore import utils as cmfutils
 import logging
 logger = logging.getLogger('p4a.plonecalendar.sitesetup')
 
-
 def setup_portal(portal):
     site.ensure_site(portal)
     setup_profile(portal)

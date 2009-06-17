@@ -5,12 +5,11 @@
     i18n_domain="Plone4Artists">
 
   <include package=".browser" />
-  
-  <adapter factory=".schemaextender.RecurrenceExtension" />
 
+  <adapter factory=".schemaextender.RecurrenceExtension" />
   <adapter factory=".recurrence.RecurrenceSupport" />
 
-  <!-- Mark Archetype events as IEvents /-->
+  <!-- Mark Archetype events as IEvents -->
   <five:implements
       class="Products.ATContentTypes.content.event.ATEvent"
       interface="dateable.kalends.IRecurringEvent"

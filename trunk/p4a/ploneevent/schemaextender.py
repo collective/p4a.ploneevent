@@ -9,53 +9,57 @@ from Products.Archetypes import atapi
 from Products.Archetypes.utils import OrderedDict
 from Products.ATContentTypes.content.event import ATEvent
 
-from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
 from interfaces import IEventSchemaExtension
 
+
 class TextField(ExtensionField, atapi.TextField):
-     pass
+    pass
+
 
 class DateTimeField(ExtensionField, atapi.DateTimeField):
-     pass
+    pass
+
 
 class IntegerField(ExtensionField, atapi.IntegerField):
-     pass
+    pass
+
 
 class StringField(ExtensionField, atapi.StringField):
-     pass
+    pass
+
 
 class EventSchemaExtender(object):
-     component.adapts(ATEvent)
-     interface.implements(IOrderableSchemaExtender)
+    component.adapts(ATEvent)
+    interface.implements(IOrderableSchemaExtender)
 
-     def __init__(self, context):
-          self.context = context
+    def __init__(self, context):
+        self.context = context
 
-     def getFields(self):          
-          fields = []
-          for name, extension in component.getAdapters((self, self.context),
-                                                       IEventSchemaExtension):
-               fields.extend(extension.getFields())
-          return fields
-     
-     def getOrder(self, original):
-          res = OrderedDict()
-          
-          # Make "default" come first:          
-          res['default'] = original['default']
-          del original['default']
-          
-          # Go through any extensions:
-          schematas = []
-          for name, extension in component.getAdapters((self, self.context),
-                                                       IEventSchemaExtension):
-               schematas.extend(extension.getOrders())
-          schematas.sort()
-          for order, schemata in schematas:
-               res[schemata] = original[schemata]
-               del original[schemata]
-          
-          # And tag on anything left over:
-          res.update(original)
-          self._order = res
-          return res
+    def getFields(self):
+        fields = []
+        for name, extension in component.getAdapters((self, self.context),
+                                                     IEventSchemaExtension):
+            fields.extend(extension.getFields())
+        return fields
+
+    def getOrder(self, original):
+        res = OrderedDict()
+
+        # Make "default" come first:
+        res['default'] = original['default']
+        del original['default']
+
+        # Go through any extensions:
+        schematas = []
+        for name, extension in component.getAdapters((self, self.context),
+                                                     IEventSchemaExtension):
+             schematas.extend(extension.getOrders())
+        schematas.sort()
+        for order, schemata in schematas:
+            res[schemata] = original[schemata]
+            del original[schemata]
+
+        # And tag on anything left over:
+        res.update(original)
+        self._order = res
+        return res

@@ -1,10 +1,9 @@
+from dateable import kalends
 from zope.component import ComponentLookupError
 from Products.CMFPlone.CatalogTool import registerIndexableAttribute
-from dateable import kalends
 
 def recurrence_days(object, portal, **kwargs):
-    """Return the dates of recurrences as ordinals
-    """
+    """Return the dates of recurrences as ordinals."""
     try:
         recurrence = kalends.IRecurrence(object)
         return recurrence.getOccurrenceDays()
