@@ -110,7 +110,7 @@ class EventView(BrowserView):
 class RecurrenceView(KSSView):
 
     @kssaction
-    def updateRecurUI(self, frequency=-1, interval=0, ends=0):
+    def updateRecurUI(self, frequency=-1, repeat='', interval=0, ends=0):
         ends = int(ends)
         interval = int(interval)
         frequency = int(frequency)
@@ -133,20 +133,38 @@ class RecurrenceView(KSSView):
                 core.setStyle('#archetypes-fieldname-count', name='display', value='none')
                 core.setStyle('#archetypes-fieldname-until', name='display', value='block')
 
-        # Montly Repeat Day
-        if frequency == 1:
+        # Repeat Day
+        if frequency in (0, 1):
             core.setStyle('#archetypes-fieldname-repeatday', name='display', value='block')
         else:
             core.setStyle('#archetypes-fieldname-repeatday', name='display', value='none')
 
-        # By Week
-        if frequency == 2:
+        # Ordinal
+        if frequency in (0, 1) and repeat == 'dayofweek':
+            core.setStyle('#archetypes-fieldname-ordinalweek', name='display', value='block')
+        else:
+            core.setStyle('#archetypes-fieldname-ordinalweek', name='display', value='none')
+
+        # Day
+        if frequency in (0, 1) and repeat == 'dayofmonth':
+            core.setStyle('#archetypes-fieldname-byday', name='display', value='block')
+        else:
+            core.setStyle('#archetypes-fieldname-byday', name='display', value='none')
+
+        # Week
+        if frequency == 2 or (frequency in (0, 1) and repeat == 'dayofweek'):
             core.setStyle('#archetypes-fieldname-byweek', name='display', value='block')
         else:
             core.setStyle('#archetypes-fieldname-byweek', name='display', value='none')
 
+        # Month
+        if frequency == 0:
+            core.setStyle('#archetypes-fieldname-bymonth', name='display', value='block')
+        else:
+            core.setStyle('#archetypes-fieldname-bymonth', name='display', value='none')
+
         # Interval
-        if frequency == -1:
+        if frequency == -1 or (frequency == 0 and repeat == 'dayofweek'):
             caltext = 'day/week/month/year.'
             interval = ''
             display = 'none'

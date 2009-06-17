@@ -1,6 +1,7 @@
 a#fieldsetlegend-recurrence span:click {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-ends: currentFormVar(ends);
 }
@@ -8,6 +9,7 @@ a#fieldsetlegend-recurrence span:click {
 select#frequency:change {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-ends: currentFormVar(ends);
 }
@@ -15,6 +17,15 @@ select#frequency:change {
 input#interval:change {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-repeat: currentFormVar(repeatday);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+div#archetypes-fieldname-repeatday input:click {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-ends: currentFormVar(ends);
 }
@@ -22,6 +33,7 @@ input#interval:change {
 div#archetypes-fieldname-ends input:click {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-ends: currentFormVar(ends);
 }
@@ -38,6 +50,7 @@ input#ends_1:click {
 document:load {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-ends: currentFormVar(ends);
 }

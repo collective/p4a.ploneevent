@@ -58,28 +58,46 @@ class RecurrenceExtension(object):
             ),
         ),
 
-        IntegerField(
-            name='interval',
-            schemata='recurrence',
-            required=True,
-            default=1,
-            widget=atapi.IntegerWidget(
-                label=u'Repeats every',
-                description=u'Repeats every day/week/month/year.',
-            ),
-        ),
-
-        LinesField(
+        StringField(
             name='repeatday',
             schemata='recurrence',
             vocabulary=[
                 (u'dayofmonth', u'day of the month'),
                 (u'dayofweek', u'day of the week'),
             ],
+            default='dayofmonth',
             widget=atapi.SelectionWidget(
                 label=u'Repeats by',
-                description=u'Select day of week or date.',
+                description=u'Repeats on a specific day of the '
+                            u'month or in a day of the week.',
                 format='radio',
+            ),
+        ),
+
+        IntegerField(
+            name='byday',
+            schemata='recurrence',
+            widget=atapi.IntegerWidget(
+                label=u'Day',
+                description=u'Repeats on this day.',
+            ),
+        ),
+
+        LinesField(
+            name='ordinalweek',
+            schemata='recurrence',
+            multiValued=True,
+            vocabulary=[
+                (u'1', u'first'),
+                (u'2', u'second'),
+                (u'3', u'third'),
+                (u'4', u'fourth'),
+                (u'-1', u'last'),
+            ],
+            widget=atapi.MultiSelectionWidget(
+                label=u'Week',
+                description=u'Repeats on specific week(s).',
+                format='checkbox',
             ),
         ),
 
@@ -97,9 +115,45 @@ class RecurrenceExtension(object):
                 (u'6', u'Sunday'),
             ],
             widget=atapi.MultiSelectionWidget(
-                label=u'Day of the week',
-                description=u'Only repeat in the selected days of the week.',
+                label=u'Week Day',
+                description=u'Repeat in the selected day(s) of the week.',
                 format='checkbox',
+            ),
+        ),
+
+        LinesField(
+            name='bymonth',
+            schemata='recurrence',
+            multiValued=True,
+            vocabulary=[
+                (u'1', u'January'),
+                (u'2', u'February'),
+                (u'3', u'March'),
+                (u'4', u'April'),
+                (u'5', u'May'),
+                (u'6', u'June'),
+                (u'7', u'July'),
+                (u'8', u'August'),
+                (u'9', u'September'),
+                (u'10', u'October'),
+                (u'11', u'November'),
+                (u'12', u'December'),
+            ],
+            widget=atapi.MultiSelectionWidget(
+                label=u'Month',
+                description=u'Repeat in the selected month(s) of the year.',
+                format='checkbox',
+            ),
+        ),
+
+        IntegerField(
+            name='interval',
+            schemata='recurrence',
+            required=True,
+            default=1,
+            widget=atapi.IntegerWidget(
+                label=u'Every',
+                description=u'Repeats every day/week/month/year.',
             ),
         ),
 
