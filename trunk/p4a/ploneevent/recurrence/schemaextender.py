@@ -1,14 +1,11 @@
+from dateutil import rrule
+from dateable.kalends import IRecurringEvent
+
 from zope import component, interface
+from Products.Archetypes import atapi
+from p4a.ploneevent.interfaces import IEventSchemaExtension
 from archetypes.schemaextender.field import ExtensionField
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
-
-from dateable.kalends import IRecurringEvent
-from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
-from p4a.ploneevent.interfaces import IEventSchemaExtension
-
-from Products.Archetypes import atapi
-from Products.Archetypes.utils import OrderedDict
-from Products.ATContentTypes.content.event import ATEvent
 
 
 class TextField(ExtensionField, atapi.TextField):
@@ -47,10 +44,10 @@ class RecurrenceExtension(object):
             required=True,
             vocabulary=[
                 (-1, u'Does not repeat'),
-                (YEARLY, u'Yearly'),
-                (MONTHLY, u'Monthly'),
-                (WEEKLY, u'Weekly'),
-                (DAILY, u'Daily'),
+                (rrule.YEARLY, u'Yearly'),
+                (rrule.MONTHLY, u'Monthly'),
+                (rrule.WEEKLY, u'Weekly'),
+                (rrule.DAILY, u'Daily'),
             ],
             default=-1,
             widget=atapi.SelectionWidget(
@@ -71,15 +68,6 @@ class RecurrenceExtension(object):
                 description=u'Repeats on a specific day of the '
                             u'month or in a day of the week.',
                 format='radio',
-            ),
-        ),
-
-        IntegerField(
-            name='byday',
-            schemata='recurrence',
-            widget=atapi.IntegerWidget(
-                label=u'Day',
-                description=u'Repeats on this day.',
             ),
         ),
 
@@ -162,9 +150,9 @@ class RecurrenceExtension(object):
             schemata='recurrence',
             default='0',
             vocabulary=[
-                (u'0', u'No end date'),
-                (u'1', u'End after a number of occurrences'),
-                (u'2', u'End on a specific date'),
+                (u'ever', u'No end date'),
+                (u'count', u'End after a number of occurrences'),
+                (u'until', u'End on a specific date'),
             ],
             widget=atapi.SelectionWidget(
                 label=u'Range of recurrence',

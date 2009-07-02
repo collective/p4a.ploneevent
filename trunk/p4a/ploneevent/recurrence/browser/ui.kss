@@ -1,56 +1,47 @@
 a#fieldsetlegend-recurrence span:click {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-ends: currentFormVar(ends);
 }
 
 select#frequency:change {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-ends: currentFormVar(ends);
 }
 
 input#interval:change {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-ends: currentFormVar(ends);
 }
 
 div#archetypes-fieldname-repeatday input:click {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-ends: currentFormVar(ends);
 }
 
 div#archetypes-fieldname-ends input:click {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-ends: currentFormVar(ends);
-}
-
-input#ends_1:click {
-  action-client: setAttribute css('#archetypes-fieldname-count input') alias(setCount);
-  setCount-name: value;
-  setCount-value: '';
-  action-client: setAttribute css('#archetypes-fieldname-until input[type=hidden]') alias(setUntil);
-  setUntil-name: value;
-  setUntil-value: '';
 }
 
 document:load {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
   updateRecurUI-ends: currentFormVar(ends);
 }

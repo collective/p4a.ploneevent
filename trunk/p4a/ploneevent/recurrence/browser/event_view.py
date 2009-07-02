@@ -1,9 +1,13 @@
-from zope.i18n import translate
-from Products.Five.browser import BrowserView
-from dateable.kalends import IRecurringEvent, IRecurrence
-from p4a.common.dtutils import dt2DT
-from kss.core import KSSView, kssaction
 from DateTime import DateTime
+from kss.core import KSSView
+from kss.core import kssaction
+from zope.i18n import translate
+
+from dateutil import rrule
+from p4a.common.dtutils import dt2DT
+from dateable.kalends import IRecurrence
+from dateable.kalends import IRecurringEvent
+from Products.Five.browser import BrowserView
 
 FREQ = {
     0: 'year',
@@ -94,10 +98,10 @@ class EventView(BrowserView):
 
         return translate(text, mapping={'interval':rrule._interval,
                                         'frequency':FREQ[rrule._freq]})
-    def rrule_interval(self):
+    def rrule_count(self):
         rrule = self.rrule()
         if rrule is not None:
-            return rrule._interval
+            return rrule._count
         return 0
 
     def rrule_end(self):
@@ -110,8 +114,7 @@ class EventView(BrowserView):
 class RecurrenceView(KSSView):
 
     @kssaction
-    def updateRecurUI(self, frequency=-1, repeat='', interval=0, ends=0):
-        ends = int(ends)
+    def updateRecurUI(self, frequency=-1, interval=1, repeat='dayofmonth', ends='ever'):
         interval = int(interval)
         frequency = int(frequency)
         core = self.getCommandSet('core')
@@ -123,48 +126,43 @@ class RecurrenceView(KSSView):
             core.setStyle('#archetypes-fieldname-until', name='display', value='none')
         else:
             core.setStyle('#archetypes-fieldname-ends', name='display', value='block')
-            if not ends:
-                core.setStyle('#archetypes-fieldname-count', name='display', value='none')
-                core.setStyle('#archetypes-fieldname-until', name='display', value='none')
-            elif ends == 1:
+            if ends == 'count':
                 core.setStyle('#archetypes-fieldname-count', name='display', value='block')
                 core.setStyle('#archetypes-fieldname-until', name='display', value='none')
-            elif ends == 2:
+            elif ends == 'until':
                 core.setStyle('#archetypes-fieldname-count', name='display', value='none')
                 core.setStyle('#archetypes-fieldname-until', name='display', value='block')
+            else:
+                core.setStyle('#archetypes-fieldname-count', name='display', value='none')
+                core.setStyle('#archetypes-fieldname-until', name='display', value='none')
 
         # Repeat Day
-        if frequency in (0, 1):
+        if frequency in (rrule.YEARLY, rrule.MONTHLY):
             core.setStyle('#archetypes-fieldname-repeatday', name='display', value='block')
         else:
             core.setStyle('#archetypes-fieldname-repeatday', name='display', value='none')
 
         # Ordinal
-        if frequency in (0, 1) and repeat == 'dayofweek':
+        if frequency in (rrule.YEARLY, rrule.MONTHLY) and repeat == 'dayofweek':
             core.setStyle('#archetypes-fieldname-ordinalweek', name='display', value='block')
         else:
             core.setStyle('#archetypes-fieldname-ordinalweek', name='display', value='none')
 
-        # Day
-        if frequency in (0, 1) and repeat == 'dayofmonth':
-            core.setStyle('#archetypes-fieldname-byday', name='display', value='block')
-        else:
-            core.setStyle('#archetypes-fieldname-byday', name='display', value='none')
-
         # Week
-        if frequency == 2 or (frequency in (0, 1) and repeat == 'dayofweek'):
+        if frequency == rrule.WEEKLY or (
+           frequency in (rrule.YEARLY, rrule.MONTHLY) and repeat == 'dayofweek'):
             core.setStyle('#archetypes-fieldname-byweek', name='display', value='block')
         else:
             core.setStyle('#archetypes-fieldname-byweek', name='display', value='none')
 
         # Month
-        if frequency == 0:
+        if frequency == rrule.YEARLY:
             core.setStyle('#archetypes-fieldname-bymonth', name='display', value='block')
         else:
             core.setStyle('#archetypes-fieldname-bymonth', name='display', value='none')
 
         # Interval
-        if frequency == -1 or (frequency == 0 and repeat == 'dayofweek'):
+        if frequency == -1 or (frequency == rrule.YEARLY and repeat == 'dayofweek'):
             caltext = 'day/week/month/year.'
             interval = ''
             display = 'none'
