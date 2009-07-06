@@ -148,9 +148,9 @@ class RecurrenceExtension(object):
         StringField(
             name='ends',
             schemata='recurrence',
-            default='0',
+            default='',
             vocabulary=[
-                (u'ever', u'No end date'),
+                (u'', u'No end date'),
                 (u'count', u'End after a number of occurrences'),
                 (u'until', u'End on a specific date'),
             ],
@@ -174,7 +174,7 @@ class RecurrenceExtension(object):
             widget=atapi.CalendarWidget(
                 label=u'Repeats Until',
                 description=u'Event repeats until this date.',
-                show_hm=True,
+                show_hm=False,
             ),
         ),
 

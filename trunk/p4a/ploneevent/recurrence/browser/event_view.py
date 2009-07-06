@@ -114,7 +114,7 @@ class EventView(BrowserView):
 class RecurrenceView(KSSView):
 
     @kssaction
-    def updateRecurUI(self, frequency=-1, interval=1, repeat='dayofmonth', ends='ever'):
+    def updateRecurUI(self, frequency=-1, interval=1, repeat='dayofmonth', ends=''):
         interval = int(interval)
         frequency = int(frequency)
         core = self.getCommandSet('core')
