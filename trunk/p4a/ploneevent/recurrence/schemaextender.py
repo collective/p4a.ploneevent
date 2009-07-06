@@ -148,9 +148,9 @@ class RecurrenceExtension(object):
         StringField(
             name='ends',
             schemata='recurrence',
-            default='',
+            default='ever',
             vocabulary=[
-                (u'', u'No end date'),
+                (u'ever', u'No end date'),
                 (u'count', u'End after a number of occurrences'),
                 (u'until', u'End on a specific date'),
             ],
