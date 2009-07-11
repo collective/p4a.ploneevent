@@ -1,0 +1,28 @@
+;-*-rst-*-
+
+======================
+p4a.ploneevent Changes
+======================
+
+p4a.ploneevent 0.6 (2009-07-02)
+===============================
+
+* Improved the KSS events for a better UI experience.
+  [deo]
+
+* Added support for repeating on day of month, day of week,
+  months and ordinal weeks.
+  [deo]
+
+* Added support for displaying different start/end dates for
+  each event occurrence.
+  [deo]
+
+* Improved tests to cover EventView and the new features.
+  [deo]
+
+
+p4a.ploneevent 0.5 (2008-07-09)
+===============================
+
+* First release: Basic recurrence support.

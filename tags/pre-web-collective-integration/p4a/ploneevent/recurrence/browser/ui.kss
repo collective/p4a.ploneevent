@@ -1,0 +1,47 @@
+a#fieldsetlegend-recurrence span:click {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+select#frequency:change {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+input#interval:change {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+div#archetypes-fieldname-repeatday input:click {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+div#archetypes-fieldname-ends input:click {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
+  updateRecurUI-ends: currentFormVar(ends);
+}
+
+document:load {
+  action-server: updateRecurUI;
+  updateRecurUI-frequency: currentFormVar(frequency);
+  updateRecurUI-interval: currentFormVar(interval);
+  updateRecurUI-repeat: currentFormVar(repeatday);
+  updateRecurUI-ends: currentFormVar(ends);
+}
