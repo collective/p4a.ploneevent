@@ -19,6 +19,15 @@ PloneTestCase.setupPloneSite(products=("p4a.ploneevent",))
 
 
 class RecurrenceTest(PloneTestCase.FunctionalTestCase):
+    def helperTestLingo(self, iFrequency, iMonth, iDay, listStrTests, iWeek=-1):
+        errStr = "'_buildRecurrenceString' did not properly generate '%s'."
+        LIST_TEST_INTERVALS = [1,2,3,9,10,11]
+        f = self.recurrence._buildRecurrenceString
+        for i in LIST_TEST_INTERVALS:
+            dt = DateTime(2009,iMonth,iDay,14,30,0)
+            strResult = f(iFrequency, i, dt, iWeek)
+            strControl = listStrTests[i]
+            self.failUnless(strResult == strControl, errStr % strControl)
 
     def afterSetUp(self):
         ZopeTestCase.utils.setupCoreSessions(self.app)
@@ -194,6 +203,64 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         cat = self.portal.portal_catalog
         results = cat(portal_type='Event', recurrence_days=732950)
         self.failUnlessEqual(len(results), 1)
+
+    def testLingo(self):
+        self.folder.invokeFactory('Event', 'event')
+        event = getattr(self.folder, 'event')
+
+        # Mark as recurring
+        interface.alsoProvides(event, kalends.IRecurringEvent)
+        self.recurrence = kalends.IRecurrence(event)
+
+        STR_YEARLY_TESTS = ['',
+            'Every year on June 23rd',
+            'Every two years on June 23rd',
+            'Every three years on June 23rd','','','','','',
+            'Every nine years on June 23rd',
+            'Every 10 years on June 23rd',
+            'Every 11 years on June 23rd',
+        ]
+        self.helperTestLingo(0, 6, 23, STR_YEARLY_TESTS)
+        
+        STR_MONTHLY_TESTS_2ND_TUESDAY = ['',
+            'Every month on the 2nd Tuesday',
+            'Every two months on the 2nd Tuesday',
+            'Every three months on the 2nd Tuesday','','','','','',
+            'Every nine months on the 2nd Tuesday',
+            'Every 10 months on the 2nd Tuesday',
+            'Every 11 months on the 2nd Tuesday',
+        ]
+        self.helperTestLingo(1, 6, 9, STR_MONTHLY_TESTS_2ND_TUESDAY, 1)
+        
+        STR_MONTHLY_TESTS_11TH_DAY = ['',
+            'Every month on the 11th day',
+            'Every two months on the 11th day',
+            'Every three months on the 11th day','','','','','',
+            'Every nine months on the 11th day',
+            'Every 10 months on the 11th day',
+            'Every 11 months on the 11th day',
+        ]
+        self.helperTestLingo(1, 6, 11, STR_MONTHLY_TESTS_11TH_DAY)
+            
+        STR_WEEKLY_TESTS = ['',
+            'Every week on Saturday',
+            'Every two weeks on Saturday',
+            'Every three weeks on Saturday','','','','','',
+            'Every nine weeks on Saturday',
+            'Every 10 weeks on Saturday',
+            'Every 11 weeks on Saturday',
+        ]
+        self.helperTestLingo(2, 6, 13, STR_WEEKLY_TESTS)
+        
+        STR_DAILY_TESTS = ['',
+            'Every day',
+            'Every two days',
+            'Every three days','','','','','',
+            'Every nine days',
+            'Every 10 days',
+            'Every 11 days',
+        ]
+        self.helperTestLingo(3, 6, 11, STR_DAILY_TESTS)
 
 
 def test_suite():

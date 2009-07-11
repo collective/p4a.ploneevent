@@ -18,6 +18,20 @@ class RecurrenceSupport(object):
     interface.implements(kalends.IRecurrence)
     component.adapts(ATEvent)
 
+    IDX_YEAR = 0
+    IDX_MONTH = 1
+    IDX_WEEK = 2
+    IDX_DAY = 3
+    LIST_PREFIX = ['Every', 'Every', 'Every', 'Every']
+    LIST_INTERVAL_TYPES = ['year', 'month', 'week', 'day']
+    LIST_PREPOSITION_START_DATE = ['on', 'on the', 'on']
+    LIST_RANGE = ['','','two','three','four','five','six','seven','eight','nine']
+    LIST_ORDINALS = ['',
+                     'st','nd','rd','th','th','th','th','th','th','th',
+                     'th','th','th','th','th','th','th','th','th','th',
+                     'st','nd','rd','th','th','th','th','th','th','th',
+                     'st']
+
     def __init__(self, context):
         self.context = context
 
@@ -100,6 +114,49 @@ class RecurrenceSupport(object):
             rule._until = until
 
         return [x.date().toordinal() for x in rule][1:]
+
+    def _buildRecurrenceString(self, iFrequency, iInterval, dateStart, 
+                               iWeek=-1):
+        """ PRE: iFrequency is an index where 0 is year, 1 is month, 2 is week, 
+        and 3 is day, iInterval is any non-zero natural number, and dateStart 
+        is a DateTime object indicating the begin date of the recurring event. 
+        iWeek is the zero-based index of the week in a monthly recurrence like
+        '2nd Tuesday'; do not pass iWeek if describing a monthly recurrence 
+        like '11th day'.
+        POST: Returns a string describing the recurring event using plain 
+        English.
+        """
+        cls = RecurrenceSupport
+        iDay = dateStart.day()
+        strDayOrd = "%d%s" % (iDay, cls.LIST_ORDINALS[iDay])
+        strWeekday = dateStart.strftime('%A')
+        listParts = []
+        listParts.append(cls.LIST_PREFIX[iFrequency])         # Every
+        if iInterval > 1:
+            if iInterval < 10:
+                listParts.append(cls.LIST_RANGE[iInterval])   # three
+            else:
+                listParts.append('%d' % iInterval)
+        strTmp = cls.LIST_INTERVAL_TYPES[iFrequency]
+        if iInterval > 1:
+            strTmp += 's'                                     # weeks
+        listParts.append(strTmp)
+        try:
+            listParts.append(cls.LIST_PREPOSITION_START_DATE[iFrequency])
+        except IndexError:
+            pass
+        if iFrequency == cls.IDX_YEAR:
+            listParts.append(dateStart.strftime('%B %%s') % strDayOrd)
+        elif iFrequency == cls.IDX_WEEK:
+            listParts.append(strWeekday)
+        elif iFrequency == cls.IDX_MONTH:
+            if iWeek == -1:
+                strTmp = "%s day" % strDayOrd
+            else:
+                strWeek = "%d%s" % (iWeek, cls.LIST_ORDINALS[iWeek])
+                strTmp = "%s %s" % (strWeek, strWeekday)
+            listParts.append(strTmp)
+        return ' '.join(listParts)
 
 
 class EventRecurrenceConfig(object):
