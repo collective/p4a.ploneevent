@@ -230,7 +230,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
             'Every 10 months on the 2nd Tuesday',
             'Every 11 months on the 2nd Tuesday',
         ]
-        self.helperTestLingo(1, 6, 9, STR_MONTHLY_TESTS_2ND_TUESDAY, 1)
+        self.helperTestLingo(1, 6, 9, STR_MONTHLY_TESTS_2ND_TUESDAY, 2)
         
         STR_MONTHLY_TESTS_11TH_DAY = ['',
             'Every month on the 11th day',

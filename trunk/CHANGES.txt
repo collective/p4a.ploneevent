@@ -4,6 +4,11 @@
 p4a.ploneevent Changes
 ======================
 
+(2009-07-11)
+============
+* Implemented Lingo functionality for daily, weekly, monthly, and yearly recurrences (but not wired up to anything yet).
+  [dlh]
+
 p4a.ploneevent 0.6 (2009-07-02)
 ===============================
 
