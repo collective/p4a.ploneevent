@@ -59,8 +59,8 @@ class RecurrenceExtension(object):
             name='repeatday',
             schemata='recurrence',
             vocabulary=[
-                (u'dayofmonth', u'day of the month'),
-                (u'dayofweek', u'day of the week'),
+                (u'dayofmonth', u'Day of the month'),
+                (u'dayofweek', u'Day of the week'),
             ],
             default='dayofmonth',
             widget=atapi.SelectionWidget(
@@ -163,7 +163,7 @@ class RecurrenceExtension(object):
             name='count',
             schemata='recurrence',
             widget=atapi.IntegerWidget(
-                label=u'Count',
+                label=u'Repeats For',
                 description=u'Event repeats this number of times.',
             ),
         ),
