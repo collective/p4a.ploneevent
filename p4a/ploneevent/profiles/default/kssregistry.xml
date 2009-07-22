@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<object name="portal_kss" meta_type="KSS Registry" autogroup="False">
+    
+    <kineticstylesheet 
+        id="++resource++p4a.event.ui.kss" cacheable="True" compression="safe" 
+        cookable="True" enabled="on" expression=""
+        />
+    
+</object>

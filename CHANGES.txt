@@ -7,6 +7,11 @@ p4a.ploneevent Changes
 p4a.ploneevent 0.7 - Unreleased
 ===============================
 
+* Renamed ui.kss to p4a.event.ui and registered same named browser resource.
+  ++resource++p4a.event.ui.kss seems not be a better choice than 
+  ++resource++ui.kss for such a specific edit form kss file and/or resource 
+  name. I've added the missing kss registry file to generic setup.  [saily]
+
 * Added german translations which are identical to google calendars'.
   [saily]
   
