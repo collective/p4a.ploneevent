@@ -23,7 +23,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.addProduct('CMFonFive')
         zcml.load_config('configure.zcml', p4a.common)
         zcml.load_config('configure.zcml', p4a.ploneevent)
-        zcml.load_config('configure.zcml', p4a.subtyper)
+        #zcml.load_config('configure.zcml', p4a.subtyper)
 
     def testRecurranceBasic(self):
         # Basic recurrence, daily for one year:
@@ -134,7 +134,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         # Edit the recurrence info:
         form.getControl(name='frequency').value = ['1']
         form.getControl(name='interval').value = '6'
-        form.getControl(name='form_submit').click()
+        form.getControl(name='form.button.save').click()
         
         # Make sure it's properly indexed:
         cat = self.portal.portal_catalog

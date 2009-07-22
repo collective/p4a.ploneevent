@@ -7,6 +7,17 @@ p4a.ploneevent Changes
 p4a.ploneevent 0.7 - Unreleased
 ===============================
 
+* Added missing metadata.xml file and updated setup.py to read out version 
+  from metadata.xml file.  [saily]
+
+* Removed obsolete code and fixed the same translation bug previously reported
+  on vs.event.  [saily]
+
+* Added complete translateable kss response.  [saily]
+
+* Added complete translateable view.  p4a.ploneevent specific msgid's can now
+  be translated, others are already translated in plone i18n domain.  [saily]
+
 * Renamed ui.kss to p4a.event.ui and registered same named browser resource.
   ++resource++p4a.event.ui.kss seems not be a better choice than 
   ++resource++ui.kss for such a specific edit form kss file and/or resource 

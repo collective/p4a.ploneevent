@@ -107,13 +107,15 @@
                             <!-- <span tal:replace="python:test(ampm, here.end().AMPMMinutes(), here.end().TimeMinutes())">End Time</span> -->
                             
                         </tal:sameday>
-                        <tal:block condition="view/isRecurring">
+                        <tal:block condition="view/isRecurring" i18n:domain="Plone4Artists">
                           <tal:block content="view/rrule_freq"/>
                           <tal:block condition="python:view.rrule_interval() > 1" i18n:translate="">
-                            for <tal:block content="view/rrule_interval"/> times
+                            for <tal:block i18n:name="interval"
+                                           content="view/rrule_interval"/> times
                           </tal:block>
                           <tal:block condition="view/rrule_end" i18n:translate="">
-                            until <tal:block content="view/rrule_end"/>
+                            until <tal:block i18n:name="end"
+                                             content="view/rrule_end"/>
                           </tal:block>
                         </tal:block>
                     </td>

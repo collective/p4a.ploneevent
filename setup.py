@@ -1,20 +1,25 @@
+# -*- coding: utf-8 -*-
+import os
 from setuptools import setup, find_packages
-import sys, os
+from xml.dom.minidom import parse
 
-version = '0.7'
+def readversion():
+    mdfile = os.path.join(os.path.dirname(__file__), 'p4a', 'ploneevent', 
+                          'profiles', 'default', 'metadata.xml')
+    metadata = parse(mdfile)
+    assert metadata.documentElement.tagName == "metadata"
+    return metadata.getElementsByTagName("version")[0].childNodes[0].data
 
-f = open('README.txt')
-readme = f.read()
-f.close()
-
-f = open('CHANGES.txt')
-changes = f.read()
-f.close()
+def read(*pathnames):
+    return open(os.path.join(os.path.dirname(__file__), *pathnames)).read()
 
 setup(name='p4a.ploneevent',
-      version=version,
+      version=readversion().strip(),
       description="Plone4Artists event extensions for Plone",
-      long_description=readme + '\n\n' + changes,
+      long_description='\n\n'.join([
+        read('README.txt'),
+        read('CHANGES.txt'),
+      ]),
       classifiers=[
           'Framework :: Zope2',
           'Framework :: Zope3',

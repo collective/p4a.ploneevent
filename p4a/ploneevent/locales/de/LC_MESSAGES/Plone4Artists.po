@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: p4a.ploneevent\n"
-"POT-Creation-Date: 2009-07-22 10:54+0000\n"
+"POT-Creation-Date: 2009-07-22 13:55+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Daniel Widerin <daniel.widerin@kombinat.at>\n"
 "Language-Team: \n"
@@ -20,11 +20,19 @@ msgstr ""
 msgid "Count"
 msgstr "Anzahl der Wiederholungen"
 
-#: ./recurrence/schemaextender.py:39
+#: ./recurrence/browser/event_view.py:14
 msgid "Daily"
-msgstr "Täglich"
+msgstr "täglich"
 
-#: ./recurrence/schemaextender.py:35
+#: ./recurrence/browser/event_view.py:14
+msgid "Day"
+msgstr "Tag"
+
+#: ./recurrence/browser/event_view.py:14
+msgid "Days"
+msgstr "Tage"
+
+#: ./recurrence/browser/event_view.py:10
 msgid "Does not repeat"
 msgstr "Keine Wiederholung"
 
@@ -36,9 +44,17 @@ msgstr "Termin wird wiederholt bis zu diesem Datum"
 msgid "Maxinum number of times the event repeats "
 msgstr "Maximale Anzahl der Wiederholungen"
 
-#: ./recurrence/schemaextender.py:37
+#: ./recurrence/browser/event_view.py:12
+msgid "Month"
+msgstr "Monat"
+
+#: ./recurrence/browser/event_view.py:12
 msgid "Monthly"
-msgstr "Monatich"
+msgstr "monatlich"
+
+#: ./recurrence/browser/event_view.py:12
+msgid "Months"
+msgstr "Monate"
 
 #: ./recurrence/schemaextender.py:60
 msgid "Range"
@@ -46,21 +62,59 @@ msgstr "Bereich"
 
 #: ./recurrence/schemaextender.py:43
 msgid "Repeats"
-msgstr "Wiederholungen"
+msgstr "Wiederholung"
+
+#: ./recurrence/browser/event_view.py:92
+msgid "Repeats ${frequency}."
+msgstr "Wiederholt sich ${frequency}."
 
 #: ./recurrence/schemaextender.py:52
 msgid "Repeats every"
 msgstr "Wiederholung alle"
 
+#: ./recurrence/browser/event_view.py:86
+msgid "Repeats every ${interval} ${frequency}."
+msgstr "Wiederholung alle ${interval} ${frequency}."
+
 #: ./recurrence/schemaextender.py:53
 msgid "Repeats every day/week/month/year."
-msgstr "Wiederholungen alle Tage/Wochen/Monate/Jahre."
+msgstr "Wiederholung alle Tage/Wochen/Monate/Jahre."
 
-#: ./recurrence/schemaextender.py:38
+#: ./recurrence/browser/event_view.py:13
+msgid "Week"
+msgstr "Woche"
+
+#: ./recurrence/browser/event_view.py:13
 msgid "Weekly"
-msgstr "Wöchentlich"
+msgstr "wöchentlich"
 
-#: ./recurrence/schemaextender.py:36
+#: ./recurrence/browser/event_view.py:13
+msgid "Weeks"
+msgstr "Wochen"
+
+#: ./recurrence/browser/event_view.py:11
+msgid "Year"
+msgstr "Jahr"
+
+#: ./recurrence/browser/event_view.py:11
 msgid "Yearly"
-msgstr "Jährlich"
+msgstr "jährlich"
+
+#: ./recurrence/browser/event_view.py:11
+msgid "Years"
+msgstr "Jahre"
+
+#: ./recurrence/browser/event_view.py:79
+msgid "day/week/month/year"
+msgstr "Tage/Wochen/Monate/Jahre"
+
+#. Default: "for ${interval} times"
+#: ./recurrence/browser/event_view.pt:113
+msgid "for ${interval} times"
+msgstr "Maximal ${interval} mal"
+
+#. Default: "until ${end}"
+#: ./recurrence/browser/event_view.pt:117
+msgid "until ${end}"
+msgstr "bis ${end}"
 

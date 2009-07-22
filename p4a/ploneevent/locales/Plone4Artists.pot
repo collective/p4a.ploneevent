@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2009-07-22 10:54+0000\n"
+"POT-Creation-Date: 2009-07-22 13:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,19 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
-#: ./recurrence/schemaextender.py:39
+#: ./recurrence/browser/event_view.py:14
 msgid "Daily"
 msgstr ""
 
-#: ./recurrence/schemaextender.py:35
+#: ./recurrence/browser/event_view.py:14
+msgid "Day"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:14
+msgid "Days"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:10
 msgid "Does not repeat"
 msgstr ""
 
@@ -37,8 +45,16 @@ msgstr ""
 msgid "Maxinum number of times the event repeats "
 msgstr ""
 
-#: ./recurrence/schemaextender.py:37
+#: ./recurrence/browser/event_view.py:12
+msgid "Month"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:12
 msgid "Monthly"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:12
+msgid "Months"
 msgstr ""
 
 #: ./recurrence/schemaextender.py:60
@@ -49,19 +65,57 @@ msgstr ""
 msgid "Repeats"
 msgstr ""
 
+#: ./recurrence/browser/event_view.py:92
+msgid "Repeats ${frequency}."
+msgstr ""
+
 #: ./recurrence/schemaextender.py:52
 msgid "Repeats every"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:86
+msgid "Repeats every ${interval} ${frequency}."
 msgstr ""
 
 #: ./recurrence/schemaextender.py:53
 msgid "Repeats every day/week/month/year."
 msgstr ""
 
-#: ./recurrence/schemaextender.py:38
+#: ./recurrence/browser/event_view.py:13
+msgid "Week"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:13
 msgid "Weekly"
 msgstr ""
 
-#: ./recurrence/schemaextender.py:36
+#: ./recurrence/browser/event_view.py:13
+msgid "Weeks"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:11
+msgid "Year"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:11
 msgid "Yearly"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:11
+msgid "Years"
+msgstr ""
+
+#: ./recurrence/browser/event_view.py:79
+msgid "day/week/month/year"
+msgstr ""
+
+#. Default: "for ${interval} times"
+#: ./recurrence/browser/event_view.pt:113
+msgid "for ${interval} times"
+msgstr ""
+
+#. Default: "until ${end}"
+#: ./recurrence/browser/event_view.pt:117
+msgid "until ${end}"
 msgstr ""
 
