@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.6'
+version = '0.7'
 
 f = open('README.txt')
 readme = f.read()
@@ -36,6 +36,7 @@ setup(name='p4a.ploneevent',
           'setuptools',
           'python-dateutil',
           'archetypes.schemaextender',
+          'p4a.common',
           'dateable.kalends >= 0.3',
       ],
       entry_points="""

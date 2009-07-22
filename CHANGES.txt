@@ -4,6 +4,22 @@
 p4a.ploneevent Changes
 ======================
 
+p4a.ploneevent 0.7 - Unreleased
+===============================
+
+* Added german translations which are identical to google calendars'.
+  [saily]
+  
+* Updated indent level to 4 spaces in recurrence/schemaextender.py.
+  [saily]
+
+* Added locales directory and used i18ndude to grep all message ids. Updated 
+  schemaextender.py to use zope MessageFactory instead of untranslateable 
+  strings.  [saily]
+
+* Added missing dependency to p4a.common, which is required by the recurring 
+  view (from p4a.common.dtutils import dt2DT).  [saily]
+  
 p4a.ploneevent 0.6 (2009-05-17)
 ===============================
 
