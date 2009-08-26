@@ -107,13 +107,28 @@
                             <!-- <span tal:replace="python:test(ampm, here.end().AMPMMinutes(), here.end().TimeMinutes())">End Time</span> -->
                             
                         </tal:sameday>
-                        <tal:block condition="view/isRecurring">
-                          <tal:block content="view/rrule_freq"/>
-                          <tal:block condition="python:view.rrule_interval() > 1" i18n:translate="">
-                            for <tal:block content="view/rrule_interval"/> times
+                        <tal:block condition="view/isRecurring"
+                          i18n:domain="p4a.ploneevent" >
+                          <tal:block condition="python:view.rrule_interval() == 1"
+                            i18n:translate="">
+                            Every <tal:block i18n:name="frequency" i18n:translate=""
+                                    content="view/rrule_freq" />
                           </tal:block>
-                          <tal:block condition="view/rrule_end" i18n:translate="">
-                            until <tal:block content="view/rrule_end"/>
+                          <tal:block condition="python:view.rrule_interval() != 1"
+                            i18n:translate="">
+                            Every <tal:block i18n:name="interval" content="view/rrule_interval" />
+                                  <tal:block i18n:name="frequency" i18n:translate=""
+                                    content="view/rrule_freq" />
+                          </tal:block>
+                          <tal:block condition="python:view.rrule_count() > 1" 
+                            i18n:translate="">
+                            for <tal:block content="view/rrule_count" 
+                                 i18n:name="count" /> times
+                          </tal:block>
+                          <tal:block condition="view/rrule_end" 
+                            i18n:translate="">
+                            until <tal:block content="view/rrule_end"
+                                   i18n:name="until" />
                           </tal:block>
                         </tal:block>
                     </td>

@@ -4,6 +4,7 @@ from dateable.kalends import IRecurringEvent, IRecurrence
 from p4a.common.dtutils import dt2DT
 from kss.core import KSSView, kssaction
 from datetime import datetime
+from p4a.ploneevent import PloneEventMessageFactory as _
 
 FREQ = {0: 'year',
         1: 'month',
@@ -15,11 +16,11 @@ FREQ = {0: 'year',
     }
     
     
-CALVOCAB = {   0: (u'Year', u'Years'),
-               1: (u'Month', u'Months'),
-               2: (u'Week', u'Weeks'),
-               3: (u'Day', u'Days'),
-                }
+CALVOCAB = {0: (_(u'year'), _(u'years')),
+            1: (_(u'month'), _(u'months')),
+            2: (_(u'week'), _(u'weeks')),
+            3: (_(u'day'), _(u'days')),
+            }
 
 class EventView(BrowserView):
     
@@ -68,21 +69,24 @@ class EventView(BrowserView):
 
     def rrule_freq(self):
         rrule = self.rrule()
-        if rrule is None:
-            return ''
+        freq = CALVOCAB[rrule._freq]
         if rrule._interval == 1:
-            text = u"Every ${frequency}"
+            return freq[0]
         else:
-            text = u"Every ${interval} ${frequency}s"
-
-        return translate(text, mapping={'interval':rrule._interval, 
-                                        'frequency':FREQ[rrule._freq]})
+            return freq[1]
+                                        
     def rrule_interval(self):
         rrule = self.rrule()
         if rrule is not None:
             return rrule._interval
         return 0
         
+    def rrule_count(self):
+        rrule = self.rrule()
+        if rrule is not None:
+            return rrule._count
+        return 0
+
     def rrule_end(self):
         rrule = self.rrule()
         if rrule is not None and rrule._until:

@@ -8,7 +8,7 @@ from Products.ATContentTypes.content.event import ATEvent
 from dateable.kalends import IRecurringEvent
 from p4a.ploneevent.interfaces import IEventSchemaExtension
 from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
-
+from p4a.ploneevent import PloneEventMessageFactory as _
 
 class TextField(ExtensionField, atapi.TextField):
      pass
@@ -28,33 +28,34 @@ class RecurrenceExtension(object):
 
      fields = [
           IntegerField('frequency',
-               schemata="recurrence",
+               schemata='recurrence',
                required=True,
-               vocabulary={-1: u'Does not repeat',
-                           YEARLY: u'Yearly',
-                           MONTHLY: u'Monthly',
-                           WEEKLY: u'Weekly',
-                           DAILY: u'Daily',
+               vocabulary={-1: _(u'Does not repeat'),
+                           YEARLY: _(u'Yearly'),
+                           MONTHLY: _(u'Monthly'),
+                           WEEKLY: _(u'Weekly'),
+                           DAILY: _(u'Daily'),
                            }.items(),
                default=-1,
-               widget=atapi.SelectionWidget(label=u'Repeats')
+               widget=atapi.SelectionWidget(label=_(u'Repeats'))
                ),
           IntegerField('interval',
-               schemata="recurrence",
+               schemata='recurrence',
                required=True,
                default=1,
-               widget=atapi.IntegerWidget(label=u'Repeats every',
-                    description=u"Repeats every day/week/month/year.")
+               widget=atapi.IntegerWidget(label=_(u'Repeats every'),
+                    description=_(u'Repeats every day/week/month/year.'))
                ),
           DateTimeField('until',
-               schemata="recurrence",
-               widget=atapi.CalendarWidget(label=u'Range',
-                    description=u"Event repeats until this date.",
+               schemata='recurrence',
+               widget=atapi.CalendarWidget(label=_(u'Range'),
+                    description=_(u'Event repeats until this date.'),
                     show_hm=True)
                ),
           IntegerField('count',
-                schemata="recurrence",
-                widget=atapi.IntegerWidget(label=u'Count',description=u'Maxinum number of times the event repeats ',)
+                schemata='recurrence',
+                widget=atapi.IntegerWidget(label=_(u'Count'),
+                    description=_(u'Maximum number of times the event repeats'),)
                 ),
           ]
 
