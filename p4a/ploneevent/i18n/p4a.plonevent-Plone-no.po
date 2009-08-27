@@ -15,4 +15,4 @@ msgstr ""
 "Domain: plone\n"
 
 msgid "label_schema_recurrence"
-msgstr "Gjentagning"
+msgstr "Gjentakelse"
