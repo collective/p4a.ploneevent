@@ -60,7 +60,7 @@ msgstr "Gjentas"
 
 #: ./recurrence/schemaextender.py:46
 msgid "Repeats every"
-msgstr ""
+msgstr "Gjentas hver"
 
 #: ./recurrence/schemaextender.py:47
 msgid "Repeats every day/week/month/year."
