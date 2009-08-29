@@ -4,6 +4,11 @@
 p4a.ploneevent Changes
 ======================
 
+p4a.ploneevent 0.7.1 (2009-08-29)
+=================================
+
+* Fixed a bug in the norwegian translation. (regebro)
+
 p4a.ploneevent 0.7 (2009-08-26)
 ===============================
 
