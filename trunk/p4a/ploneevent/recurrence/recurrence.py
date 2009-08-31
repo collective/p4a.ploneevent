@@ -115,7 +115,7 @@ class RecurrenceSupport(object):
         English.
         """
         cls = RecurrenceSupport
-        iDay = dateStart.day()
+        iDay = dateStart.day
         strDayOrd = "%d%s" % (iDay, cls.LIST_ORDINALS[iDay])
         strWeekday = dateStart.strftime('%A')
         listParts = []

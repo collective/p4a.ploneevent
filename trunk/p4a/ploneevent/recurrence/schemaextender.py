@@ -69,8 +69,7 @@ class RecurrenceExtension(object):
             default='dayofmonth',
             widget=atapi.SelectionWidget(
                 label=u'Repeats by',
-                description=u'Repeats on a specific day of the '
-                            u'month or in a day of the week.',
+                description=u'Repeat by day of the month or weekday',
                 format='radio',
             ),
         ),

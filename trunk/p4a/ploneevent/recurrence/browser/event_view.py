@@ -93,18 +93,20 @@ class EventView(BrowserView):
         rrule = self.rrule()
         if rrule is None:
             return ''
-        if rrule._interval == 1:
-            text = u"Every ${frequency}"
-        else:
-            text = u"Every ${interval} ${frequency}s"
 
-        return translate(text, mapping={'interval':rrule._interval,
-                                        'frequency':FREQ[rrule._freq]})
+        # TODO: Re-integrate new code with i18n
+        lib = RecurrenceSupport(self.context)
+        startDate = DT2dt(self.context.startDate)
+        iWeek = lib.getWeekInMonthFromDate(startDate)
+        text = lib._buildRecurrenceString(rrule._freq, rrule._interval, 
+                                          startDate, iWeek)
+        return text
+        
     def rrule_count(self):
-        rrule = self.rrule()
-        if rrule is not None:
-            return rrule._count
-        return 0
+        if self.context.ends==False and self.context.count > 1:
+            return self.context.count
+        else:
+            return None
 
     def rrule_end(self):
         rrule = self.rrule()
@@ -172,16 +174,21 @@ class RecurrenceView(PloneKSSView):
         core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
 
         text = self.getRecurrenceString(core.context, startDate, frequency, 
-                                        interval)
+                                        interval, repeatday)
         core.replaceInnerHTML('#archetypes-fieldname-lingo', text)
     
-    def getRecurrenceString(self, event, strStartDate, frequency, interval):
+    def getRecurrenceString(self, event, strStartDate, frequency, interval,
+                            repeatday):
         if frequency == -1:
             return ''
         iInterval = interval
         if interval == '' or interval is None:
             iInterval = 1
         lib = RecurrenceSupport(event)
-        dateStart = DateTime(strStartDate)
-        text = lib._buildRecurrenceString(frequency, iInterval, dateStart)
+        dateStart =  DT2dt(DateTime(strStartDate))
+        if repeatday == 'dayofweek':
+            iWeek = lib.getWeekInMonthFromDate(dateStart)
+        else:
+            iWeek=-1
+        text = lib._buildRecurrenceString(frequency, iInterval, dateStart, iWeek)
         return text
