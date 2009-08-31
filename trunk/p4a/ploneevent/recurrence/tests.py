@@ -36,7 +36,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         zcml.load_config('configure.zcml', p4a.ploneevent)
         zcml.load_config('configure.zcml', p4a.subtyper)
 
-    def testRecurranceBasic(self):
+    def testRecurrenceBasic(self):
         # Basic recurrence, daily for one year
         self.folder.invokeFactory('Event', 'event')
         event = getattr(self.folder, 'event')
@@ -46,7 +46,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         # Set the recurrence info
         event.frequency = rrule.DAILY
-        event.ends = 'until'
+        event.ends = True
         event.until = DateTime('2002/02/01')
         event.interval = 1
 
@@ -65,12 +65,12 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnlessEqual(len(dates), 121)
 
         # Have a max count
-        event.ends = 'count'
+        event.ends = True
         event.count = 25
         dates = recurrence.getOccurrenceDays()
         self.failUnlessEqual(len(dates), 24)
 
-    def testRecurranceMidnight(self):
+    def testRecurrenceMidnight(self):
         # Check that the recurrence works correctly with events starting
         # at midnight
         self.folder.invokeFactory('Event', 'event')
@@ -81,7 +81,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         # Set the recurrence info
         event.frequency = rrule.DAILY
-        event.ends = 'until'
+        event.ends = True
         event.until = DateTime('2001/02/04')
         event.interval = 1
 
@@ -92,7 +92,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnlessEqual(dates[0], datetime.date(2001, 2, 2).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2001, 2, 4).toordinal())
 
-    def testRecurranceWeek(self):
+    def testRecurrenceWeek(self):
         self.folder.invokeFactory('Event', 'event')
         event = getattr(self.folder, 'event')
         event.update(startDate=DateTime('2007/02/01 00:00'),
@@ -101,7 +101,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         # Set the recurrence info
         event.frequency = rrule.WEEKLY
-        event.ends = 'until'
+        event.ends = True
         event.until = DateTime('2008/02/04')
         event.interval = 1
 
@@ -114,39 +114,6 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnlessEqual(dates[2], datetime.date(2007, 2, 22).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2008, 1, 31).toordinal())
 
-    def testRecurranceMonth(self):
-        self.folder.invokeFactory('Event', 'event')
-        event = getattr(self.folder, 'event')
-        event.update(startDate=DateTime('2009/06/08 01:00'),
-                     endDate=DateTime('2009/06/08 02:00'))
-        interface.alsoProvides(event, kalends.IRecurringEvent)
-
-        # Set the recurrence info
-        event.frequency = rrule.MONTHLY
-        event.ends = 'count'
-        event.count = 12
-        event.interval = 2
-        event.repeatday = 'dayofweek'
-        event.ordinalweek = ['2', '-1']
-        event.byweek = ['0', '1', '6']
-
-        # Test
-        recurrence = kalends.IRecurrence(event)
-        dates = recurrence.getOccurrenceDays()
-        self.failUnlessEqual(len(dates), 11)
-        #self.failUnlessEqual(dates[0], datetime.date(2009, 6, 8).toordinal())
-        self.failUnlessEqual(dates[0], datetime.date(2009, 6, 9).toordinal())
-        self.failUnlessEqual(dates[1], datetime.date(2009, 6, 14).toordinal())
-        self.failUnlessEqual(dates[2], datetime.date(2009, 6, 28).toordinal())
-        self.failUnlessEqual(dates[3], datetime.date(2009, 6, 29).toordinal())
-        self.failUnlessEqual(dates[4], datetime.date(2009, 6, 30).toordinal())
-        self.failUnlessEqual(dates[5], datetime.date(2009, 8, 9).toordinal())
-        self.failUnlessEqual(dates[6], datetime.date(2009, 8, 10).toordinal())
-        self.failUnlessEqual(dates[7], datetime.date(2009, 8, 11).toordinal())
-        self.failUnlessEqual(dates[8], datetime.date(2009, 8, 25).toordinal())
-        self.failUnlessEqual(dates[9], datetime.date(2009, 8, 30).toordinal())
-        self.failUnlessEqual(dates[10], datetime.date(2009, 8, 31).toordinal())
-
     def testViewRecurrence(self):
         self.folder.invokeFactory('Event', 'event')
         event = getattr(self.folder, 'event')
@@ -156,7 +123,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         # Set the recurrence info
         event.frequency = rrule.WEEKLY
-        event.ends = 'count'
+        event.ends = True
         event.count = 3
         event.interval = 2
 

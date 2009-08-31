@@ -21,13 +21,12 @@ FREQ = {
     6: 'second',
 }
 
-CALVOCAB = {
-    0: ('year', 'years'),
-    1: ('month', 'months'),
-    2: ('week', 'weeks'),
-    3: ('day', 'days'),
+CALVOCAB = {   
+    0: (u'Year', u'Years'),
+    1: (u'Month', u'Months'),
+    2: (u'Week', u'Weeks'),
+    3: (u'Day', u'Days'),
 }
-
 
 class EventView(BrowserView):
 
@@ -128,8 +127,8 @@ class RecurrenceView(PloneKSSView):
         core.setStyle('#archetypes-fieldname-repeatday', name='display', value='none')
         core.setStyle('#archetypes-fieldname-until', name='display', value='none')
         core.setStyle('#archetypes-fieldname-count', name='display', value='none')        
-        core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
-        core.setStyle('#archetypes-fieldname-ends', name='display', value=display)
+        core.setStyle('#archetypes-fieldname-interval', name='display', value='none')
+        core.setStyle('#archetypes-fieldname-ends', name='display', value='none')
 
         # Repeat Day
         if frequency in (rrule.YEARLY, rrule.MONTHLY):
