@@ -45,16 +45,17 @@ class EventSchemaExtender(object):
     def getOrder(self, original):
         res = OrderedDict()
 
-        # Make "default" come first:
-        res['default'] = original['default']
-        del original['default']
-
         # Go through any extensions:
         schematas = []
         for name, extension in component.getAdapters((self, self.context),
                                                      IEventSchemaExtension):
-             schematas.extend(extension.getOrders())
+             schematas.extend(extension.getOrders(original))
         schematas.sort()
+          
+        # Make "default" come first:
+        res['default'] = original['default']
+        del original['default']
+
         for order, schemata in schematas:
             try:
                 # original['default'] will raise KeyError now

@@ -6,5 +6,5 @@ class IEventSchemaExtension(interface.Interface):
     def getFields():
         """Returns all the fields as a list"""
 
-    def getOrders():
+    def getOrders(original):
         """Returns a list of tuples of (order, schemataname)"""

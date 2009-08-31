@@ -165,5 +165,12 @@ class RecurrenceExtension(object):
     def getFields(self):
         return self.fields
 
-    def getOrders(self):
-        return [(10, 'recurrence')]
+    def getOrders(self, original):
+        default = original['default']
+        idx = default.index('endDate') + 1
+        newfields = []
+        for field in self.fields:
+            default.remove(field.__name__)
+            default.insert(idx,field.__name__)
+            idx=idx+1
+        return [(0,'default')]
