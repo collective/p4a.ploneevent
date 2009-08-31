@@ -53,18 +53,6 @@ class RecurrenceSupport(object):
             #cache=False
         )
 
-        # byweekday
-        days = [int(day) for day in self.context.byweek]
-        if not days:
-            days = [dtstart.weekday()]
-        if self.context.frequency == rrule.WEEKLY:
-            params['byweekday'] = days
-        elif self.context.frequency in (rrule.MONTHLY, rrule.YEARLY) and \
-           self.context.repeatday == 'dayofweek':
-            if self.context.ordinalweek:
-                weekrepeat = [int(week) for week in self.context.ordinalweek]
-                days = [rrule.weekdays[d](w) for w in weekrepeat for d in days]
-            params['byweekday'] = days
 
         # bymonthday
         if self.context.frequency in (rrule.MONTHLY, rrule.YEARLY) and \

@@ -30,7 +30,7 @@ div#archetypes-fieldname-repeatday input:click {
   updateRecurUI-ends: currentFormVar(ends);
 }
 
-div#archetypes-fieldname-ends input:click{
+#ends:change {
   action-server: updateRecurUI;
   updateRecurUI-frequency: currentFormVar(frequency);
   updateRecurUI-interval: currentFormVar(interval);

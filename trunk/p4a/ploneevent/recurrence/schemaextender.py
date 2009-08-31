@@ -136,6 +136,7 @@ class RecurrenceExtension(object):
             ],
             widget=atapi.SelectionWidget(
                 label=u'Range of recurrence',
+                format='select',
             ),
         ),
 
