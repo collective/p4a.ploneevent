@@ -56,8 +56,13 @@ class EventSchemaExtender(object):
              schematas.extend(extension.getOrders())
         schematas.sort()
         for order, schemata in schematas:
-            res[schemata] = original[schemata]
-            del original[schemata]
+            try:
+                # original['default'] will raise KeyError now
+                # XXX better way to deal with this?
+                res[schemata] = original[schemata]
+                del original[schemata]
+            except KeyError:
+                continue    
 
         # And tag on anything left over:
         res.update(original)
