@@ -128,18 +128,13 @@ class RecurrenceExtension(object):
             ),
         ),
 
-        StringField(
+        BooleanField(
             name='ends',
             schemata='default',
-            default='ever',
-            vocabulary=[
-                (u'ever', u'No end date'),
-                (u'count', u'End after a number of occurrences'),
-                (u'until', u'End on a specific date'),
-            ],
-            widget=atapi.SelectionWidget(
-                label=u'Range of recurrence',
-                format='select',
+            default='on',
+            widget=atapi.BooleanWidget(
+                label=u'Repeat Forever',
+                description='Event repeats indefinitely.',
             ),
         ),
 

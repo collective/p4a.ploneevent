@@ -71,11 +71,11 @@ class RecurrenceSupport(object):
             params['interval'] = self.context.interval
 
         # count
-        if self.context.ends == 'count' and self.context.count:
+        if not self.context.ends and self.context.count:
             params['count'] = self.context.count
 
         # until
-        if self.context.ends == 'until' and self.context.until:
+        if not self.context.ends and self.context.until:
             until = DT2dt(self.context.until)
             until = until.replace(hour=23, minute=59, second=59, microsecond=999999)
             params['until'] = until
