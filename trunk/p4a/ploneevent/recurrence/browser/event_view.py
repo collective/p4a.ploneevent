@@ -171,15 +171,17 @@ class RecurrenceView(PloneKSSView):
         core.replaceInnerHTML('#interval_help', content)
         core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
 
-        text = self.getRecurrenceString(core.context, frequency, interval)
+        text = self.getRecurrenceString(core.context, startDate, frequency, 
+                                        interval)
         core.replaceInnerHTML('#archetypes-fieldname-lingo', text)
     
-    def getRecurrenceString(self, event, frequency, interval):
+    def getRecurrenceString(self, event, strStartDate, frequency, interval):
         if frequency == -1:
             return ''
         iInterval = interval
         if interval == '' or interval is None:
             iInterval = 1
         lib = RecurrenceSupport(event)
-        text = lib._buildRecurrenceString(frequency, iInterval, event.startDate)
+        dateStart = DateTime(strStartDate)
+        text = lib._buildRecurrenceString(frequency, iInterval, dateStart)
         return text
