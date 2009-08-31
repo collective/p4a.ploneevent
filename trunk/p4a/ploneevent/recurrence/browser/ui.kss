@@ -1,5 +1,6 @@
 a#fieldsetlegend-recurrence span:click {
   action-server: updateRecurUI;
+  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
   updateRecurUI-frequency: currentFormVar(frequency);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-repeat: currentFormVar(repeatday);
@@ -8,6 +9,7 @@ a#fieldsetlegend-recurrence span:click {
 
 select#frequency:change {
   action-server: updateRecurUI;
+  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
   updateRecurUI-frequency: currentFormVar(frequency);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-repeat: currentFormVar(repeatday);
@@ -16,6 +18,7 @@ select#frequency:change {
 
 input#interval:change {
   action-server: updateRecurUI;
+  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
   updateRecurUI-frequency: currentFormVar(frequency);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-repeat: currentFormVar(repeatday);
@@ -24,6 +27,7 @@ input#interval:change {
 
 div#archetypes-fieldname-repeatday input:click {
   action-server: updateRecurUI;
+  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
   updateRecurUI-frequency: currentFormVar(frequency);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-repeat: currentFormVar(repeatday);
@@ -32,6 +36,7 @@ div#archetypes-fieldname-repeatday input:click {
 
 #ends:change {
   action-server: updateRecurUI;
+  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
   updateRecurUI-frequency: currentFormVar(frequency);
   updateRecurUI-interval: currentFormVar(interval);
   updateRecurUI-repeat: currentFormVar(repeatday);
@@ -40,6 +45,7 @@ div#archetypes-fieldname-repeatday input:click {
 
 document:load {
   action-server: updateRecurUI;
+  updateRecurUI-startDate: formVar(startDate);
   updateRecurUI-frequency: formVar(edit_form,frequency);
   updateRecurUI-interval: formVar(edit_form,interval);
   updateRecurUI-repeat: formVar(edit_form,repeatday);

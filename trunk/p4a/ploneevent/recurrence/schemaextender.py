@@ -37,7 +37,11 @@ class RecurrenceExtension(object):
     interface.implements(IEventSchemaExtension)
 
     fields = [
-
+        StringField('lingo',
+            schemata='default',
+            widget=atapi.LabelWidget(label=u'')
+        ),
+        
         IntegerField(
             name='frequency',
             schemata='default',

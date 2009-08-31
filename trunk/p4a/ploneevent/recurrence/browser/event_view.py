@@ -9,6 +9,8 @@ from dateable.kalends import IRecurrence
 from dateable.kalends import IRecurringEvent
 from Products.Five.browser import BrowserView
 
+from p4a.ploneevent.recurrence.recurrence import RecurrenceSupport
+
 FREQ = {
     0: 'year',
     1: 'month',
@@ -114,7 +116,8 @@ class EventView(BrowserView):
 class RecurrenceView(PloneKSSView):
 
     @kssaction
-    def updateRecurUI(self, frequency=-1, interval=1, repeat='dayofmonth', ends=None):
+    def updateRecurUI(self, frequency=-1, interval=1, repeat='dayofmonth', 
+                      ends=None, startDate=None):
         interval = int(interval)
         frequency = int(frequency)
         core = self.getCommandSet('core')
@@ -167,3 +170,16 @@ class RecurrenceView(PloneKSSView):
         content = 'Repeats every %s %s.' % (interval, caltext)
         core.replaceInnerHTML('#interval_help', content)
         core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
+
+        text = self.getRecurrenceString(core.context, frequency, interval)
+        core.replaceInnerHTML('#archetypes-fieldname-lingo', text)
+    
+    def getRecurrenceString(self, event, frequency, interval):
+        if frequency == -1:
+            return ''
+        iInterval = interval
+        if interval == '' or interval is None:
+            iInterval = 1
+        lib = RecurrenceSupport(event)
+        text = lib._buildRecurrenceString(frequency, iInterval, event.startDate)
+        return text
