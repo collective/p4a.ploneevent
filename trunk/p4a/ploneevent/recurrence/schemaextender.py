@@ -40,7 +40,7 @@ class RecurrenceExtension(object):
 
         IntegerField(
             name='frequency',
-            schemata='recurrence',
+            schemata='default',
             required=True,
             vocabulary=[
                 (-1, u'Does not repeat'),
@@ -57,7 +57,7 @@ class RecurrenceExtension(object):
 
         StringField(
             name='repeatday',
-            schemata='recurrence',
+            schemata='default',
             vocabulary=[
                 (u'dayofmonth', u'Day of the month'),
                 (u'dayofweek', u'Day of the week'),
@@ -73,7 +73,7 @@ class RecurrenceExtension(object):
 
         LinesField(
             name='ordinalweek',
-            schemata='recurrence',
+            schemata='default',
             multiValued=True,
             vocabulary=[
                 (u'1', u'first'),
@@ -90,28 +90,8 @@ class RecurrenceExtension(object):
         ),
 
         LinesField(
-            name='byweek',
-            schemata='recurrence',
-            multiValued=True,
-            vocabulary=[
-                (u'0', u'Monday'),
-                (u'1', u'Tuesday'),
-                (u'2', u'Wednesday'),
-                (u'3', u'Thursday'),
-                (u'4', u'Friday'),
-                (u'5', u'Saturday'),
-                (u'6', u'Sunday'),
-            ],
-            widget=atapi.MultiSelectionWidget(
-                label=u'Week Day',
-                description=u'Repeat in the selected day(s) of the week.',
-                format='checkbox',
-            ),
-        ),
-
-        LinesField(
             name='bymonth',
-            schemata='recurrence',
+            schemata='default',
             multiValued=True,
             vocabulary=[
                 (u'1', u'January'),
@@ -136,7 +116,7 @@ class RecurrenceExtension(object):
 
         IntegerField(
             name='interval',
-            schemata='recurrence',
+            schemata='default',
             required=True,
             default=1,
             widget=atapi.IntegerWidget(
@@ -147,7 +127,7 @@ class RecurrenceExtension(object):
 
         StringField(
             name='ends',
-            schemata='recurrence',
+            schemata='default',
             default='ever',
             vocabulary=[
                 (u'ever', u'No end date'),
@@ -161,7 +141,7 @@ class RecurrenceExtension(object):
 
         IntegerField(
             name='count',
-            schemata='recurrence',
+            schemata='default',
             widget=atapi.IntegerWidget(
                 label=u'Repeats For',
                 description=u'Event repeats this number of times.',
@@ -170,7 +150,7 @@ class RecurrenceExtension(object):
 
         DateTimeField(
             name='until',
-            schemata='recurrence',
+            schemata='default',
             widget=atapi.CalendarWidget(
                 label=u'Repeats Until',
                 description=u'Event repeats until this date.',

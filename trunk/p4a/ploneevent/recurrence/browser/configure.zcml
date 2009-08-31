@@ -16,12 +16,12 @@
       file="ui.kss"
       />
 
-    <browser:page
-      for="plone.app.kss.interfaces.IPortalObject"
-      class=".event_view.RecurrenceView"
-      attribute="updateRecurUI"
-      name="updateRecurUI"
-      permission="zope2.View"
-      />
-
+	  <browser:page
+		  for="Products.ATContentTypes.content.event.ATEvent"
+	    class=".event_view.RecurrenceView"
+		  attribute="updateRecurUI"
+		  name="updateRecurUI"
+		  permission="zope2.View"
+		  />
+		     
 </configure>

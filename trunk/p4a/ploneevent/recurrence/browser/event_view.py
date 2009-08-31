@@ -1,6 +1,6 @@
 from DateTime import DateTime
-from kss.core import KSSView
 from kss.core import kssaction
+from plone.app.kss.plonekssview import PloneKSSView
 from zope.i18n import translate
 
 from dateutil import rrule
@@ -111,36 +111,24 @@ class EventView(BrowserView):
         return ''
 
 
-class RecurrenceView(KSSView):
+class RecurrenceView(PloneKSSView):
 
     @kssaction
-    def updateRecurUI(self, frequency=-1, interval=1, repeat='dayofmonth', ends='ever'):
+    def updateRecurUI(self, frequency=-1, interval=1, repeat='dayofmonth', ends=None):
         interval = int(interval)
         frequency = int(frequency)
         core = self.getCommandSet('core')
-
-        # Range of recurrence
-        if frequency == -1:
-            core.setStyle('#archetypes-fieldname-ends', name='display', value='none')
-            core.setStyle('#archetypes-fieldname-count', name='display', value='none')
-            core.setStyle('#archetypes-fieldname-until', name='display', value='none')
-        else:
-            core.setStyle('#archetypes-fieldname-ends', name='display', value='block')
-            if ends == 'count':
-                core.setStyle('#archetypes-fieldname-count', name='display', value='block')
-                core.setStyle('#archetypes-fieldname-until', name='display', value='none')
-            elif ends == 'until':
-                core.setStyle('#archetypes-fieldname-count', name='display', value='none')
-                core.setStyle('#archetypes-fieldname-until', name='display', value='block')
-            else:
-                core.setStyle('#archetypes-fieldname-count', name='display', value='none')
-                core.setStyle('#archetypes-fieldname-until', name='display', value='none')
+        
+        # Hide all widgets, initially
+        core.setStyle('#archetypes-fieldname-repeatday', name='display', value='none')
+        core.setStyle('#archetypes-fieldname-until', name='display', value='none')
+        core.setStyle('#archetypes-fieldname-count', name='display', value='none')        
+        core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
+        core.setStyle('#archetypes-fieldname-ends', name='display', value=display)
 
         # Repeat Day
         if frequency in (rrule.YEARLY, rrule.MONTHLY):
             core.setStyle('#archetypes-fieldname-repeatday', name='display', value='block')
-        else:
-            core.setStyle('#archetypes-fieldname-repeatday', name='display', value='none')
 
         # Ordinal
         if frequency in (rrule.YEARLY, rrule.MONTHLY) and repeat == 'dayofweek':
@@ -148,18 +136,16 @@ class RecurrenceView(KSSView):
         else:
             core.setStyle('#archetypes-fieldname-ordinalweek', name='display', value='none')
 
-        # Week
-        if frequency == rrule.WEEKLY or (
-           frequency in (rrule.YEARLY, rrule.MONTHLY) and repeat == 'dayofweek'):
-            core.setStyle('#archetypes-fieldname-byweek', name='display', value='block')
-        else:
-            core.setStyle('#archetypes-fieldname-byweek', name='display', value='none')
-
         # Month
         if frequency == rrule.YEARLY:
             core.setStyle('#archetypes-fieldname-bymonth', name='display', value='block')
         else:
             core.setStyle('#archetypes-fieldname-bymonth', name='display', value='none')
+        
+        # Ends
+        if not ends:
+            core.setStyle('#archetypes-fieldname-until', name='display', value='block') 
+            core.setStyle('#archetypes-fieldname-count', name='display', value='block')            
 
         # Interval
         if frequency == -1 or (frequency == rrule.YEARLY and repeat == 'dayofweek'):
