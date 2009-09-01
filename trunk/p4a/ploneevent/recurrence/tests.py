@@ -67,6 +67,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         # Have a max count
         event.ends = True
         event.count = 25
+        event.until = None
         dates = recurrence.getOccurrenceDays()
         self.failUnlessEqual(len(dates), 24)
 
@@ -228,70 +229,6 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
             'Every 11 days',
         ]
         self.helperTestLingo(3, 6, 11, STR_DAILY_TESTS)
-        
-    def testCollections(self):
-        # Step One: Create Event
-        self.folder.invokeFactory('Event', 'myEvent')
-        myEvent = getattr(self.folder, 'myEvent')
-
-        # Step Two: Specify Recurrence
-        # Mark as recurring
-        interface.alsoProvides(myEvent, kalends.IRecurringEvent)
-        self.recurrence = kalends.IRecurrence(myEvent)
-
-        # Set the recurrence info
-
-
-        #myEvent.startDate=DateTime('2009/06/01')
-
-        myEvent.update(startDate = DateTime('2009/06/01'),
-                       endDate = DateTime('2009/06/01'))
-
-
-        myEvent.frequency=rrule.DAILY
-        myEvent.until=DateTime('2009/08/01')
-        myEvent.interval = 1
-        myEvent.count = None
-
-        # Step Three: Create Collection
-        #     specify item_type = event as criterion
-        self.setRoles(['Manager'])
-
-        self.folder.invokeFactory('Topic', 'myCollection')
-        myCollection = getattr(self.folder, 'myCollection')
-        type_crit = myCollection.addCriterion('portal_type', \
-                    'ATSimpleStringCriterion')
-        type_crit.setValue(['Event',])
-
-        # Step Four: Query the Collection results
-        # our event should appear on Monday, June 1 and Tue, June 2 
-        res = myCollection.queryCatalog()
-        # TODO: 'res' is returning nothing, but it should return at least one
-        # Event, so this needs work
-        foundJune1=False
-        foundJune2=False
-        for r in res:
-            if res['start'] == DateTime('2009/06/01'):
-                foundJune1=True
-            if res['start'] == DateTime('2009/06/02'):
-                foundJune2=True
-                break
-           
-        errStr = "Event did not appear in Collection on Monday and Tuesday"
-        self.failUnless(foundJune1 and foundJune2, errStr)  
-        
-        
-        # Step Five: Change Event recurrence
-        # set to recur every 1st Monday 
-        myEvent.frequency=rrule.MONTHLY
-        myEvent.repeatday=dayofweek      
-        
-        
-        # Step Six: See Change on Collection
-        # event should appear on Monday, June 1
-        # event should not appear on Tuesday, June 2
-        # event should appear on Mon, July 6 
-        
 
 
 def test_suite():

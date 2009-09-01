@@ -89,8 +89,15 @@ class RecurrenceSupport(object):
             return []
 
         if until is None:
-            until = datetime.datetime.now() + \
-                    datetime.timedelta(365*5)
+            if hasattr(self.context, 'until') and self.context.until:
+                #u = self.context.until
+                #until = datetime.datetime(u.year(), u.month(), u.day())
+                until = DT2dt(self.context.until)
+                until = until.replace(hour=23, minute=59, second=59, 
+                                      microsecond=999999)
+            else:
+                until = datetime.datetime.now() + \
+                        datetime.timedelta(365*5)
 
         if until.tzinfo is None and rule._dtstart.tzinfo is not None:
             until = until.replace(tzinfo=rule._dtstart.tzinfo)
@@ -115,7 +122,7 @@ class RecurrenceSupport(object):
         English.
         """
         cls = RecurrenceSupport
-        iDay = dateStart.day
+        iDay = dateStart.day()
         strDayOrd = "%d%s" % (iDay, cls.LIST_ORDINALS[iDay])
         strWeekday = dateStart.strftime('%A')
         listParts = []
