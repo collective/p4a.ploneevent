@@ -1,80 +1,75 @@
-#edit_form_startDate_0:change {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
+#edit_form_startDate_0:change
+{
+action-server: updateRecurUI;
+updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
+updateRecurUI-frequency: currentFormVar(frequency);
+updateRecurUI-interval:  currentFormVar(interval);
+updateRecurUI-ends:  currentFormVar(ends);
+updateRecurUI-repeatday: currentFormVar(repeatday);
 }
+
+select#frequency:change
+{
+action-server: updateRecurUI;
+updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
+updateRecurUI-frequency: currentFormVar(frequency);
+updateRecurUI-interval:  currentFormVar(interval);
+updateRecurUI-ends:  currentFormVar(ends);
+updateRecurUI-repeatday: currentFormVar(repeatday);
+}
+
+#interval:change
+{
+action-server: updateRecurUI;
+updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
+updateRecurUI-frequency: currentFormVar(frequency);
+updateRecurUI-interval:  currentFormVar(interval);
+updateRecurUI-ends:  currentFormVar(ends);
+updateRecurUI-repeatday: currentFormVar(repeatday);
+}
+
+#ends:change{
+action-server: updateRecurUI;
+updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
+updateRecurUI-frequency: currentFormVar(frequency);
+updateRecurUI-interval:  currentFormVar(interval);
+updateRecurUI-ends:  currentFormVar(ends);
+updateRecurUI-repeatday: currentFormVar(repeatday);
+}
+
+#repeatday_1:click{
+action-server: updateRecurUI;
+updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
+updateRecurUI-frequency: currentFormVar(frequency);
+updateRecurUI-interval:  currentFormVar(interval);
+updateRecurUI-ends:  currentFormVar(ends);
+updateRecurUI-repeatday: currentFormVar(repeatday);
+}
+
+#repeatday_2:click{
+action-server: updateRecurUI;
+updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
+updateRecurUI-frequency: currentFormVar(frequency);
+updateRecurUI-interval:  currentFormVar(interval);
+updateRecurUI-ends:  currentFormVar(ends);
+updateRecurUI-repeatday: currentFormVar(repeatday);
+}
+
 
 a#fieldsetlegend-recurrence span:click {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
-}
-
-select#frequency:change {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
-}
-
-input#interval:change {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
-}
-
-div#archetypes-fieldname-repeatday input:click {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
-}
-
-#ends:change {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
-}
-
-#repeatday_1:click {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
-}
-
-#repeatday_2:click {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
-  updateRecurUI-frequency: currentFormVar(frequency);
-  updateRecurUI-interval: currentFormVar(interval);
-  updateRecurUI-repeatday: currentFormVar(repeatday);
-  updateRecurUI-ends: currentFormVar(ends);
+action-server: updateRecurUI;
+updateRecurUI-startDate: currentFormVar(edit_form_startDate_0);
+updateRecurUI-frequency: currentFormVar(frequency);
+updateRecurUI-interval:  currentFormVar(interval);
+updateRecurUI-ends:  currentFormVar(ends);
+updateRecurUI-repeatday: currentFormVar(repeatday);
 }
 
 document:load {
-  action-server: updateRecurUI;
-  updateRecurUI-startDate: formVar(edit_form,edit_form_startDate_0);
-  updateRecurUI-frequency: formVar(edit_form,frequency);
-  updateRecurUI-interval: formVar(edit_form,interval);
-  updateRecurUI-repeatday: formVar(edit_form,repeatday);
-  updateRecurUI-ends: formVar(edit_form,ends);
+action-server: updateRecurUI;
+updateRecurUI-startDate: formVar(edit_form,edit_form_startDate_0);
+updateRecurUI-frequency: formVar(edit_form,frequency);
+updateRecurUI-interval:  formVar(edit_form,interval);
+updateRecurUI-ends:  formVar(edit_form,ends);
+updateRecurUI-repeatday: formVar(edit_form,repeatday);
 }

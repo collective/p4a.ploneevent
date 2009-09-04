@@ -1,23 +1,29 @@
 import datetime
-from dateutil import rrule
+import calendar
+from dateutil import rrule, tz
 from zope import interface
 from zope import component
 from zope.app.annotation import interfaces as annointerfaces
 
-from p4a.common.dtutils import DT2dt
+from persistent.dict import PersistentDict
+
 from p4a.ploneevent.recurrence import interfaces
+from p4a.common.descriptors import anno
+from p4a.common.dtutils import DT2dt
 
 from Products.ATContentTypes.content.event import ATEvent
 
 from dateable import kalends
 
+#temp import
+from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
+
 
 class RecurrenceSupport(object):
-    """Recurrence support.
-    """
+    """Recurrence support"""
+
     interface.implements(kalends.IRecurrence)
     component.adapts(ATEvent)
-
     IDX_YEAR = 0
     IDX_MONTH = 1
     IDX_WEEK = 2
@@ -35,80 +41,98 @@ class RecurrenceSupport(object):
     def __init__(self, context):
         self.context = context
 
-    def getRecurrenceRule(self):
-        """Returns a dateutil.rrule."""
-        if getattr(self.context, 'frequency', -1) is -1:
-            return None
+    def getDayofWeek(self):
 
         dtstart = DT2dt(self.context.startDate)
-        params = dict(
-            dtstart=dtstart,
-            #wkst=None,
-            #byyearday=None,
-            #byeaster=None,
-            #byweekno=None,
-            #byhour=None,
-            #byminute=None,
-            #bysecond=None,
-            #cache=False
-        )
-
-
-        # bymonthday
-        if self.context.frequency in (rrule.MONTHLY, rrule.YEARLY) and \
-           self.context.repeatday == 'dayofmonth':
-            params['bymonthday'] = dtstart.day
-
-        # bymonth
-        months = [int(month) for month in self.context.bymonth]
-        if not months:
-            months = [dtstart.month]
-        if self.context.frequency == rrule.YEARLY:
-            params['bymonth'] = months
-
-        # interval
-        if self.context.interval:
-            params['interval'] = self.context.interval
-
-        # count
-        if not self.context.ends and self.context.count:
-            params['count'] = self.context.count
-
-        # until
-        if not self.context.ends and self.context.until:
+        
+        if self.context.frequency == 3:
+            return tuple([int(day) for day in self.context.byweekday])       
+        if self.context.frequency != 1:
+            return None
+        if self.context.repeatday[0] == 'dayofmonth':
+            return None
+        if len(self.context.byweekday) == 0 or self.context.frequency == 1:
+            return tuple([dtstart.weekday()])
+        
+    def getWeekNumber(self):
+        """returns the number of the week for specific date"""
+        dtstart = DT2dt(self.context.startDate)
+        #need to test if monthly otherwise return -1 ?
+        if self.context.repeatday[0] == 'dayofmonth':
+            return -1
+        if self.context.frequency != 1:
+            return -1
+        return self.getWeekInMonthFromDate(dtstart)
+            
+    def getWeekInMonthFromDate(self,dtTest):
+        """returns the number of the week for a given date"""
+        weeks = calendar.monthcalendar(dtTest.year,dtTest.month)
+        for week in weeks:
+            if week.count(dtTest.day):
+                return weeks.index(week) + 1
+        
+        
+    def getRecurrenceRule(self):
+        """Returns a dateutil.rrule"""
+        if getattr(self.context, 'frequency', -1) is -1:
+            return None
+        
+        dtstart = DT2dt(self.context.startDate)       
+        
+        #if ends ('repeat forever') is true, this overrides any values
+        #in until and count   
+        if self.context.until is not None and not self.context.ends:
             until = DT2dt(self.context.until)
             until = until.replace(hour=23, minute=59, second=59, microsecond=999999)
-            params['until'] = until
-
-        return rrule.rrule(self.context.frequency, **params)
+        else:
+            until = None
+            
+        if self.context.count is not None and not self.context.ends:
+            count = self.context.count
+        else:
+            count = None    
+            
+        rule = rrule.rrule(self.context.frequency,
+                           dtstart=dtstart,
+                           interval=self.context.interval,
+                           #wkst=None, 
+                           count=count, 
+                           until=until, 
+                           bysetpos= self.getWeekNumber(),
+                           #bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
+                           #byweekno=None, 
+                           #bymonthday= dtstart.day,
+                           byweekday= self.getDayofWeek(),
+                           #byhour=None, byminute=None, bysecond=None,
+                           #cache=False
+                       )
+        return rule
 
     def getOccurrenceDays(self, until=None):
-        """Days on which the event occurs. Used for indexing."""
+        """Days on which the event occurs. Used for indexing"""
+        # XXX Handle when there is no occurrence.
         rule = self.getRecurrenceRule()
         if rule is None:
             return []
-
         if until is None:
             if hasattr(self.context, 'until') and self.context.until:
-                #u = self.context.until
-                #until = datetime.datetime(u.year(), u.month(), u.day())
                 until = DT2dt(self.context.until)
                 until = until.replace(hour=23, minute=59, second=59, 
-                                      microsecond=999999)
+                                      microsecond=999999)                
             else:
                 until = datetime.datetime.now() + \
                         datetime.timedelta(365*5)
 
         if until.tzinfo is None and rule._dtstart.tzinfo is not None:
             until = until.replace(tzinfo=rule._dtstart.tzinfo)
-
+            
         if until.tzinfo is not None and rule._dtstart.tzinfo is None:
             until = until.replace(tzinfo=None)
-
+                            
         if rule._until is None or rule._until > until:
             rule._until = until
-
-        return [x.date().toordinal() for x in rule][1:]
+        
+        return [x.date().toordinal() for x in rule][1:]    
 
     def _buildRecurrenceString(self, iFrequency, iInterval, dateStart, 
                                iWeek=-1):
@@ -122,7 +146,12 @@ class RecurrenceSupport(object):
         English.
         """
         cls = RecurrenceSupport
-        iDay = dateStart.day()
+        try: #TODO: figure out why in tests we need the property and when running
+             #the site we need the method.  Should have to do with datetime vs.
+             #DateTime, I think
+            iDay = dateStart.day()
+        except:
+            iDay = dateStart.day    
         strDayOrd = "%d%s" % (iDay, cls.LIST_ORDINALS[iDay])
         strWeekday = dateStart.strftime('%A')
         listParts = []
@@ -157,7 +186,7 @@ class RecurrenceSupport(object):
 class EventRecurrenceConfig(object):
     """An IRecurrenceConfig adapter for events.
     """
-
+    
     interface.implements(interfaces.IRecurrenceConfig)
     component.adapts(ATEvent)
 

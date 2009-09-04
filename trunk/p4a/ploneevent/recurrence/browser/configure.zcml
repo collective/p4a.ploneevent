@@ -2,7 +2,7 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="Plone4Artists">
-
+    
     <browser:page
       name="event_view"
       for="Products.ATContentTypes.content.event.ATEvent"
@@ -11,17 +11,27 @@
       template="event_view.pt"
       />
 
-    <browser:resource
-      name="ui.kss"
-      file="ui.kss"
+    <browser:page
+      name="occurrence_view"
+      for="Products.ATContentTypes.content.event.ATEvent"
+      permission="zope2.View"
+      class=".event_view.OccurrenceView"
+      template="event_view.pt"
       />
+    
+    <browser:resource
+  		name="ui.kss"
+  		file="ui.kss"
+		/>
+		
+	<browser:page
+		for="Products.ATContentTypes.content.event.ATEvent"
+	  class=".event_view.RecurrenceView"
+		attribute="updateRecurUI"
+		name="updateRecurUI"
+		permission="zope2.View"
+		     />
+		
 
-	  <browser:page
-		  for="Products.ATContentTypes.content.event.ATEvent"
-	    class=".event_view.RecurrenceView"
-		  attribute="updateRecurUI"
-		  name="updateRecurUI"
-		  permission="zope2.View"
-		  />
-		     
+
 </configure>
