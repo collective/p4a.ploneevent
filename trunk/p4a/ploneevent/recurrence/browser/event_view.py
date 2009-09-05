@@ -124,13 +124,37 @@ class OccurrenceView(EventView):
         date values. Times will be consistent with original Event obj
         values """
         
-    def __init__(self, context, request):        
-        self.ordinalstart = int(request.r)
-        self.startdate = datetime.fromordinal(self.ordinalstart).replace(tzinfo=gettz())
-        #self.startdate = self.startdate.replace() ### replace the hours minutes with correct time
-        self.daysduration = 2 #dummy
-        self.enddate = self.startdate + timedelta(days=self.daysduration)        
-        EventView.__init__(self, context, request)
+    # XXX TODO: Would be nicer to use a custom bobo_traverse method
+    # a la /image/image_mini to be able to use urls like /my-event/733681
+    # or better yet /my-event/2009/10/01,  
+    # rather than /my-event/?r=733681
+        
+    def __init__(self, context, request):  
+        try:
+            self.ordinalstart = int(request.r)
+            #calculate duration of this occurrence based on duration of original
+            self.origStart = DT2dt(context.start())
+            self.origEnd = DT2dt(context.end())
+            self.duration =  self.origEnd - self.origStart
+            self.startdate = datetime.fromordinal(self.ordinalstart).replace(tzinfo=gettz())
+            #since we are passing ordinal date equal to 12:00am of that day,
+            #must add hours and minutes from original event
+            self.startdate = self.startdate + \
+              timedelta(hours=self.origStart.hour,minutes=self.origStart.minute)
+            self.enddate = self.startdate + \
+              timedelta(days=self.duration.days, seconds=self.duration.seconds)
+            EventView.__init__(self, context, request)
+        except:
+            #if we don't pass an integer that can be evaluated as an ordinal date
+            #in the request variable r, then just use methods from EventView
+            #this allows us to register occurrence_view as the default event view
+            #and if no occurrence date passed default to plain event_view
+            EventView.__init__(self, context, request)
+            self.same_day = EventView.same_day(self)
+            self.short_start_date = EventView.short_start_date(self)
+            self.long_start_date = EventView.long_start_date(self)
+            self.short_end_date = EventView.short_end_date(self)
+            self.long_end_date = EventView.long_end_date(self)
         
     def same_day(self):
         return False
