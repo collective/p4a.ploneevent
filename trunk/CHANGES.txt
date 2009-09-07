@@ -4,10 +4,36 @@
 p4a.ploneevent Changes
 ======================
 
+p4a.ploneevent 0.7 (2009-09-07)
+===============================
+
+* Reworked support for occurrence views, which are views on a recurring event 
+  that display the correct date and time information for that occurrence, 
+  to use ordinal date passed in query string.
+  [bcw]
+  
+* Added event display (as override) for calendars to add the ordinal date of the 
+  occurrence to a query string variable, passed to the new occurrence
+  browserview.
+  [bcw]
+
+* Requires addition of ZCML slug for overrides used in recurrence.browser
+  package.  See README.txt for more information
+  [bcw]
+  
+* Removed repeat by specified day of week, months, and ordinal weeks and instead
+  handle repeating based on day of month and weekday of the event start date.
+  [bcw][dlh]
+
+
 (2009-07-11)
 ============
-* Implemented Lingo functionality for daily, weekly, monthly, and yearly recurrences (but not wired up to anything yet).
+* Implemented Lingo functionality for daily, weekly, monthly, and yearly 
+  recurrences (but not wired up to anything yet).
   [dlh]
+  
+* Moved recurrence fields to default schemata tab.
+  [bcw, dlh]  
 
 p4a.ploneevent 0.6 (2009-07-02)
 ===============================

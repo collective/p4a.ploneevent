@@ -1,0 +1,17 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="Plone4Artists">
+
+
+	  <!-- override dateable.chronos' adapter for Event Display
+       in order to add occurrence date ordinals to query string of url.
+       XXX TODO: This could be moved back into dateable.chronos, perhaps.
+       That would be nice to get rid of step to add ZCML slug for 
+       this override -->
+  <adapter
+      for="dateable.kalends.IOccurrence dateable.chronos.browser.interfaces.IUnPositionedView"
+      factory=".eventdisplay.EventDisplay"
+    />
+
+</configure>

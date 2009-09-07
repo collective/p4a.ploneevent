@@ -2,6 +2,7 @@ from dateutil import rrule
 from zope import interface
 from Products.Five.testbrowser import Browser
 from DateTime import DateTime
+from datetime import datetime
 from Testing import ZopeTestCase
 import datetime
 
@@ -150,6 +151,14 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         # Make sure it's properly indexed:
         cat = self.portal.portal_catalog
         self.failUnless(len(cat(portal_type='Event', recurrence_days=732950)) == 1)
+        
+        # Test that we can browse to the event passing a recurrence day
+        # and see that the date shows for the recurrence, not the original event
+        # 732950 = (2007/10/01)
+        browser.open(folder_url + '/an-event/?r=732950')
+        errStr = "Event view does not show correct start date for occurrence \
+                  passed as query parameter."
+        self.failUnless('Oct 01, 2007' in browser.contents, errStr)
 
     def testLingo(self):
         self.folder.invokeFactory('Event', 'event')

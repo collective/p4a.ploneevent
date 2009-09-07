@@ -30,27 +30,51 @@ CALVOCAB = {   0: (u'Year', u'Years'),
 
 
 class EventView(BrowserView):
+
+    # XXX TODO: Would be nicer to use a custom __bobo_traverse__ method
+    # a la /image/image_mini to be able to use urls like /my-event/733681
+    # or better yet /my-event/2009/10/01,  
+    # rather than /my-event/?r=733681       
+    def start(self):
+        date = DateTime(self.context.start())
+        if self.isRecurring() and self.request.has_key('r'):
+            current = int(self.request['r'])
+            date = datetime.fromordinal(current).replace(tzinfo=gettz())
+            #since we are passing ordinal date equal to 12:00am of that day,
+            #must add hours and minutes from original event
+            date = date + \
+              timedelta(hours=self.context.start().hour(),\
+                        minutes=self.context.start().minute())
+            date = dt2DT(date)  
+            
+        return date
+
+    def end(self):
+        offset = self.context.end() - self.context.start()
+        #XXX TODO otherwise returning 1 minute before 
+        # appropriate end time, but could be done more elegantly
+        return self.start() + offset + 0.000001
     
     def same_day(self):
-        return self.context.start().Date() == self.context.end().Date()
+        return self.start().Date() == self.end().Date()
 
     def short_start_date(self):
-        return self.context.toLocalizedTime(self.context.start(), long_format=0)
+        return self.context.toLocalizedTime(self.start(), long_format=0)
         
     def long_start_date(self):
-        return self.context.toLocalizedTime(self.context.start(), long_format=1)
+        return self.context.toLocalizedTime(self.start(), long_format=1)
     
     def start_time(self):
         return self.context.start().strftime(self.time_format())
 
     def short_end_date(self):
-        return self.context.toLocalizedTime(self.context.end(), long_format=0)
+        return self.context.toLocalizedTime(self.end(), long_format=0)
     
     def long_end_date(self):
-        return self.context.toLocalizedTime(self.context.end(), long_format=1)
+        return self.context.toLocalizedTime(self.end(), long_format=1)
 
     def end_time(self):
-        return self.context.end().strftime(self.time_format())
+        return self.end().strftime(self.time_format())
 
     def datetime_format(self):
         site_properties = self.context.portal_properties.site_properties
@@ -119,59 +143,6 @@ class EventView(BrowserView):
             return self.context.toLocalizedTime(dt2DT(rrule._until), long_format=0)
         return ''
         
-class OccurrenceView(EventView):
-    """ provides methods for returning event occurrence-specific 
-        date values. Times will be consistent with original Event obj
-        values """
-        
-    # XXX TODO: Would be nicer to use a custom bobo_traverse method
-    # a la /image/image_mini to be able to use urls like /my-event/733681
-    # or better yet /my-event/2009/10/01,  
-    # rather than /my-event/?r=733681
-        
-    def __init__(self, context, request):  
-        try:
-            self.ordinalstart = int(request.r)
-            #calculate duration of this occurrence based on duration of original
-            self.origStart = DT2dt(context.start())
-            self.origEnd = DT2dt(context.end())
-            self.duration =  self.origEnd - self.origStart
-            self.startdate = datetime.fromordinal(self.ordinalstart).replace(tzinfo=gettz())
-            #since we are passing ordinal date equal to 12:00am of that day,
-            #must add hours and minutes from original event
-            self.startdate = self.startdate + \
-              timedelta(hours=self.origStart.hour,minutes=self.origStart.minute)
-            self.enddate = self.startdate + \
-              timedelta(days=self.duration.days, seconds=self.duration.seconds)
-            EventView.__init__(self, context, request)
-        except:
-            #if we don't pass an integer that can be evaluated as an ordinal date
-            #in the request variable r, then just use methods from EventView
-            #this allows us to register occurrence_view as the default event view
-            #and if no occurrence date passed default to plain event_view
-            EventView.__init__(self, context, request)
-            self.same_day = EventView.same_day(self)
-            self.short_start_date = EventView.short_start_date(self)
-            self.long_start_date = EventView.long_start_date(self)
-            self.short_end_date = EventView.short_end_date(self)
-            self.long_end_date = EventView.long_end_date(self)
-        
-    def same_day(self):
-        return False
-
-    def short_start_date(self):
-        return self.context.toLocalizedTime(self.startdate.isoformat(), long_format=0)
-        
-    def long_start_date(self):
-        return self.context.toLocalizedTime(self.startdate.isoformat(), long_format=1)
-
-    def short_end_date(self):
-        return self.context.toLocalizedTime(self.enddate.isoformat(), long_format=0)
-    
-    def long_end_date(self):
-        return self.context.toLocalizedTime(self.enddate.isoformat(), long_format=1)
-        
-
 
 class RecurrenceView(PloneKSSView):
 
