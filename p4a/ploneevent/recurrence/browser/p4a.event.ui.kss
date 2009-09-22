@@ -21,7 +21,7 @@ updateRecurUI-frequency: currentFormVar(frequency);
 updateRecurUI-interval:  currentFormVar(interval);
 }
 
-document:load
+.documentEditoable document:load
 {
 action-server: updateRecurUI;
 updateRecurUI-frequency: currentFormVar(frequency);

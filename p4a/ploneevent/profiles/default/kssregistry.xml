@@ -3,7 +3,8 @@
     
     <kineticstylesheet 
         id="++resource++p4a.event.ui.kss" cacheable="True" compression="safe" 
-        cookable="True" enabled="on" expression=""
+        cookable="True" enabled="on" 
+        expression="python:here.restrictedTraverse('@@plone_context_state').is_editable()"
         />
     
 </object>
