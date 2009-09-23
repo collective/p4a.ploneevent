@@ -62,13 +62,20 @@ class EventView(BrowserView):
         return datetime_format.split(' ')[-1]
 
     def isRecurring(self):
-        return IRecurringEvent.providedBy(self.context)
+        if not IRecurringEvent.providedBy(self.context):
+            return False
+        rrule = IRecurrence(self.context, None).getRecurrenceRule()
+        if rrule is None:
+            return False
+        return True
 
     def rrule(self):
         return IRecurrence(self.context, None).getRecurrenceRule()
 
     def rrule_freq(self):
         rrule = self.rrule()
+        if rrule is None:
+            return ''
         freq = CALVOCAB[rrule._freq]
         if rrule._interval == 1:
             return freq[0]
