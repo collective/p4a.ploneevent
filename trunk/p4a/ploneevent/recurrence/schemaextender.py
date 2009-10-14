@@ -102,6 +102,16 @@ class RecurrenceExtension(object):
                 widget=atapi.IntegerWidget(label=u'Repeats For',
                     description=u'Maximum number of times the event repeats ',)
                 ),
+          LinesField('exceptions',
+                schemata="default",
+                multiValued=True,
+                widget=atapi.LinesWidget(label=u'Recurrence Exceptions',
+                    description=u'Ordinal dates of event exceptions. \
+                      Occurrences will not be displayed for these dates.',),
+                    modes=('edit',),
+                    visible={'view': 'hidden', 'edit': 'visible' } ,                    
+                ),
+
           ]
 
      def __init__(self, extender, context):

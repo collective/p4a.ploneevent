@@ -132,7 +132,20 @@ class RecurrenceSupport(object):
         if rule._until is None or rule._until > until:
             rule._until = until
         
-        return [x.date().toordinal() for x in rule][1:]    
+        occurrenceDays = [x.date().toordinal() for x in rule][1:]  
+        
+        # remove from list ordinal dates stored as recurrence exceptions
+        # probably a more efficient way of doing this.
+        if self.context.exceptions:
+            filteredDays = []
+            for d in occurrenceDays:
+                if str(d) not in self.context.exceptions:
+                    filteredDays.append(d)
+            return filteredDays        
+        
+        return occurrenceDays
+            
+        
 
     def _buildRecurrenceString(self, iFrequency, iInterval, dateStart, 
                                iWeek=-1):
