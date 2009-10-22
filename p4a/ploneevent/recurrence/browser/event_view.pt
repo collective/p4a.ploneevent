@@ -8,7 +8,7 @@
 <body>
 
 <div metal:fill-slot="main">
-    <tal:main-macro metal:define-macro="main" 
+    <tal:main-macro metal:define-macro="main"
          tal:define="kssClassesView context/@@kss_field_decorator_view;
                      getKssClasses nocall:kssClassesView/getKssClassesInlineEditable;
                      templateId template/getId">
@@ -17,7 +17,7 @@
 
         <div class="vevent">
 
-        <h1 class="documentFirstHeading"> 
+        <h1 class="documentFirstHeading">
             <metal:field use-macro="python:here.widget('title', mode='view')">
             Title
             </metal:field>
@@ -30,7 +30,7 @@
             Description
             </metal:field>
         </p>
-        
+
         <div tal:replace="structure provider:plone.abovecontentbody" />
 
         <div class="eventDetails vcard">
@@ -58,7 +58,7 @@
                                   id="parent-fieldname-startDate"
                                   tal:attributes="class string: summary$kss_class;
                                   title python:here.start()">
-                                  <span metal:define-slot="inside" 
+                                  <span metal:define-slot="inside"
                                         class="explain"
                                         tal:attributes="title python:here.start()"
                                         tal:content="view/long_start_date">Start Date Time</span>
@@ -71,7 +71,7 @@
                                   id="parent-fieldname-endDate"
                                   tal:attributes="class string: summary$kss_class;
                                   title python:here.end()">
-                                  <span metal:define-slot="inside" 
+                                  <span metal:define-slot="inside"
                                           class="explain"
                                           tal:attributes="title python:here.end()"
                                           tal:content="view/long_end_date">End Date Time</span>
@@ -81,7 +81,7 @@
                         <tal:sameday tal:condition="view/same_day">
                             <span tal:replace="view/short_start_date">
                                 Start Date Time</span> <br />
-                            <span i18n:translate="event_from">from</span>  
+                            <span i18n:translate="event_from">from</span>
                             <span metal:define-macro="startdatesame-field-view"
                                   class="dtstart"
                                   tal:define="kss_class python:getKssClasses('startDate',
@@ -89,7 +89,7 @@
                                   id="parent-fieldname-startDate"
                                   tal:attributes="class string: summary$kss_class;
                                   title view/start_time">
-                                  <span metal:define-slot="inside" 
+                                  <span metal:define-slot="inside"
                                         tal:replace="view/start_time">Start Time</span>
                             </span>
                             <span i18n:translate="event_to">to</span>
@@ -100,15 +100,15 @@
                                   id="parent-fieldname-endDate"
                                   tal:attributes="class string: summary$kss_class;
                                   title view/end_time">
-                                  <span metal:define-slot="inside" 
+                                  <span metal:define-slot="inside"
                                         tal:replace="view/end_time">End Time</span>
                             </span>
-                            
+
                             <!-- <span tal:replace="python:test(ampm, here.end().AMPMMinutes(), here.end().TimeMinutes())">End Time</span> -->
-                            
+
                         </tal:sameday>
                         <tal:block condition="view/isRecurring"
-                          i18n:domain="p4a.ploneevent" >
+                          i18n:domain="p4a.ploneevent">
                           <tal:block condition="python:view.rrule_interval() == 1"
                             i18n:translate="">
                             Every <tal:block i18n:name="frequency" i18n:translate=""
@@ -120,12 +120,12 @@
                                   <tal:block i18n:name="frequency" i18n:translate=""
                                     content="view/rrule_freq" />
                           </tal:block>
-                          <tal:block condition="python:view.rrule_count() > 1" 
+                          <tal:block condition="python:view.rrule_count() > 1"
                             i18n:translate="">
-                            for <tal:block content="view/rrule_count" 
+                            for <tal:block content="view/rrule_count"
                                  i18n:name="count" /> times
                           </tal:block>
-                          <tal:block condition="view/rrule_end" 
+                          <tal:block condition="view/rrule_end"
                             i18n:translate="">
                             until <tal:block content="view/rrule_end"
                                    i18n:name="until" />
@@ -204,7 +204,7 @@
             <a class="url"
                href="event_url"
                i18n:translate="event_more_information"
-               tal:define="field python:context.getField('eventUrl');"                    
+               tal:define="field python:context.getField('eventUrl');"
                         id="parent-fieldname-eventUrl"
                         tal:attributes="href here/event_url">
                More information about this event&hellip;</a>
