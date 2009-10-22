@@ -1,15 +1,12 @@
-from setuptools import setup, find_packages
 import sys, os
+from setuptools import setup, find_packages
 
-version = '0.7.2'
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-f = open('README.txt')
-readme = f.read()
-f.close()
-
-f = open('CHANGES.txt')
-changes = f.read()
-f.close()
+readme = read('README.txt')
+changes = read('CHANGES.txt')
+version = read('p4a', 'ploneevent', 'version.txt').strip()
 
 setup(name='p4a.ploneevent',
       version=version,
@@ -36,6 +33,7 @@ setup(name='p4a.ploneevent',
           'setuptools',
           'python-dateutil',
           'archetypes.schemaextender',
+          'archetypes.recurringdate',
           'dateable.kalends >= 0.3',
       ],
       entry_points="""
