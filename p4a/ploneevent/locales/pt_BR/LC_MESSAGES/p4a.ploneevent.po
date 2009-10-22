@@ -1,0 +1,118 @@
+# p4a.ploneevents messages template
+# Dorneles Tremea, 2009
+msgid ""
+msgstr ""
+"Project-Id-Version: p4a.ploneevent\n"
+"POT-Creation-Date: 2009-08-26 07:22+0000\n"
+"PO-Revision-Date: 2009-08-26 04:33+0000\n"
+"Last-Translator: Dorneles Tremea <dorneles@tremea.com>\n"
+"Language-Team: Plone Developers <plone-developers@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: pt-br\n"
+"Language-Name: Português do Brasil\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: p4a.ploneevent\n"
+
+#: ./recurrence/schemaextender.py:57
+msgid "Count"
+msgstr "Contagem"
+
+#: ./recurrence/schemaextender.py:37
+msgid "Daily"
+msgstr "Diariamente"
+
+#: ./recurrence/schemaextender.py:33
+msgid "Does not repeat"
+msgstr "Não repete"
+
+#: ./recurrence/schemaextender.py:52
+msgid "Event repeats until this date."
+msgstr "O evento repete até esta data."
+
+#. Default: "Every ${frequency}"
+#: ./recurrence/browser/event_view.pt:114
+msgid "Every ${frequency}"
+msgstr "A cada ${frequency}"
+
+#. Default: "Every ${interval} ${frequency}"
+#: ./recurrence/browser/event_view.pt:120
+msgid "Every ${interval} ${frequency}"
+msgstr "A cada ${interval} ${frequency}"
+
+#: ./recurrence/schemaextender.py:58
+msgid "Maximum number of times the event repeats"
+msgstr "Número máximo de vezes que o evento repete"
+
+#: ./recurrence/schemaextender.py:35
+msgid "Monthly"
+msgstr "Mensalmente"
+
+#: ./recurrence/schemaextender.py:51
+msgid "Range"
+msgstr "Faixa"
+
+#: ./recurrence/schemaextender.py:40
+msgid "Repeats"
+msgstr "Repete"
+
+#: ./recurrence/schemaextender.py:46
+msgid "Repeats every"
+msgstr "Repete a cada"
+
+#: ./recurrence/schemaextender.py:47
+msgid "Repeats every day/week/month/year."
+msgstr "Repete a cada dia/semana/mês/ano."
+
+#: ./recurrence/schemaextender.py:36
+msgid "Weekly"
+msgstr "Semanalmente"
+
+#: ./recurrence/schemaextender.py:34
+msgid "Yearly"
+msgstr "Anualmente"
+
+#: ./recurrence/browser/event_view.py:22
+msgid "day"
+msgstr "dia"
+
+#: ./recurrence/browser/event_view.py:22
+msgid "days"
+msgstr "dias"
+
+#. Default: "for ${count} times"
+#: ./recurrence/browser/event_view.pt:125
+msgid "for ${count} times"
+msgstr "por ${count} vezes"
+
+#: ./recurrence/browser/event_view.py:20
+msgid "month"
+msgstr "mês"
+
+#: ./recurrence/browser/event_view.py:20
+msgid "months"
+msgstr "meses"
+
+#. Default: "until ${until}"
+#: ./recurrence/browser/event_view.pt:130
+msgid "until ${until}"
+msgstr "até ${until}"
+
+#: ./recurrence/browser/event_view.py:21
+msgid "week"
+msgstr "semana"
+
+#: ./recurrence/browser/event_view.py:21
+msgid "weeks"
+msgstr "semanas"
+
+#: ./recurrence/browser/event_view.py:19
+msgid "year"
+msgstr "ano"
+
+#: ./recurrence/browser/event_view.py:19
+msgid "years"
+msgstr "anos"
+
