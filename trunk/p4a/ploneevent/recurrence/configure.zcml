@@ -14,5 +14,6 @@
       class="Products.ATContentTypes.content.event.ATEvent"
       interface="dateable.kalends.IRecurringEvent"
       />
+      
 
 </configure>

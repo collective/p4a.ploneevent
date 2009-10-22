@@ -1,0 +1,21 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="Plone4Artists">
+         
+  <!-- sub-menu beneath plone_contentmenu -->
+  <browser:menu
+      id="event_recurrence_menu"
+      title="The 'recurrence options' menu - allows the user to make 
+             recurrence exceptions, change future events, ..."     
+      class=".menu.RecurrenceMenu"       
+      />            	
+  
+  <!-- register the submenu item beneath plone_contentmenu that will 
+       contain event_recurrence_menu -->
+  <adapter for="dateable.kalends.IRecurringEvent *"
+           name="p4a.ploneevent.recurrence_options"
+           factory=".menu.RecurrenceSubMenuItem"
+           provides="plone.app.contentmenu.interfaces.IContentMenuItem" />       
+
+</configure>
