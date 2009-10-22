@@ -1,49 +1,57 @@
-from zope.i18n import translate
-from Products.Five.browser import BrowserView
-from dateable.kalends import IRecurringEvent, IRecurrence
+from DateTime import DateTime
 from p4a.common.dtutils import dt2DT
-from kss.core import KSSView, kssaction
-from datetime import datetime
+
+from dateable.kalends import IRecurrence
+from dateable.kalends import IRecurringEvent
+from Products.Five.browser import BrowserView
+
 from p4a.ploneevent import PloneEventMessageFactory as _
 
-FREQ = {0: 'year',
-        1: 'month',
-        2: 'week',
-        3: 'day',
-        4: 'hour',
-        5: 'minute',
-        6: 'second',
-    }
-    
-    
-CALVOCAB = {0: (_(u'year'), _(u'years')),
-            1: (_(u'month'), _(u'months')),
-            2: (_(u'week'), _(u'weeks')),
-            3: (_(u'day'), _(u'days')),
-            }
+CALVOCAB = {
+    0: (_(u'year'), _(u'years')),
+    1: (_(u'month'), _(u'months')),
+    2: (_(u'week'), _(u'weeks')),
+    3: (_(u'day'), _(u'days')),
+}
+
 
 class EventView(BrowserView):
-    
+
+    def start(self):
+        date = DateTime(self.context.start())
+        if self.isRecurring() and self.request.form.has_key('date'):
+            current = DateTime(self.request.form['date'])
+            parts = list(date.parts())
+            parts[0] = current.year()
+            parts[1] = current.month()
+            parts[2] = current.day()
+            date = DateTime(*parts)
+        return date
+
+    def end(self):
+        offset = self.context.end() - self.context.start()
+        return self.start() + offset
+
     def same_day(self):
         return self.context.start().Date() == self.context.end().Date()
 
     def short_start_date(self):
-        return self.context.toLocalizedTime(self.context.start(), long_format=0)
-        
+        return self.context.toLocalizedTime(self.start(), long_format=0)
+
     def long_start_date(self):
-        return self.context.toLocalizedTime(self.context.start(), long_format=1)
-    
+        return self.context.toLocalizedTime(self.start(), long_format=1)
+
     def start_time(self):
-        return self.context.start().strftime(self.time_format())
+        return self.start().strftime(self.time_format())
 
     def short_end_date(self):
-        return self.context.toLocalizedTime(self.context.end(), long_format=0)
-    
+        return self.context.toLocalizedTime(self.end(), long_format=0)
+
     def long_end_date(self):
-        return self.context.toLocalizedTime(self.context.end(), long_format=1)
+        return self.context.toLocalizedTime(self.end(), long_format=1)
 
     def end_time(self):
-        return self.context.end().strftime(self.time_format())
+        return self.end().strftime(self.time_format())
 
     def datetime_format(self):
         site_properties = self.context.portal_properties.site_properties
@@ -52,7 +60,7 @@ class EventView(BrowserView):
     def date_format(self):
         site_properties = self.context.portal_properties.site_properties
         return site_properties.getProperty('localTimeFormat')
-    
+
     def time_format(self):
         datetime_format = self.datetime_format()
         if '%p' in datetime_format:
@@ -64,7 +72,7 @@ class EventView(BrowserView):
     def isRecurring(self):
         if not IRecurringEvent.providedBy(self.context):
             return False
-        rrule = IRecurrence(self.context, None).getRecurrenceRule()
+        rrule = self.rrule()
         if rrule is None:
             return False
         return True
@@ -79,15 +87,14 @@ class EventView(BrowserView):
         freq = CALVOCAB[rrule._freq]
         if rrule._interval == 1:
             return freq[0]
-        else:
-            return freq[1]
-                                        
+        return freq[1]
+
     def rrule_interval(self):
         rrule = self.rrule()
         if rrule is not None:
             return rrule._interval
         return 0
-        
+
     def rrule_count(self):
         rrule = self.rrule()
         if rrule is not None:
@@ -99,37 +106,3 @@ class EventView(BrowserView):
         if rrule is not None and rrule._until:
             return self.context.toLocalizedTime(dt2DT(rrule._until), long_format=0)
         return ''
-
-
-class RecurrenceView(KSSView):
-
-    @kssaction
-    def updateRecurUI(self, frequency,interval):
-        # build HTML
-        content ='Repeats every %s  %s '
-        core = self.getCommandSet('core')
-
-        #check to see if single interval
-        frequency = int(frequency)
-        interval  = int(interval)
-        if frequency == -1:
-            caltext = 'day/week/month/year.'
-            interval = ''
-            display = 'none'
-        elif interval > 1:
-            caltext = CALVOCAB[frequency][1]
-            display = 'block'
-        elif interval == 0:
-            caltext = 'day/week/month/year.'
-            interval = ''
-            display = 'block'
-        else: 
-            caltext = CALVOCAB[frequency][0]
-            interval = '' 
-            display = 'block'
-         
-        core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
-        core.setStyle('#archetypes-fieldname-until', name='display', value=display)
-        core.setStyle('#archetypes-fieldname-count', name='display', value=display)
-        content = content % (interval, caltext)         
-        core.replaceInnerHTML('#interval_help', content)
