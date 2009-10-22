@@ -4,31 +4,66 @@
 p4a.ploneevent Changes
 ======================
 
+p4a.ploneevent 0.8 (Unreleased)
+===============================
+
+* General code cleanup. (deo)
+
+* Implemented an Exchange-like user interface for configuring
+  the recurrent events. (deo)
+
+* Replaced the recurrence fields with a proper field/widget
+  combo from the new archetypes.recurringdate package. (deo)
+
+* Removed the (now) unnecessary KSS related stuff. (deo)
+
+* Added support for displaying different start/end dates for
+  each event occurrence: just pass a 'date' variable in the
+  request using the YYYY-MM-DD format. (deo)
+
+* Improved tests to cover EventView and the new features. (deo)
+
+* Changed the ZCML registration of RecurrenceView to just for
+  ATEvent and not whole Portal. (bcw, dlh)
+
+* Added missing dependency to p4a.common, which is required by the
+  recurring view (from p4a.common.dtutils import dt2DT). (saily)
+
+* Translated to Brazilian Portuguese. (deo)
+
+* Added a version.txt file and made sure setup.py uses its value
+  for the package version. (deo)
+
+
 p4a.ploneevent 0.7.2 (2009-09-23)
 =================================
 
-* Fixed a bug in viewing of non-recurring events
+* Fixed a bug in viewing of non-recurring events. (regebro)
+
 
 p4a.ploneevent 0.7.1 (2009-08-29)
 =================================
 
-* Fixed a bug in the norwegian translation. (regebro)
+* Fixed a bug in the Norwegian translation. (regebro)
+
 
 p4a.ploneevent 0.7 (2009-08-26)
 ===============================
 
-* Translations to Swedish and Norwegian. (regebro)
+* Added i18n support. (regebro, saily)
+
+* Translated to Swedish and Norwegian. (regebro)
 
 
 p4a.ploneevent 0.6 (2009-05-17)
 ===============================
 
-* Fixed up dependencies (regebro, natea)
+* Fixed up dependencies. (regebro, natea)
 
-* Added KSS UI enhancements, reordered and relabled recurrence fields 
-  to better describe field functions (aaronvanderlip)
-  
-* Cleaned up "Recurrence" schemata UI. Added new labels and descriptions. 
+* Added KSS UI enhancements, reordered and relabled recurrence fields
+  to better describe field functions. (aaronvanderlip)
+
+* Cleaned up "Recurrence" schemata UI. Added new labels and descriptions.
   Removed 'count'. Reordered fields. (aaronvanderlip)
 
 
