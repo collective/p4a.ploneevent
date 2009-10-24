@@ -11,23 +11,42 @@ class RecurrenceMenu(BrowserMenu):
     interface.implements(IRecurrenceMenu)
 
     def getMenuItems(self, context, request):
-        """Return menu item entries in a TAL-friendly form."""
-        results = []
+        """Return menu item entries in a TAL-friendly form."""        
         
         portal_state = getMultiAdapter((context, request), name='plone_portal_state')
         plone_utils = getToolByName(context, 'plone_utils')
         portal_url = portal_state.portal_url()
 
-        results.append({ 'title'       : 'Edit this occurrence',
-                         'description' : 'Remove this occurrence from the recurrence series and create a new event',
-                         'action'      : context.absolute_url() + '/@@occurrence_edit',
-                         'selected'    : False,
-                         'icon'        : '',
-                         'extra'       : {'id': 'delete-this-occurrence', 'separator': None, 'class': ''},
-                         'submenu'     : None,
-                         })
+        items = [{ 'title'         : 'Edit this event occurrence',
+                   'description' : 'Remove this event from the recurrence series and make changes.',
+                   'action'      : context.absolute_url() + '/@@occurrence_edit',
+                   'selected'    : False,
+                   'icon'        : '',
+                   'extra'       : {'id': 'edit-this-occurrence', 'separator': None, 'class': ''},
+                   'submenu'     : None,
+                },]
+        """ 
+                  {'title'       : 'Cancel this event occurrence',
+                   'description' : 'Remove this event occurrence from the recurrence series',
+                   'action'      : context.absolute_url() + '/@@occurrence_delete',
+                   'selected'    : False,
+                   'icon'        : '',
+                   'extra'       : {'id': 'delete-this-occurrence', 'separator': None, 'class': ''},
+                   'submenu'     : None,
+                   },
+                  {'title'       : 'Edit this and future occurrences',
+                   'description' : 'Split this event into two recurrence series, and make changes to' + \
+                                   ' the future occurrences.  ',
+                   'action'      : context.absolute_url() + '/@@occurrence_editfuture',
+                   'selected'    : False,
+                   'icon'        : '',
+                   'extra'       : {'id': 'edit-future-occurrences', 'separator': None, 'class': ''},
+                   'submenu'     : None,
+                   },
+        """
+                  
                           
-        return results
+        return items
 
 
 class RecurrenceSubMenuItem(BrowserSubMenuItem):
