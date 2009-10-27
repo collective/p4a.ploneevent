@@ -1,5 +1,6 @@
 from DateTime import DateTime
 from p4a.common.dtutils import dt2DT
+from p4a.common.dtutils import DT2dt
 
 from dateable.kalends import IRecurrence
 from dateable.kalends import IRecurringEvent
@@ -29,8 +30,8 @@ class EventView(BrowserView):
         return date
 
     def end(self):
-        offset = self.context.end() - self.context.start()
-        return self.start() + offset
+        delta = DT2dt(self.context.end()) - DT2dt(self.context.start())
+        return dt2DT(DT2dt(self.start()) + delta)
 
     def same_day(self):
         return self.context.start().Date() == self.context.end().Date()
