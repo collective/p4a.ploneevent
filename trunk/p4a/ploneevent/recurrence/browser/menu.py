@@ -16,10 +16,14 @@ class RecurrenceMenu(BrowserMenu):
         portal_state = getMultiAdapter((context, request), name='plone_portal_state')
         plone_utils = getToolByName(context, 'plone_utils')
         portal_url = portal_state.portal_url()
+        try:
+          qry = '?r=' + context.request.r
+        except: 
+          qry = ''  
 
         items = [{ 'title'         : 'Edit this event occurrence',
                    'description' : 'Remove this event from the recurrence series and make changes.',
-                   'action'      : context.absolute_url() + '/@@occurrence_edit',
+                   'action'      : context.absolute_url() + '/@@occurrence_edit' + qry,
                    'selected'    : False,
                    'icon'        : '',
                    'extra'       : {'id': 'edit-this-occurrence', 'separator': None, 'class': ''},

@@ -24,6 +24,14 @@
   		name="updateRecurUI"
   		permission="zope2.View"
   		/>
+  		
+  	<browser:page
+  		 for="dateable.kalends.IRecurringEvent"
+  		 class=".occurrence_edit.OccurrenceEditView"
+  		 attribute="editSingleOccurrence"
+  		 name="occurrence_edit"
+  		 permission="cmf.ModifyPortalContent"
+  		 />
 		
     <include file="menus.zcml" />
 
