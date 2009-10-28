@@ -68,4 +68,8 @@ class RecurrenceSubMenuItem(BrowserSubMenuItem):
         return self.context.absolute_url()+ '/@@folder_listing'
 
     def available(self):
+        # TODO: Answer question, "Shall this method call the base class' 
+        # 'available' method as well, or is this sufficient?"
+        if self.context.frequency == -1:
+            return False
         return True

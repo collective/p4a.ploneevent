@@ -18,6 +18,21 @@ from dateable import kalends
 PloneTestCase.setupPloneSite(products=("p4a.ploneevent",))
 
 class RecurrenceTest(PloneTestCase.FunctionalTestCase):
+    def helperCreateEvent(self, context, id, dtStart=None, dtEnd=None):
+        """ Create a basic Plone event in 'context and mark it as a recurring 
+        event. If no start and end dates are provided, helperCreateEvent 
+        creates a default value for those parameters. Returns the new event 
+        object itself. """
+        if not dtStart:
+            dtStart = DateTime('2001/02/01 10:00')
+        if not dtEnd:
+            dtEnd = DateTime('2001/02/01 14:00')
+        context.invokeFactory('Event', id)
+        myEvent = getattr(context, id)
+        myEvent.update(startDate=dtStart, endDate=dtEnd)
+        interface.alsoProvides(myEvent, kalends.IRecurringEvent)
+        return myEvent
+
     def helperTestLingo(self, iFrequency, iMonth, iDay, listStrTests, iWeek=-1):
         errStr = "'_buildRecurrenceString' did not properly generate '%s'."
         LIST_TEST_INTERVALS = [1,2,3,9,10,11]
@@ -217,6 +232,42 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
             'Every 11 days',
         ]
         self.helperTestLingo(3, 6, 11, STR_DAILY_TESTS)
+
+    def testRecurrenceMenuAvailable(self):
+        # Basic recurrence, daily for one year:
+        context = self.folder
+        eventSingle = self.helperCreateEvent(context, 'event-single')
+        eventDouble = self.helperCreateEvent(context, 'event-double')
+        recurrenceSingle = kalends.IRecurrence(eventSingle)
+        recurrenceDouble = kalends.IRecurrence(eventDouble)
+
+        # Set the recurrence info for the eventDouble to recur for one year
+        eventDouble.frequency = rrule.DAILY
+        eventDouble.ends = False  # True would mean the event repeats forever. 
+        eventDouble.until = DateTime('2002/02/01')
+        eventDouble.interval = 1
+        eventDouble.count = None
+
+        # Create browser and prepare for testing
+        browser = Browser()
+        browser.handleErrors = False
+        strTmp = 'Basic %s:%s' % (portal_owner, default_password)
+        browser.addHeader('Authorization', strTmp)
+        folder_url = context.absolute_url() 
+        
+        strMenuTest = 'Recurrence options'
+
+        # Test to ensure recurrence options are not set for single events
+        browser.open("%s/%s" % (folder_url, eventSingle.id))
+        errStr = "Recurrence options submenu should not appear on events that" \
+                 " do not have recurrence options set."
+        self.failIf(strMenuTest in browser.contents, errStr)
+
+        # Test to ensure recurrence options are indeed set for multiple events
+        browser.open("%s/%s" % (folder_url, eventDouble.id))
+        errStr = "Recurrence options submenu should indeed appear on events " \
+                 "which have recurrence options set."
+        self.failUnless(strMenuTest in browser.contents, errStr)
 
 
 def test_suite():
