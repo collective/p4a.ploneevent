@@ -42,6 +42,12 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
             strResult = f(iFrequency, i, dt, iWeek)
             strControl = listStrTests[i]
             self.failUnless(strResult == strControl, errStr % strControl)
+            
+    def helperSetupBrowser(self):
+        browser = Browser()
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic %s:%s' % (portal_owner, default_password))
+        return browser                
     
     def afterSetUp(self):
         ZopeTestCase.utils.setupCoreSessions(self.app)
@@ -139,9 +145,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         
     def test_recurrence(self):
-        browser = Browser()
-        browser.handleErrors = False
-        browser.addHeader('Authorization', 'Basic %s:%s' % (portal_owner, default_password))
+        browser = self.helperSetupBrowser()
         folder_url = self.folder.absolute_url() 
         
         # Add event
@@ -249,10 +253,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         eventDouble.count = None
 
         # Create browser and prepare for testing
-        browser = Browser()
-        browser.handleErrors = False
-        strTmp = 'Basic %s:%s' % (portal_owner, default_password)
-        browser.addHeader('Authorization', strTmp)
+        browser = self.helperSetupBrowser()      
         folder_url = context.absolute_url() 
         
         strMenuTest = 'Recurrence options'
@@ -268,6 +269,65 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         errStr = "Recurrence options submenu should indeed appear on events " \
                  "which have recurrence options set."
         self.failUnless(strMenuTest in browser.contents, errStr)
+        
+    def testCreateNewEventAsRecurrenceException(self):
+    
+        context = self.folder
+        folder_url = self.folder.absolute_url() 
+        
+        recurEvent = self.helperCreateEvent(context, 'recurring-event')
+        recurEvent.frequency = rrule.DAILY
+        recurEvent.ends = False  # True would mean the event repeats forever. 
+        recurEvent.until = DateTime('2002/02/01')
+        recurEvent.interval = 1
+        recurEvent.count = None    
+    
+        # Create browser and prepare for testing
+        browser = self.helperSetupBrowser()
+        
+        # Create recurrence exception on January 30, 2001      
+        editOccQry = "/@@occurrence_edit?r=730882"
+        #browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
+        
+        #Test that we have created a new Event as copy of recurring Event
+        errStr = "'Edit this event occurrence' did not create a new Event."
+        newEvId = "recurring-event-1"
+        self.failUnless(newEvId in browser.url, errStr)
+        
+        #Test that we see appropriate portal status message
+        errStr = "Correct portal status message does not display after  \
+                  creating event exception with 'Edit this event occurrence'"
+        strMsgTest = "You created this new event as an exception to the original"          
+        #self.failUnless(strMsgTest in browser.contents, errStr)
+        
+    """
+    TESTS PSEUDOCODE
+    [x] Is a new exception event being created?
+
+    [x] Is a portal status message being displayed on the edit view of the new 
+    exception event stating, 'You have now created an exception to the original
+    event that cannot be undone. To ensure that an event occurrence exists on 
+    this date, be sure to complete your edits and hit the Save button.'? 
+     - I edited the message, but yes, check for that
+
+    Is the ordinal date of occurrence being specified on the exceptions dates
+     field of the original event?
+
+    Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding the 
+    dates in the new recurrence exception schema field from the index?
+
+    Does creating an exception on a date that was never an occurrence on the 
+     original event return an error?
+
+    Does the new event have the same values as the original event, excluding
+     recurrence parameters, and with the start date of the occurrence passed in?
+        - NEW - This includes not copying the exception ordinal list
+
+    Does the action ('edit this occurrence') appear in the recurrence options 
+    dropdown menu only when an event is an occurrence of a recurring event?
+    this is the menu item vs. the whole menu
+    
+    """
 
 
 def test_suite():
