@@ -37,6 +37,7 @@ setup(name='p4a.ploneevent',
           'python-dateutil',
           'archetypes.schemaextender',
           'dateable.kalends >= 0.3',
+          'plone.app.locales > 3.3.5',
       ],
       entry_points="""
       # -*- Entry points: -*-

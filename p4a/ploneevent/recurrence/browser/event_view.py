@@ -34,7 +34,7 @@ class EventView(BrowserView):
         return self.context.toLocalizedTime(self.context.start(), long_format=1)
     
     def start_time(self):
-        return self.context.start().strftime(self.time_format())
+        return self.context.start().strftime(self.time_format().replace('${', '%').replace('}', ''))
 
     def short_end_date(self):
         return self.context.toLocalizedTime(self.context.end(), long_format=0)
@@ -43,23 +43,16 @@ class EventView(BrowserView):
         return self.context.toLocalizedTime(self.context.end(), long_format=1)
 
     def end_time(self):
-        return self.context.end().strftime(self.time_format())
+        return self.context.end().strftime(self.time_format().replace('${', '%').replace('}', ''))
 
     def datetime_format(self):
-        site_properties = self.context.portal_properties.site_properties
-        return site_properties.getProperty('localLongTimeFormat')
+        return translate(u'date_format_long', 'plonelocales', {}, self.request)
 
     def date_format(self):
-        site_properties = self.context.portal_properties.site_properties
-        return site_properties.getProperty('localTimeFormat')
+        return translate(u'date_format_short', 'plonelocales', {}, self.request)
     
     def time_format(self):
-        datetime_format = self.datetime_format()
-        if '%p' in datetime_format:
-            # Using AM/PM:
-            return ' '.join(datetime_format.split(' ')[-2:])
-        # 24 H format
-        return datetime_format.split(' ')[-1]
+        return translate(u'time_format', 'plonelocales', {}, self.request)
 
     def isRecurring(self):
         if not IRecurringEvent.providedBy(self.context):
