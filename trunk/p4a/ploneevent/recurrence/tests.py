@@ -15,6 +15,9 @@ import p4a.common
 import p4a.ploneevent
 from dateable import kalends
 
+from zExceptions import NotFound
+
+
 PloneTestCase.setupPloneSite(products=("p4a.ploneevent",))
 
 class RecurrenceTest(PloneTestCase.FunctionalTestCase):
@@ -27,7 +30,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
             dtStart = DateTime('2001/02/01 10:00')
         if not dtEnd:
             dtEnd = DateTime('2001/02/01 14:00')
-        context.invokeFactory('Event', id)
+        context.invokeFactory('Event', id=id, title="My Basic Event")
         myEvent = getattr(context, id)
         myEvent.update(startDate=dtStart, endDate=dtEnd)
         interface.alsoProvides(myEvent, kalends.IRecurringEvent)
@@ -271,7 +274,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnless(strMenuTest in browser.contents, errStr)
         
     def testCreateNewEventAsRecurrenceException(self):
-    
+
         context = self.folder
         folder_url = self.folder.absolute_url() 
         
@@ -287,18 +290,18 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         
         # Create recurrence exception on January 30, 2001      
         editOccQry = "/@@occurrence_edit?r=730882"
-        #browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
+        browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
         
         #Test that we have created a new Event as copy of recurring Event
         errStr = "'Edit this event occurrence' did not create a new Event."
         newEvId = "recurring-event-1"
-        #self.failUnless(newEvId in browser.url, errStr)
+        self.failUnless(newEvId in browser.url, errStr)
         
         #Test that we see appropriate portal status message
         errStr = "Correct portal status message does not display after  \
                   creating event exception with 'Edit this event occurrence'"
         strMsgTest = "You created this new event as an exception to the original"          
-        #self.failUnless(strMsgTest in browser.contents, errStr)
+        self.failUnless(strMsgTest in browser.contents, errStr)
         
         #Test that the start date of the new event is same as passed occurrence
         
@@ -308,7 +311,42 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         
         #Test that the recurrence fields are set to default values
         
+    def testIncorrectQueryParameter(self):
+        context = self.folder
+        folder_url = self.folder.absolute_url() 
+        browser = self.helperSetupBrowser()
+        recurEvent = self.helperCreateEvent(context, 'my-event')
+        recurEvent.frequency = rrule.DAILY
+        recurEvent.ends = False  # True would mean the event repeats forever. 
+        recurEvent.until = DateTime('2002/02/01')
+        recurEvent.interval = 1
+        recurEvent.count = None    
+        strMsgTest = "We're sorry, but that page doesn't exist"
         
+        # Ensure that we can view the start date occurrence
+        viewOccQry = "/?r=730517"
+        browser.open("%s/%s%s" % (folder_url, recurEvent.id, viewOccQry))
+        errStr = "Should be able to view a the start date of an Event"
+        self.failUnless('My Basic Event' in browser.contents, errStr)
+
+        # Ensure that we can view one of the non-start date occurrences
+        viewOccQry = "/?r=730518"
+        browser.open("%s/%s%s" % (folder_url, recurEvent.id, viewOccQry))
+        errStr = "Should be able to view a non-start date occurrence"
+        self.failUnless('My Basic Event' in browser.contents, errStr)
+
+        # Ensure we raise a 404 Error when the query parameter is incorrect
+        viewOccQry = "/?r=730883"
+        strRequest = "%s/%s%s" % (folder_url, recurEvent.id, viewOccQry)
+        bNotFound = False
+        try:
+            browser.open(strRequest)
+        except:
+            # Using bare except because neither self.assertRaises nor a specific 
+            # except, will catch the exception
+            bNotFound = True
+        errStr = "404 Error was not raised when the query parameter is incorrect"
+        self.failUnless(bNotFound, errStr)
         
     """
     TESTS PSEUDOCODE
@@ -320,22 +358,25 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
     this date, be sure to complete your edits and hit the Save button.'? 
      - I edited the message, but yes, check for that
 
-    Is the ordinal date of occurrence being specified on the exceptions dates
+    [] Is the ordinal date of occurrence being specified on the exceptions dates
      field of the original event?
 
-    Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding the 
+    [] Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding the 
     dates in the new recurrence exception schema field from the index?
 
-    Does creating an exception on a date that was never an occurrence on the 
+    [] Does creating an exception on a date that was never an occurrence on the 
      original event return an error?
 
-    Does the new event have the same values as the original event, excluding
+    [] Does the new event have the same values as the original event, excluding
      recurrence parameters, and with the start date of the occurrence passed in?
         - NEW - This includes not copying the exception ordinal list
 
-    Does the action ('edit this occurrence') appear in the recurrence options 
+    [] Does the action ('edit this occurrence') appear in the recurrence options 
     dropdown menu only when an event is an occurrence of a recurring event?
     this is the menu item vs. the whole menu
+   
+    [x] Does the p4a.ploneevent raise a 404 Error when the query parameter is
+    incorrect
     
     """
 
