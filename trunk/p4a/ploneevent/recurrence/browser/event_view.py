@@ -11,6 +11,8 @@ from p4a.common.dtutils import DT2dt, gettz
 
 from p4a.ploneevent.recurrence.recurrence import RecurrenceSupport
 
+from zExceptions import NotFound
+
 FREQ = {0: 'year',
         1: 'month',
         2: 'week',
@@ -30,6 +32,19 @@ CALVOCAB = {   0: (u'Year', u'Years'),
 
 
 class EventView(BrowserView):
+
+
+    def __init__(self,context,request): 
+        """ return 404 error if there is no occurrence on the date
+            passed in to request as ordinal
+        """ 
+        BrowserView.__init__(self,context,request)           
+        if self.request.has_key('r'):
+            dtOrd = int(self.request['r'])
+            if not self.isRecurring() or \
+             dtOrd not in IRecurrence(self.context, None).getOccurrenceDays():
+                raise NotFound(context, request)
+
 
     # XXX TODO: Would be nicer to use a custom __bobo_traverse__ method
     # a la /image/image_mini to be able to use urls like /my-event/733681
