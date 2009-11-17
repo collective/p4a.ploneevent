@@ -221,7 +221,7 @@ class RecurrenceView(PloneKSSView):
             #core.replaceInnerHTML('#byweekday_help', 'Repeats on')        
             #core.setStyle('#archetypes-fieldname-byweekday', name='display', value='block') 
 
-        if not ends:
+        if not ends and frequency !=-1:
             core.setStyle('#archetypes-fieldname-until', name='display', value='block') 
             core.setStyle('#archetypes-fieldname-count', name='display', value='block')            
                       

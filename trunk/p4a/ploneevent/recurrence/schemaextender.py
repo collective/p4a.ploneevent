@@ -107,9 +107,9 @@ class RecurrenceExtension(object):
                 multiValued=True,
                 widget=atapi.LinesWidget(label=u'Recurrence Exceptions',
                     description=u'Ordinal dates of event exceptions. \
-                      Occurrences will not be displayed for these dates.',),
-                    modes=('edit',),
-                    visible={'view': 'hidden', 'edit': 'hidden' } ,                    
+                      Occurrences will not be displayed for these dates.',
+                    modes=("edit"),
+                    visible={'view': 'invisible', 'edit': 'hidden' } ,)                    
                 ),
 
           ]
