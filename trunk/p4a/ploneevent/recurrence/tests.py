@@ -274,7 +274,9 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnless(strMenuTest in browser.contents, errStr)
         
     def testCreateNewEventAsRecurrenceException(self):
-
+        """ Create an exception, then make sure new (duplicated) event
+            is created for that exception date.
+        """
         context = self.folder
         folder_url = self.folder.absolute_url() 
         
@@ -283,7 +285,8 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         recurEvent.ends = False  # True would mean the event repeats forever. 
         recurEvent.until = DateTime('2002/02/01')
         recurEvent.interval = 1
-        recurEvent.count = None    
+        recurEvent.count = None
+        self.failUnless('recurring-event' in context.objectIds())
     
         # Create browser and prepare for testing
         browser = self.helperSetupBrowser()
@@ -295,7 +298,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         #Test that we have created a new Event as copy of recurring Event
         errStr = "'Edit this event occurrence' did not create a new Event."
         newEvId = "recurring-event-1"
-        self.failUnless(newEvId in browser.url, errStr)
+        self.failUnless(newEvId in context.objectIds(), errStr)
         
         #Test that we see appropriate portal status message
         errStr = "Correct portal status message does not display after  \
@@ -304,12 +307,25 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnless(strMsgTest in browser.contents, errStr)
         
         #Test that the start date of the new event is same as passed occurrence
+        # and so is end date. And make sure repeat is off.
+        newEvent = context[newEvId]
+        self.failUnless(newEvent.startDate == DateTime('2002/02/01'))
+        self.failUnless(newEvent.endDate == DateTime('2002/02/01'))
+        self.failUnless(newEvent.frequency == -1)   # is repeat off?
         
-        #Test that the start and end times 
+        #TODO: Test that the recurrence fields are set to default values
         
-        #Test that (some other) field values are the same
-        
-        #Test that the recurrence fields are set to default values
+    def testCreateNewEventAsRecurrenceException_FirstInSeries(self):
+        """ Let's make an exception on the first date of the recurring event
+            and make sure things work ok.
+        """
+        pass
+
+    def testCreateNewEventAsRecurrenceException_LastInSeries(self):
+        """ Let's make an exception on the last date of the recurring event
+            (that ends on a specific date) and make sure things work ok.
+        """
+        pass
         
     def testIncorrectQueryParameter(self):
         context = self.folder
