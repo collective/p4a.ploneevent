@@ -37,14 +37,18 @@ class EventView(BrowserView):
     def __init__(self,context,request): 
         """ return 404 error if there is no occurrence on the date
             passed in to request as ordinal
+            XXX TODO: Might be nicer to return specific message saying 
+                      there is not an occurrence of that event on the 
+                      date passed.
         """ 
         BrowserView.__init__(self,context,request)           
         if self.request.has_key('r'):
             dtOrd = int(self.request['r'])
             if not self.isRecurring() or \
-             dtOrd not in IRecurrence(self.context, None).getOccurrenceDays():
+             (dtOrd not in IRecurrence(self.context, None).getOccurrenceDays() \
+              and dtOrd != DT2dt(self.context.start()).toordinal()
+             ):
                 raise NotFound(context, request)
-
 
     # XXX TODO: Would be nicer to use a custom __bobo_traverse__ method
     # a la /image/image_mini to be able to use urls like /my-event/733681
@@ -55,13 +59,7 @@ class EventView(BrowserView):
         if self.isRecurring() and self.request.has_key('r'):
             current = int(self.request['r'])
             date = datetime.fromordinal(current).replace(tzinfo=gettz())
-            #since we are passing ordinal date equal to 12:00am of that day,
-            #must add hours and minutes from original event
-            date = date + \
-              timedelta(hours=self.context.start().hour(),\
-                        minutes=self.context.start().minute())
-            date = dt2DT(date)  
-            
+            date = self.offset_start(date)            
         return date
 
     def end(self):
@@ -69,6 +67,14 @@ class EventView(BrowserView):
         #XXX TODO otherwise returning 1 minute before 
         # appropriate end time, but could be done more elegantly
         return self.start() + offset + 0.000001
+        
+    def offset_start(self,date):
+        #since we are passing ordinal date equal to 12:00am of that day,
+        #must add hours and minutes from original event
+        date = date + \
+          timedelta(hours=self.context.start().hour(),\
+                    minutes=self.context.start().minute())
+        return dt2DT(date)
     
     def same_day(self):
         return self.start().Date() == self.end().Date()

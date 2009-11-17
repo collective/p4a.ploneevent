@@ -5,7 +5,7 @@ from Products.Archetypes.utils import addStatusMessage
 from Products.Archetypes import PloneMessageFactory as _
 
 from datetime import timedelta, datetime, time
-from p4a.common import dtutils  
+from p4a.common.dtutils import DT2dt, dt2DT, gettz
 
 class OccurrenceEditView(BrowserView):
 
@@ -45,13 +45,22 @@ class OccurrenceEditView(BrowserView):
       try:
         # if we pass an ordinal date in the querystring use as new start date
         ordDt = self.context.request.r 
-        x.startDate = dtutils.dt2DT(datetime.fromordinal(int(ordDt)))
-        x.endDate = dtutils.dt2DT(datetime.fromordinal(int(ordDt)))
-        # TODO XXX: need to add hours minutes seconds         
+        startDate = datetime.fromordinal(int(ordDt)).replace(tzinfo=gettz())
+        #XXX TODO factor time offset code so not duplicating code in browserview
+        startDate = startDate + \
+          timedelta(hours=x.start().hour(),\
+                    minutes=x.start().minute())        
+        endOffset = x.end() - x.start()            
+        x.startDate = dt2DT(startDate)                
+        #XXX TODO otherwise returning 1 minute before 
+        # appropriate end time, but could be done more elegantly
+        endDate =  x.startDate + endOffset + 0.000001
+        x.endDate = endDate
+         
       except:
-        ordDt = dtutils.DT2dt(x.start()).toordinal()
+        ordDt = DT2dt(x.start()).toordinal()
       #add new date as exception to original
-      self.addDateExceptionToEvent(ordDt,self.context.aq_self)
+      self.addDateExceptionToEvent(str(ordDt),self.context.aq_self)
 
       #new event should not be recurring
       x.frequency = -1

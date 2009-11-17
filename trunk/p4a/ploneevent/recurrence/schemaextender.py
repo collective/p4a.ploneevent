@@ -109,7 +109,7 @@ class RecurrenceExtension(object):
                     description=u'Ordinal dates of event exceptions. \
                       Occurrences will not be displayed for these dates.',),
                     modes=('edit',),
-                    visible={'view': 'hidden', 'edit': 'visible' } ,                    
+                    visible={'view': 'hidden', 'edit': 'hidden' } ,                    
                 ),
 
           ]
