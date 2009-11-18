@@ -326,7 +326,45 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
             (that ends on a specific date) and make sure things work ok.
         """
         pass
+
+    def testDeleteOccurrenceInRecurrenceEvent(self):
+        """ Delete a single exception for this recurring event.
+        """
+        context = self.folder
+        folder_url = self.folder.absolute_url() 
+
+        recurEvent = self.helperCreateEvent(context, 'recurring-event')
+        recurEvent.frequency = rrule.DAILY
+        recurEvent.ends = False  # True would mean the event repeats forever. 
+        recurEvent.until = DateTime('2002/02/01')
+        recurEvent.interval = 1
+        recurEvent.count = None
+        self.failUnless('recurring-event' in context.objectIds())
+
+        # Create browser and prepare for testing
+        browser = self.helperSetupBrowser()
+
+        # Create recurrence exception on January 30, 2001
+        editOccQry = "/@@occurrence_delete?r=730882"
+        browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
         
+        #Test that we see appropriate portal status message
+        errStr = "Correct portal status message does not display"
+        strMsgTest = "You have deleted the occurrence of this event"
+        self.failUnless(strMsgTest in browser.contents, errStr)
+
+        # There should be no new events created from this
+        self.failUnless(len(context.objectIds()) == 1, "There should only be our recurring event")
+
+        # Is this event in the exception list now?
+        self.failUnless("730882" in recurEvent.exceptions,"Didn't find our exception in the list")
+        
+    def testDeleteOccurrenceInRecurrenceEvent_IfThereIsOnlyOneOccurrence(self):
+        """ Edge case: Delete a single exception for this recurring event, but
+            the recurring event only has one occurrence.
+        """
+        pass
+    
     def testIncorrectQueryParameter(self):
         context = self.folder
         folder_url = self.folder.absolute_url() 
