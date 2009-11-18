@@ -297,7 +297,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         recurEvent.count = None
         self.failUnless('recurring-event' in context.objectIds())
         
-        # Create recurrence exception on January 30, 2001
+        # Create recurrence exception on February 1, 2002
         strNewEventOrdinal = '730882'
         editOccQry = "/@@occurrence_edit?r=%s" % strNewEventOrdinal
         self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
@@ -318,7 +318,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         newEvent = context[newEvId]
         self.failUnless(newEvent.startDate == DateTime('2002/02/01 10:00:00 GMT-8'))
         self.failUnless(newEvent.endDate == DateTime('2002/02/01 14:00:00.086 GMT-8'))
-        self.failUnless(newEvent.frequency == -1)   # is repeat off?
+        self.failUnless(newEvent.frequency == -1)   # is repeat off?       
         
         # Is the ordinal date of occurrence being specified on the exceptions
         # dates field of the original event?
@@ -340,7 +340,19 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
                  "occurrence for the new exception event."
         self.failIf(strNewEventOrdinal in listRecurOccurrences, errStr)
         
-        #TODO: Test that the recurrence fields are set to default values
+        #Are the recurrence fields on the new event set to default values?
+        self.failUnless(newEvent.frequency == -1)
+        self.failUnless(newEvent.interval == 1)
+        self.failUnless(newEvent.byweekday == None)
+        self.failUnless(newEvent.repeatday == [])
+        self.failUnless(newEvent.ends == False)
+        self.failUnless(newEvent.until == None)
+        self.failUnless(newEvent.count == None)
+        self.failUnless(newEvent.lingo == '')
+        self.failUnless(newEvent.exceptions == ())
+        
+        #Verify that the title of the new event is the same as old
+        self.failUnless(newEvent.title == 'My Basic Event')
         
     def testCreateNewEventAsRecurrenceException_FirstInSeries(self):
         """ Let's make an exception on the FIRST date of the recurring event
@@ -398,7 +410,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         recurEvent.count = None
         self.failUnless('recurring-event' in context.objectIds())
 
-        # Create recurrence exception on January 30, 2001
+        # Delete recurrence on February 1, 2002
         editOccQry = "/@@occurrence_delete?r=730882"
         self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
         
@@ -455,6 +467,56 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         errStr = "404 Error was not raised when the query parameter is incorrect"
         self.failUnless(bNotFound, errStr)
         
+    def testEditThisAndSubsequentOccurrences(self):
+        """ Edit the present and future occurrences of a recurring event """
+
+        context = self.folder
+        folder_url = self.folder.absolute_url() 
+
+        recurEvent = self.helperCreateEvent(context, 'recurring-event')
+        recurEvent.frequency = rrule.DAILY
+        recurEvent.ends = False  # True would mean the event repeats forever. 
+        recurEvent.until = DateTime('2002/02/01')
+        recurEvent.interval = 1
+        recurEvent.count = None
+        self.failUnless('recurring-event' in context.objectIds())
+
+        # Edit recurrence on January 30, 2002 and subsequent occurrences
+        editOccQry = "/@@occurrence_editsubsequent?r=730880"
+        self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
+        
+        # Test that we have created a new Event as copy of recurring Event
+        errStr = "'Edit this and subsequent occurrences' did not create a new\
+                   Event."
+        newEvId = "recurring-event-1"
+        newEv = getattr(context,newEvId)
+        self.failUnless(newEvId in context.objectIds(), errStr)
+        
+        #Ensure that old event has an until value of day before specified occurrence
+        errStr = "'Edit this and subsequent occurrences' did not correctly set the \
+                   value of 'until' field on original event."
+        dayBefore = DateTime('2002/01/29')           
+        self.failUnless( recurEvent.until == dayBefore, errStr)
+        
+        #Ensure that new event has same recurrence field values as original,
+        #other than until
+        errStr = "The values for recurrence fiels in the new event created by \
+                  'Edit this and subsequent occurrences' do not match those of \
+                  the original event."
+        self.failUnless(newEv.frequency == recurEvent.frequency, errStr)
+        self.failUnless(newEv.ends == recurEvent.ends, errStr)
+        self.failUnless(newEv.interval == recurEvent.interval, errStr)
+        self.failUnless(newEv.count == recurEvent.count, errStr)        
+        
+        #Ensure that the new event has a start date of the specified occurrence
+        errStr = "The start date of the new event created by 'edit this and \
+                  subsequent events' is not the same as the occurrence used \
+                  for the split date."
+        self.failUnless(newEv.startDate == DateTime('2002/01/30 10:00:00 GMT-8') , errStr)
+        
+        #Ensure we see the appropriate portal status message?
+            
+        
     """
     TESTS PSEUDOCODE
     [x] Is a new exception event being created?
@@ -474,7 +536,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
     [x] Does creating an exception on a date that was never an occurrence on the 
      original event return an error?
 
-    [] Does the new event have the same values as the original event, excluding
+    [x] Does the new event have the same values as the original event, excluding
      recurrence parameters, and with the start date of the occurrence passed in?
         - NEW - This includes not copying the exception ordinal list
 
