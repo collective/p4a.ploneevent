@@ -369,10 +369,20 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         recurEvent.count = None
         self.failUnless('recurring-event' in context.objectIds())
     
-        # Create recurrence exception on January 30, 2001
+        # Create recurrence exception on a day not in the recurrence
         strNewEventOrdinal = '730883'
         editOccQry = "/@@occurrence_edit?r=%s" % strNewEventOrdinal
         self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
+
+        # Ensure there is a portal status message
+        strMsgTest = "You attempted to make an exception on a date that is not "
+        errStr = "There was no indication that user cannot create exception now"
+        self.failUnless(strMsgTest in self.browser.contents, errStr)
+        
+        # Be sure we have not created a new Event as copy of recurring Event
+        errStr = "Accidentally created new Event on non-existent occurrence"
+        newEvId = "recurring-event-1"
+        self.failIf(newEvId in context.objectIds(), errStr)
 
     def testDeleteOccurrenceInRecurrenceEvent(self):
         """ Delete a single exception for this recurring event.

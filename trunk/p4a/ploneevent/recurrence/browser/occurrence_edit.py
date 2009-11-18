@@ -7,6 +7,8 @@ from Products.Archetypes import PloneMessageFactory as _
 from datetime import timedelta, datetime, time
 from p4a.common.dtutils import DT2dt, dt2DT, gettz
 
+from dateable import kalends
+
 class OccurrenceEditView(BrowserView):
 
   implements(IOccurrenceEditView)
@@ -77,44 +79,57 @@ class OccurrenceEditView(BrowserView):
       """ Create a new event as copy of original and redirect to 
           edit view for new event.
       """
-      x = self.copyEvent()
-      if x:
-        #new event gets start date from passed ordinal or original start date
-        try:
-          # if we pass an ordinal date in the querystring use as new start date
-          ordDt = self.context.request.r 
-          (x.startDate,x.endDate) =  self.offsetStartAndEndTimes(x,ordDt)
-        except:
-          ordDt = DT2dt(x.start()).toordinal()
-          
-        #add new date as exception to original
-        self.addDateExceptionToEvent(str(ordDt),self.context.aq_self)
-  
-        #new event should not be recurring
-        x.frequency = -1
-        x.interval = 1
-        x.byweekday = None
-        x.repeatday = []
-        x.ends = False
-        x.until = None
-        x.count = None
-        x.lingo = ''
-        x.exceptions = ()
-                   
-        #index new object
-        x.reindexObject()
+      context = self.context
+
+      # Cannot add an exception on a date that is not part of the recurrence
+      ordDt = getattr(context.request, 'r', None)
+      listOrdinals = kalends.IRecurrence(context.aq_self).getOccurrenceDays()
+      if ordDt is not None and int(ordDt) not in listOrdinals:
+          status_message =_(u"You attempted to make an exception on a " \
+                            "date that is not a part of this event's " \
+                            "series. Double-check the event and try again.")
+          nextURL = context.aq_self.absolute_url()
+      else:
+          x = self.copyEvent()
+          if x:
+              # new event gets start date from passed ordinal or original start 
+              # date.  if we pass an ordinal date in the querystring use as new 
+              # start date
+              if ordDt:
+                  (x.startDate,x.endDate) = self.offsetStartAndEndTimes(x,ordDt)
+              else:
+                  ordDt = DT2dt(x.start()).toordinal()
+                
+              # add new date as exception to original
+              self.addDateExceptionToEvent(str(ordDt),self.context.aq_self)
         
-        
-        #redirect to new object with portal status message      
-        xurl = x.absolute_url() 
-        status_message=_(u'You created this new event as an exception to the original \
-                           recurring event series. The original event will no \
-                           longer have an occurrence on the start date \
-                           displayed below.  To ensure that an event occurrence \
-                           exists on this date, be sure to complete your edits \
-                           and hit the Save button.')
-        addStatusMessage(self.context.request,status_message)    
-        self.context.request.RESPONSE.redirect(xurl + '/edit')
+              # new event should not be recurring
+              x.frequency = -1
+              x.interval = 1
+              x.byweekday = None
+              x.repeatday = []
+              x.ends = False
+              x.until = None
+              x.count = None
+              x.lingo = ''
+              x.exceptions = ()
+                         
+              #index new object
+              x.reindexObject()
+              
+              status_message=_(u'You created this new event as an exception ' \
+                               'to the original recurring event series. The ' \
+                               'original event will no longer have an ' \
+                               'occurrence on the start date displayed below.' \
+                               '  To ensure that an event occurrence exists ' \
+                               'on this date, be sure to complete your edits ' \
+                               'and hit the Save button.')
+              xurl = x.absolute_url() 
+              nextURL = xurl + '/edit'
+
+      #redirect to new object with portal status message      
+      addStatusMessage(context.request,status_message)
+      context.request.RESPONSE.redirect(nextURL)
     
   def editSubsequentOccurrences(self):
       """ Split this event into two recurrence series, and make changes to
