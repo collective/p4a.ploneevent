@@ -50,7 +50,8 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         browser = Browser()
         browser.handleErrors = False
         browser.addHeader('Authorization', 'Basic %s:%s' % (portal_owner, default_password))
-        return browser                
+        self.browser = browser
+        return browser
     
     def afterSetUp(self):
         ZopeTestCase.utils.setupCoreSessions(self.app)
@@ -58,6 +59,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         zcml.load_config('configure.zcml', p4a.common)
         zcml.load_config('configure.zcml', p4a.ploneevent)
         zcml.load_config('configure.zcml', p4a.subtyper)
+        self.helperSetupBrowser()
 
     def testRecurrenceBasic(self):
         # Basic recurrence, daily for one year:
@@ -148,12 +150,11 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
 
         
     def test_recurrence(self):
-        browser = self.helperSetupBrowser()
         folder_url = self.folder.absolute_url() 
         
         # Add event
-        browser.open(folder_url + '/createObject?type_name=Event')
-        form = browser.getForm('event-base-edit')
+        self.browser.open(folder_url + '/createObject?type_name=Event')
+        form = self.browser.getForm('event-base-edit')
         form.getControl(name='title').value = 'An Event'
         form.getControl(name='startDate_year').value = ['2007']
         form.getControl(name='startDate_month').value = ['04']
@@ -177,10 +178,10 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         # Test that we can browse to the event passing a recurrence day
         # and see that the date shows for the recurrence, not the original event
         # 732950 = (2007/10/01)
-        browser.open(folder_url + '/an-event/?r=732950')
+        self.browser.open(folder_url + '/an-event/?r=732950')
         errStr = "Event view does not show correct start date for occurrence \
                   passed as query parameter."
-        self.failUnless('Oct 01, 2007' in browser.contents, errStr)
+        self.failUnless('Oct 01, 2007' in self.browser.contents, errStr)
 
     def testLingo(self):
         self.folder.invokeFactory('Event', 'event')
@@ -255,32 +256,31 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         eventMultiple.interval = 1
         eventMultiple.count = None
 
-        # Create browser and prepare for testing
-        browser = self.helperSetupBrowser()      
+        # Prepare for testing
         folder_url = context.absolute_url() 
         
         strMenuTest = 'Recurrence options'
         strMenuItemTest = 'Edit this event occurrence'
 
         # Test to ensure recurrence options are not set for single events
-        browser.open("%s/%s" % (folder_url, eventSingle.id))
+        self.browser.open("%s/%s" % (folder_url, eventSingle.id))
         errStr = "Recurrence options submenu should not appear on events that" \
                  " do not have recurrence options set."
-        self.failIf(strMenuTest in browser.contents, errStr)
+        self.failIf(strMenuTest in self.browser.contents, errStr)
 
         errStr = "Edit this occurrence menu item should not appear on events " \
                  "that do not have recurrence options set."
-        self.failIf(strMenuItemTest in browser.contents, errStr)
+        self.failIf(strMenuItemTest in self.browser.contents, errStr)
 
         # Test to ensure recurrence options are indeed set for multiple events
-        browser.open("%s/%s" % (folder_url, eventMultiple.id))
+        self.browser.open("%s/%s" % (folder_url, eventMultiple.id))
         errStr = "Recurrence options submenu should indeed appear on events " \
                  "which have recurrence options set."
-        self.failUnless(strMenuTest in browser.contents, errStr)
+        self.failUnless(strMenuTest in self.browser.contents, errStr)
         
         errStr = "Edit this occurrence menu item should indeed appear on " \
                  "events which have recurrence options set."
-        self.failUnless(strMenuItemTest in browser.contents, errStr)
+        self.failUnless(strMenuItemTest in self.browser.contents, errStr)
         
     def testCreateNewEventAsRecurrenceException(self):
         """ Create an exception, then make sure new (duplicated) event
@@ -296,14 +296,11 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         recurEvent.interval = 1
         recurEvent.count = None
         self.failUnless('recurring-event' in context.objectIds())
-    
-        # Create browser and prepare for testing
-        browser = self.helperSetupBrowser()
         
         # Create recurrence exception on January 30, 2001
         strNewEventOrdinal = '730882'
         editOccQry = "/@@occurrence_edit?r=%s" % strNewEventOrdinal
-        browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
+        self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
         
         # Test that we have created a new Event as copy of recurring Event
         errStr = "'Edit this event occurrence' did not create a new Event."
@@ -314,7 +311,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         errStr = "Correct portal status message does not display after  \
                   creating event exception with 'Edit this event occurrence'"
         strMsgTest = "You created this new event as an exception to the original"
-        self.failUnless(strMsgTest in browser.contents, errStr)
+        self.failUnless(strMsgTest in self.browser.contents, errStr)
         
         # Test that the start date of the new event is same as passed occurrence
         # and so is end date. And make sure repeat is off.
@@ -357,6 +354,26 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         """
         self.fail("Need to implement")
 
+    def testCreateNewEventWithNonExistantOccurrence(self):
+        """ Does creating an exception on a date that was never an occurrence on the 
+        original event return an error?
+        """
+        context = self.folder
+        folder_url = self.folder.absolute_url() 
+        
+        recurEvent = self.helperCreateEvent(context, 'recurring-event')
+        recurEvent.frequency = rrule.DAILY
+        recurEvent.ends = False  # True would mean the event repeats forever. 
+        recurEvent.until = DateTime('2002/02/01')
+        recurEvent.interval = 1
+        recurEvent.count = None
+        self.failUnless('recurring-event' in context.objectIds())
+    
+        # Create recurrence exception on January 30, 2001
+        strNewEventOrdinal = '730883'
+        editOccQry = "/@@occurrence_edit?r=%s" % strNewEventOrdinal
+        self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
+
     def testDeleteOccurrenceInRecurrenceEvent(self):
         """ Delete a single exception for this recurring event.
         """
@@ -371,17 +388,14 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         recurEvent.count = None
         self.failUnless('recurring-event' in context.objectIds())
 
-        # Create browser and prepare for testing
-        browser = self.helperSetupBrowser()
-
         # Create recurrence exception on January 30, 2001
         editOccQry = "/@@occurrence_delete?r=730882"
-        browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
+        self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
         
         #Test that we see appropriate portal status message
         errStr = "Correct portal status message does not display"
         strMsgTest = "You have deleted the occurrence of this event"
-        self.failUnless(strMsgTest in browser.contents, errStr)
+        self.failUnless(strMsgTest in self.browser.contents, errStr)
 
         # There should be no new events created from this
         self.failUnless(len(context.objectIds()) == 1, "There should only be our recurring event")
@@ -398,7 +412,6 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
     def testIncorrectQueryParameter(self):
         context = self.folder
         folder_url = self.folder.absolute_url() 
-        browser = self.helperSetupBrowser()
         recurEvent = self.helperCreateEvent(context, 'my-event')
         recurEvent.frequency = rrule.DAILY
         recurEvent.ends = False  # True would mean the event repeats forever. 
@@ -409,22 +422,22 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         
         # Ensure that we can view the start date occurrence
         viewOccQry = "/?r=730517"
-        browser.open("%s/%s%s" % (folder_url, recurEvent.id, viewOccQry))
+        self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, viewOccQry))
         errStr = "Should be able to view a the start date of an Event"
-        self.failUnless('My Basic Event' in browser.contents, errStr)
+        self.failUnless('My Basic Event' in self.browser.contents, errStr)
 
         # Ensure that we can view one of the non-start date occurrences
         viewOccQry = "/?r=730518"
-        browser.open("%s/%s%s" % (folder_url, recurEvent.id, viewOccQry))
+        self.browser.open("%s/%s%s" % (folder_url, recurEvent.id, viewOccQry))
         errStr = "Should be able to view a non-start date occurrence"
-        self.failUnless('My Basic Event' in browser.contents, errStr)
+        self.failUnless('My Basic Event' in self.browser.contents, errStr)
 
         # Ensure we raise a 404 Error when the query parameter is incorrect
         viewOccQry = "/?r=730883"
         strRequest = "%s/%s%s" % (folder_url, recurEvent.id, viewOccQry)
         bNotFound = False
         try:
-            browser.open(strRequest)
+            self.browser.open(strRequest)
         except:
             # Using bare except because neither self.assertRaises nor a specific 
             # except, will catch the exception
@@ -448,7 +461,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
     [x] Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding the 
     dates in the new recurrence exception schema field from the index?
 
-    [] Does creating an exception on a date that was never an occurrence on the 
+    [x] Does creating an exception on a date that was never an occurrence on the 
      original event return an error?
 
     [] Does the new event have the same values as the original event, excluding
