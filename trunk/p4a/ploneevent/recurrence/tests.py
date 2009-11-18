@@ -312,29 +312,29 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         #Test that we see appropriate portal status message
         errStr = "Correct portal status message does not display after  \
                   creating event exception with 'Edit this event occurrence'"
-        strMsgTest = "You created this new event as an exception to the original"          
+        strMsgTest = "You created this new event as an exception to the original"
         self.failUnless(strMsgTest in browser.contents, errStr)
         
         #Test that the start date of the new event is same as passed occurrence
         # and so is end date. And make sure repeat is off.
         newEvent = context[newEvId]
-        self.failUnless(newEvent.startDate == DateTime('2002/02/01'))
-        self.failUnless(newEvent.endDate == DateTime('2002/02/01'))
+        self.failUnless(newEvent.startDate == DateTime('2002/02/01 10:00:00 GMT-8'))
+        self.failUnless(newEvent.endDate == DateTime('2002/02/01 14:00:00.086 GMT-8'))
         self.failUnless(newEvent.frequency == -1)   # is repeat off?
         
         #TODO: Test that the recurrence fields are set to default values
         
     def testCreateNewEventAsRecurrenceException_FirstInSeries(self):
-        """ Let's make an exception on the first date of the recurring event
+        """ Let's make an exception on the FIRST date of the recurring event
             and make sure things work ok.
         """
-        pass
+        self.fail("Need to implement")
 
     def testCreateNewEventAsRecurrenceException_LastInSeries(self):
-        """ Let's make an exception on the last date of the recurring event
+        """ Let's make an exception on the LAST date of the recurring event
             (that ends on a specific date) and make sure things work ok.
         """
-        pass
+        self.fail("Need to implement")
 
     def testDeleteOccurrenceInRecurrenceEvent(self):
         """ Delete a single exception for this recurring event.
@@ -372,7 +372,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         """ Edge case: Delete a single exception for this recurring event, but
             the recurring event only has one occurrence.
         """
-        pass
+        self.fail("Need to implement")
     
     def testIncorrectQueryParameter(self):
         context = self.folder
