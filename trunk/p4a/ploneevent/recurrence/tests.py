@@ -240,26 +240,27 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         ]
         self.helperTestLingo(3, 6, 11, STR_DAILY_TESTS)
 
-    def testRecurrenceMenuAvailable(self):
+    def testRecurrenceMenu(self):
         # Basic recurrence, daily for one year:
         context = self.folder
         eventSingle = self.helperCreateEvent(context, 'event-single')
-        eventDouble = self.helperCreateEvent(context, 'event-double')
+        eventMultiple = self.helperCreateEvent(context, 'event-double')
         recurrenceSingle = kalends.IRecurrence(eventSingle)
-        recurrenceDouble = kalends.IRecurrence(eventDouble)
+        recurrenceMultiple = kalends.IRecurrence(eventMultiple)
 
         # Set the recurrence info for the eventDouble to recur for one year
-        eventDouble.frequency = rrule.DAILY
-        eventDouble.ends = False  # True would mean the event repeats forever. 
-        eventDouble.until = DateTime('2002/02/01')
-        eventDouble.interval = 1
-        eventDouble.count = None
+        eventMultiple.frequency = rrule.DAILY
+        eventMultiple.ends = False  # True would mean the event repeats forever. 
+        eventMultiple.until = DateTime('2002/02/01')
+        eventMultiple.interval = 1
+        eventMultiple.count = None
 
         # Create browser and prepare for testing
         browser = self.helperSetupBrowser()      
         folder_url = context.absolute_url() 
         
         strMenuTest = 'Recurrence options'
+        strMenuItemTest = 'Edit this event occurrence'
 
         # Test to ensure recurrence options are not set for single events
         browser.open("%s/%s" % (folder_url, eventSingle.id))
@@ -267,11 +268,19 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
                  " do not have recurrence options set."
         self.failIf(strMenuTest in browser.contents, errStr)
 
+        errStr = "Edit this occurrence menu item should not appear on events " \
+                 "that do not have recurrence options set."
+        self.failIf(strMenuItemTest in browser.contents, errStr)
+
         # Test to ensure recurrence options are indeed set for multiple events
-        browser.open("%s/%s" % (folder_url, eventDouble.id))
+        browser.open("%s/%s" % (folder_url, eventMultiple.id))
         errStr = "Recurrence options submenu should indeed appear on events " \
                  "which have recurrence options set."
         self.failUnless(strMenuTest in browser.contents, errStr)
+        
+        errStr = "Edit this occurrence menu item should indeed appear on " \
+                 "events which have recurrence options set."
+        self.failUnless(strMenuItemTest in browser.contents, errStr)
         
     def testCreateNewEventAsRecurrenceException(self):
         """ Create an exception, then make sure new (duplicated) event
@@ -425,7 +434,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
      recurrence parameters, and with the start date of the occurrence passed in?
         - NEW - This includes not copying the exception ordinal list
 
-    [] Does the action ('edit this occurrence') appear in the recurrence options 
+    [x] Does the action ('edit this occurrence') appear in the recurrence options 
     dropdown menu only when an event is an occurrence of a recurring event?
     this is the menu item vs. the whole menu
    
