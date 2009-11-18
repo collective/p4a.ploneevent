@@ -32,6 +32,16 @@
   		 name="occurrence_edit"
   		 permission="cmf.ModifyPortalContent"
   		 />
+
+  	<browser:page
+  		 for="dateable.kalends.IRecurringEvent"
+  		 class=".occurrence_edit.OccurrenceEditView"
+  		 attribute="deleteSingleOccurrence"
+  		 name="occurrence_delete"
+  		 permission="cmf.ModifyPortalContent"
+  		 />
+
+
 		
     <include file="menus.zcml" />
 

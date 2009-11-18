@@ -28,16 +28,18 @@ class RecurrenceMenu(BrowserMenu):
                    'icon'        : '',
                    'extra'       : {'id': 'edit-this-occurrence', 'separator': None, 'class': ''},
                    'submenu'     : None,
-                },]
-        """ 
-                  {'title'       : 'Cancel this event occurrence',
+                },
+
+                  {'title'       : 'Delete this event occurrence',
                    'description' : 'Remove this event occurrence from the recurrence series',
-                   'action'      : context.absolute_url() + '/@@occurrence_delete',
+                   'action'      : context.absolute_url() + '/@@occurrence_delete' + qry,
                    'selected'    : False,
                    'icon'        : '',
                    'extra'       : {'id': 'delete-this-occurrence', 'separator': None, 'class': ''},
                    'submenu'     : None,
-                   },
+                },]
+                
+        """ 
                   {'title'       : 'Edit this and future occurrences',
                    'description' : 'Split this event into two recurrence series, and make changes to' + \
                                    ' the future occurrences.  ',
