@@ -300,27 +300,48 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         # Create browser and prepare for testing
         browser = self.helperSetupBrowser()
         
-        # Create recurrence exception on January 30, 2001      
-        editOccQry = "/@@occurrence_edit?r=730882"
+        # Create recurrence exception on January 30, 2001
+        strNewEventOrdinal = '730882'
+        editOccQry = "/@@occurrence_edit?r=%s" % strNewEventOrdinal
         browser.open("%s/%s%s" % (folder_url, recurEvent.id, editOccQry))
         
-        #Test that we have created a new Event as copy of recurring Event
+        # Test that we have created a new Event as copy of recurring Event
         errStr = "'Edit this event occurrence' did not create a new Event."
         newEvId = "recurring-event-1"
         self.failUnless(newEvId in context.objectIds(), errStr)
         
-        #Test that we see appropriate portal status message
+        # Test that we see appropriate portal status message
         errStr = "Correct portal status message does not display after  \
                   creating event exception with 'Edit this event occurrence'"
         strMsgTest = "You created this new event as an exception to the original"
         self.failUnless(strMsgTest in browser.contents, errStr)
         
-        #Test that the start date of the new event is same as passed occurrence
+        # Test that the start date of the new event is same as passed occurrence
         # and so is end date. And make sure repeat is off.
         newEvent = context[newEvId]
         self.failUnless(newEvent.startDate == DateTime('2002/02/01 10:00:00 GMT-8'))
         self.failUnless(newEvent.endDate == DateTime('2002/02/01 14:00:00.086 GMT-8'))
         self.failUnless(newEvent.frequency == -1)   # is repeat off?
+        
+        # Is the ordinal date of occurrence being specified on the exceptions
+        # dates field of the original event?
+        errStr = "Didn't find our exception in the list"
+        self.failUnless(strNewEventOrdinal in recurEvent.exceptions, errStr)
+        errStr = "Shouldn't find an exception in the list of the new object"
+        self.failIf(strNewEventOrdinal in newEvent.exceptions, errStr)
+
+        # Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding 
+        # the dates in the new recurrence exception schema field from the index?
+        recurrenceNewEvent = kalends.IRecurrence(newEvent)
+        recurrenceRecurEvent = kalends.IRecurrence(recurEvent)
+        listNewOccurrences = recurrenceNewEvent.getOccurrenceDays()
+        listRecurOccurrences = recurrenceRecurEvent.getOccurrenceDays()
+        errStr = "New exception occurrence should not have itself any " \
+                 "occurrences"
+        self.failUnless(len(listNewOccurrences) == 0, errStr)
+        errStr = "Original recurring event should no longer be reporting an " \
+                 "occurrence for the new exception event."
+        self.failIf(strNewEventOrdinal in listRecurOccurrences, errStr)
         
         #TODO: Test that the recurrence fields are set to default values
         
@@ -421,10 +442,10 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
     this date, be sure to complete your edits and hit the Save button.'? 
      - I edited the message, but yes, check for that
 
-    [] Is the ordinal date of occurrence being specified on the exceptions dates
+    [x] Is the ordinal date of occurrence being specified on the exceptions dates
      field of the original event?
 
-    [] Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding the 
+    [x] Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding the 
     dates in the new recurrence exception schema field from the index?
 
     [] Does creating an exception on a date that was never an occurrence on the 
