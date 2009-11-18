@@ -41,7 +41,13 @@
   		 permission="cmf.ModifyPortalContent"
   		 />
 
-
+  	<browser:page
+  		 for="dateable.kalends.IRecurringEvent"
+  		 class=".occurrence_edit.OccurrenceEditView"
+  		 attribute="editSubsequentOccurrences"
+  		 name="occurrence_editsubsequent"
+  		 permission="cmf.ModifyPortalContent"
+  		 />
 		
     <include file="menus.zcml" />
 
