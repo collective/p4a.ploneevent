@@ -17,3 +17,15 @@ if not hasattr(vocabulary.SimpleVocabulary, 'fromDictionary'):
     fromDictionary = classmethod(fromDictionary)
 
     vocabulary.SimpleVocabulary.fromDictionary = fromDictionary
+
+# XXX TODO: Fix this code in p4a.plonecalendar
+from p4a.plonecalendar.eventprovider import TopicEventProvider
+
+def getEvents(self, start=None, stop=None, **kw):
+    #need to filter by topic criteria here too, to return correct
+    #recurring events with _getEvents
+    q = self.context.buildQuery()
+    kw.update(q)    
+    return self._getEvents(start=start, stop=stop, **kw)
+
+TopicEventProvider.getEvents = getEvents
