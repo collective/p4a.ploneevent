@@ -4,7 +4,7 @@
 p4a.ploneevent Changes
 ======================
 
-p4a.ploneevent 0.7.3 (unreleased)
+p4a.ploneevent 0.7.3 (2009-11-27)
 =================================
 
 * Now displays events with 12H or 24H clock depending on locale. (regebro)
