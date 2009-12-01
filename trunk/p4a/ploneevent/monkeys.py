@@ -25,7 +25,14 @@ def getEvents(self, start=None, stop=None, **kw):
     #need to filter by topic criteria here too, to return correct
     #recurring events with _getEvents
     q = self.context.buildQuery()
-    kw.update(q)    
+    # drop any duplicate start and stop keyword args from
+    # topic criteria as we are interested in start and stop of 
+    # date range from calendar.
+    if 'start' in q.keys():
+         del(q['start'])
+    if 'stop' in q.keys():
+          del(q['stop'])
+    kw.update(q)
     return self._getEvents(start=start, stop=stop, **kw)
 
 TopicEventProvider.getEvents = getEvents
