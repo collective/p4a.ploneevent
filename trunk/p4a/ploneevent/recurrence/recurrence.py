@@ -45,13 +45,15 @@ class RecurrenceSupport(object):
 
         dtstart = DT2dt(self.context.startDate)
         
-        if self.context.frequency == 3:
+        if getattr(self.context,'byweekday',None) and \
+          self.context.frequency == 3:
             return tuple([int(day) for day in self.context.byweekday])       
         if self.context.frequency != 1:
             return None
         if self.context.repeatday[0] == 'dayofmonth':
             return None
-        if len(self.context.byweekday) == 0 or self.context.frequency == 1:
+        if getattr(self.context,'byweekday',None) and \
+          len(self.context.byweekday) == 0 or self.context.frequency == 1:
             return tuple([dtstart.weekday()])
         
     def getWeekNumber(self):
