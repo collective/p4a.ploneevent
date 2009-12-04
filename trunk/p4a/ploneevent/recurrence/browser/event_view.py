@@ -7,7 +7,7 @@ from plone.app.kss.plonekssview import PloneKSSView
 from datetime import datetime
 from datetime import timedelta
 from DateTime import DateTime
-from p4a.common.dtutils import DT2dt, gettz
+from p4a.common.dtutils import DT2dt, dt2DT, gettz
 
 from p4a.ploneevent.recurrence.recurrence import RecurrenceSupport
 
@@ -41,7 +41,11 @@ class EventView(BrowserView):
                       there is not an occurrence of that event on the 
                       date passed.
         """ 
-        BrowserView.__init__(self,context,request)           
+        BrowserView.__init__(self,context,request)
+        # Get the local timezone
+        # Assume all dates should be in local timezone
+        self.tz = gettz()
+                   
         if self.request.has_key('r'):
             dtOrd = int(self.request['r'])
             if not self.isRecurring() or \
@@ -55,12 +59,14 @@ class EventView(BrowserView):
     # or better yet /my-event/2009/10/01,  
     # rather than /my-event/?r=733681       
     def start(self):
-        date = DateTime(self.context.start())
         if self.isRecurring() and self.request.has_key('r'):
             current = int(self.request['r'])
-            date = datetime.fromordinal(current).replace(tzinfo=gettz())
+            date = datetime.fromordinal(current).replace(tzinfo=self.tz)
             date = self.offset_start(date)            
-        return date
+        else:
+            dtdate = DT2dt(self.context.start())
+            datelocaltz = dt2DT(dtdate.replace(tzinfo=self.tz))
+        return datelocaltz
 
     def end(self):
         offset = self.context.end() - self.context.start()
@@ -86,7 +92,7 @@ class EventView(BrowserView):
         return self.context.toLocalizedTime(self.start(), long_format=1)
     
     def start_time(self):
-        return self.context.start().strftime(self.time_format())
+        return self.start().strftime(self.time_format())
 
     def short_end_date(self):
         return self.context.toLocalizedTime(self.end(), long_format=0)
