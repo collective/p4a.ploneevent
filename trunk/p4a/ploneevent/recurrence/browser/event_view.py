@@ -66,7 +66,8 @@ class EventView(BrowserView):
         else:
             dtdate = DT2dt(self.context.start())
             datelocaltz = dt2DT(dtdate.replace(tzinfo=self.tz))
-        return datelocaltz
+            date = datelocaltz
+        return date
 
     def end(self):
         offset = self.context.end() - self.context.start()
