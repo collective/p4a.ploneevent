@@ -20,7 +20,15 @@ class OccurrenceEditView(BrowserView):
       evExc = list(event.exceptions)
       evExc.append(ordDt)
       event.exceptions = tuple(evExc)
-      event.reindexObject()
+      
+      #if exception date is same as start date, add day to start/end dates
+      #XXX TODO: because of the way calendars display, exceptions do not
+      # affect original date of event.  Think about better ways to do this.
+      if int(ordDt) == DT2dt(event.start()).toordinal():
+        event.startDate = dt2DT(DT2dt(event.startDate) + timedelta(days=1))
+        event.endDate = dt2DT(DT2dt(event.endDate) + timedelta(days=1))
+     
+      event.reindexObject()         
       
   def copyEvent(self):
       idIncr = 1
@@ -80,52 +88,55 @@ class OccurrenceEditView(BrowserView):
           edit view for new event.
       """
       context = self.context
-
-      # Cannot add an exception on a date that is not part of the recurrence
-      ordDt = getattr(context.request, 'r', None)
-      listOrdinals = kalends.IRecurrence(context.aq_self).getOccurrenceDays()
-      if ordDt is not None and int(ordDt) not in listOrdinals:
-          status_message =_(u"You attempted to make an exception on a " \
-                            "date that is not a part of this event's " \
-                            "series. Double-check the event and try again.")
-          nextURL = context.aq_self.absolute_url()
-      else:
-          x = self.copyEvent()
-          if x:
-              # new event gets start date from passed ordinal or original start 
-              # date.  if we pass an ordinal date in the querystring use as new 
-              # start date
-              if ordDt:
-                  (x.startDate,x.endDate) = self.offsetStartAndEndTimes(x,ordDt)
-              else:
-                  ordDt = DT2dt(x.start()).toordinal()
-                
-              # add new date as exception to original
-              self.addDateExceptionToEvent(str(ordDt),self.context.aq_self)
-        
-              # new event should not be recurring
-              x.frequency = -1
-              x.interval = 1
-              x.byweekday = None
-              x.repeatday = []
-              x.ends = False
-              x.until = None
-              x.count = None
-              x.lingo = ''
-              x.exceptions = ()
-                         
-              #index new object
-              x.reindexObject()
+      try:
+        ordDt = self.context.request.r 
+        if int(ordDt) not in listOrdinals:
+            status_message =_(u"You attempted to make an exception on a " \
+                              "date that is not a part of this event's " \
+                              "series. Double-check the event and try again.")
+            nextURL = context.aq_self.absolute_url()
+      # otherwise delete the first occurrence  
+      except:
+        ordDt = DT2dt(self.context.aq_self.start()).toordinal()
               
-              status_message=_(u'You created this new event as an exception ' \
-                               'to the original recurring event series. The ' \
-                               'original event will no longer have an ' \
-                               'occurrence on the start date displayed below.' \
-                               '  To ensure that an event occurrence exists ' \
-                               'on this date, be sure to complete your edits ' \
-                               'and hit the Save button.')
-              xurl = x.absolute_url() 
-              nextURL = xurl + '/edit'
+      # Cannot add an exception on a date that is not part of the recurrence
+      listOrdinals = kalends.IRecurrence(context.aq_self).getOccurrenceDays()
+      x = self.copyEvent()
+      if x:
+          # new event gets start date from passed ordinal or original start 
+          # date.  if we pass an ordinal date in the querystring use as new 
+          # start date
+          if ordDt:
+              (x.startDate,x.endDate) = self.offsetStartAndEndTimes(x,ordDt)
+          else:
+              ordDt = DT2dt(x.start()).toordinal()
+        
+          # add new date as exception to original
+          self.addDateExceptionToEvent(str(ordDt),self.context.aq_self)
+
+          # new event should not be recurring
+          x.frequency = -1
+          x.interval = 1
+          x.byweekday = None
+          x.repeatday = []
+          x.ends = False
+          x.until = None
+          x.count = None
+          x.lingo = ''
+          x.exceptions = ()
+                 
+          #index new object
+          x.reindexObject()
+      
+          status_message=_(u'You created this new event as an exception ' \
+                           'to the original recurring event series. The ' \
+                           'original event will no longer have an ' \
+                           'occurrence on the start date displayed below.' \
+                           '  To ensure that an event occurrence exists ' \
+                           'on this date, be sure to complete your edits ' \
+                           'and hit the Save button.')
+          xurl = x.absolute_url() 
+          nextURL = xurl + '/edit'          
 
       #redirect to new object with portal status message      
       addStatusMessage(context.request,status_message)
