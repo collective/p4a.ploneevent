@@ -241,6 +241,47 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         ]
         self.helperTestLingo(3, 6, 11, STR_DAILY_TESTS)
 
+    def testGetWeekInMonthFromDate(self):
+        self.folder.invokeFactory('Event', 'event')
+        event = getattr(self.folder, 'event')
+
+        # Mark as recurring
+        interface.alsoProvides(event, kalends.IRecurringEvent)
+        self.recurrence = kalends.IRecurrence(event)
+        errStr = "getWeekInMonthFromDate failed to return the proper week index"
+
+        dt = datetime.datetime(2009,12,28,14,30,0)
+        iWeekFourthMonday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekFourthMonday == 4, errStr)
+        
+        dt = datetime.datetime(2009,12,29,14,30,0)
+        iWeekFifthTuesday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekFifthTuesday == 5, errStr)
+
+        dt = datetime.datetime(2010,1,6,14,30,0)
+        iWeekFirstWednesday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekFirstWednesday == 1, errStr)
+
+        dt = datetime.datetime(2010,2,3,14,30,0)
+        iWeekFirstWednesday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekFirstWednesday == 1, errStr)
+
+        dt = datetime.datetime(2010,1,19,14,30,0)
+        iWeekThirdTuesday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekThirdTuesday == 3, errStr)
+
+        dt = datetime.datetime(2010,2,16,14,30,0)
+        iWeekThirdTuesday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekThirdTuesday == 3, errStr)
+
+        dt = datetime.datetime(2010,1,27,14,30,0)
+        iWeekFourthWednesday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekFourthWednesday == 4, errStr)
+
+        dt = datetime.datetime(2010,2,24,14,30,0)
+        iWeekFourthWednesday = self.recurrence.getWeekInMonthFromDate(dt)
+        self.failUnless(iWeekFourthWednesday == 4, errStr)
+
     def testRecurrenceMenu(self):
         # Basic recurrence, daily for one year:
         context = self.folder

@@ -68,11 +68,16 @@ class RecurrenceSupport(object):
             
     def getWeekInMonthFromDate(self,dtTest):
         """returns the number of the week for a given date"""
+        iWeekIndex = None
         weeks = calendar.monthcalendar(dtTest.year,dtTest.month)
         for week in weeks:
             if week.count(dtTest.day):
-                return weeks.index(week) + 1
-        
+                iDayOfWeek = week.index(dtTest.day)
+                iWeekIndex = weeks.index(week) + 1
+                for week in weeks:
+                    if not week[iDayOfWeek]:
+                        iWeekIndex -= 1
+        return iWeekIndex
         
     def getRecurrenceRule(self):
         """Returns a dateutil.rrule"""
