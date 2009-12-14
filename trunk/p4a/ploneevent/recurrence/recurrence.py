@@ -68,7 +68,7 @@ class RecurrenceSupport(object):
             
     def getWeekInMonthFromDate(self,dtTest):
         """returns the number of the week for a given date"""
-        iWeekIndex = None
+        iWeekIndex = 1
         weeks = calendar.monthcalendar(dtTest.year,dtTest.month)
         for week in weeks:
             if week.count(dtTest.day):
