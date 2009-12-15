@@ -75,6 +75,8 @@ class RecurrenceSupport(object):
                 iDayOfWeek = week.index(dtTest.day)
                 iWeekIndex = weeks.index(week) + 1
                 for week in weeks:
+                    if weeks.index(week) +1 > iWeekIndex:
+                        break
                     if not week[iDayOfWeek]:
                         iWeekIndex -= 1
         return iWeekIndex
