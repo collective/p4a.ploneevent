@@ -147,7 +147,6 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnlessEqual(dates[2], datetime.date(2007, 2, 22).toordinal())
         self.failUnlessEqual(dates[-1], datetime.date(2008, 1, 31).toordinal())
         self.failUnlessEqual(len(dates), 52)
-
         
     def test_recurrence(self):
         folder_url = self.folder.absolute_url() 
@@ -281,6 +280,11 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         dt = datetime.datetime(2010,2,24,14,30,0)
         iWeekFourthWednesday = self.recurrence.getWeekInMonthFromDate(dt)
         self.failUnless(iWeekFourthWednesday == 4, errStr)
+
+        dt = datetime.datetime(2009,12,29,14,30,0)
+        iWeekFourthWednesday = self.recurrence.getWeekInMonthFromDate(dt)
+        # TODO: Figure out what the failUnless here was/is supposed to be, or 
+        # decide not to have this part of the test and delete.        
 
     def testRecurrenceMenu(self):
         # Basic recurrence, daily for one year:
@@ -537,7 +541,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         errStr = "'Edit this and subsequent occurrences' did not correctly set the \
                    value of 'until' field on original event."
         dayBefore = DateTime('2002/01/29')           
-        self.failUnless( recurEvent.until == dayBefore, errStr)
+        self.failUnless(recurEvent.until == dayBefore, errStr)
         
         #Ensure that new event has same recurrence field values as original,
         #other than until
@@ -556,39 +560,8 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         self.failUnless(newEv.startDate == DateTime('2002/01/30 10:00:00 GMT-8') , errStr)
         
         #Ensure we see the appropriate portal status message?
-            
-        
-    """
-    TESTS PSEUDOCODE
-    [x] Is a new exception event being created?
-
-    [x] Is a portal status message being displayed on the edit view of the new 
-    exception event stating, 'You have now created an exception to the original
-    event that cannot be undone. To ensure that an event occurrence exists on 
-    this date, be sure to complete your edits and hit the Save button.'? 
-     - I edited the message, but yes, check for that
-
-    [x] Is the ordinal date of occurrence being specified on the exceptions dates
-     field of the original event?
-
-    [x] Is the p4a.ploneevent.recurrence.getOccurrenceDays method excluding the 
-    dates in the new recurrence exception schema field from the index?
-
-    [x] Does creating an exception on a date that was never an occurrence on the 
-     original event return an error?
-
-    [x] Does the new event have the same values as the original event, excluding
-     recurrence parameters, and with the start date of the occurrence passed in?
-        - NEW - This includes not copying the exception ordinal list
-
-    [x] Does the action ('edit this occurrence') appear in the recurrence options 
-    dropdown menu only when an event is an occurrence of a recurring event?
-    this is the menu item vs. the whole menu
-   
-    [x] Does the p4a.ploneevent raise a 404 Error when the query parameter is
-    incorrect
-    
-    """
+        # TODO: Find out if there is more that needed to be tested here due to
+        # this comment, or get rid of the comment if not needed.
 
 
 def test_suite():

@@ -79,6 +79,8 @@ class RecurrenceSupport(object):
                         break
                     if not week[iDayOfWeek]:
                         iWeekIndex -= 1
+                # possible break
+            print iWeekIndex
         return iWeekIndex
         
     def getRecurrenceRule(self):
