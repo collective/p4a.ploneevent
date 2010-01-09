@@ -24,7 +24,6 @@ class OccurrenceEditView(BrowserView):
       #if exception date is same as start date, need to change start date
       #to date of next recurrence (does not already exist as an exception).
       if int(ordDt) == DT2dt(event.start()).toordinal():
-        import pdb; pdb.set_trace( )
         #find second ordinal date in index of occurrences
         recurrence = kalends.IRecurrence(event)
         occurDays = recurrence.getOccurrenceDays()
