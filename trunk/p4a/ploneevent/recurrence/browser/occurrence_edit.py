@@ -21,12 +21,19 @@ class OccurrenceEditView(BrowserView):
       evExc.append(ordDt)
       event.exceptions = tuple(evExc)
       
-      #if exception date is same as start date, add day to start/end dates
-      #XXX TODO: because of the way calendars display, exceptions do not
-      # affect original date of event.  Think about better ways to do this.
+      #if exception date is same as start date, need to change start date
+      #to date of next recurrence (does not already exist as an exception).
       if int(ordDt) == DT2dt(event.start()).toordinal():
-        event.startDate = dt2DT(DT2dt(event.startDate) + timedelta(days=1))
-        event.endDate = dt2DT(DT2dt(event.endDate) + timedelta(days=1))
+        #find second ordinal date in index of occurrences
+        recurrence = kalends.IRecurrence(event)
+        occurDays = recurrence.getOccurrenceDays()
+        #first list element will be first additional occurrence
+        iter = 0 
+        while str(occurDays[iter]) in event.exceptions:
+            iter = iter + 1
+        nextOccurrenceOrd = occurDays[iter-1]
+        (event.startDate, event.endDate) = self.offsetStartAndEndTimes(event, \
+                                           nextOccurrenceOrd)
      
       event.reindexObject()         
       
@@ -88,6 +95,9 @@ class OccurrenceEditView(BrowserView):
           edit view for new event.
       """
       context = self.context
+
+      # Cannot add an exception on a date that is not part of the recurrence
+      listOrdinals = kalends.IRecurrence(context.aq_self).getOccurrenceDays()
       try:
         ordDt = self.context.request.r 
         if int(ordDt) not in listOrdinals:
@@ -95,12 +105,13 @@ class OccurrenceEditView(BrowserView):
                               "date that is not a part of this event's " \
                               "series. Double-check the event and try again.")
             nextURL = context.aq_self.absolute_url()
+            #return to original object with error msg
+            addStatusMessage(context.request,status_message)
+            context.request.RESPONSE.redirect(nextURL)            
       # otherwise delete the first occurrence  
       except:
         ordDt = DT2dt(self.context.aq_self.start()).toordinal()
               
-      # Cannot add an exception on a date that is not part of the recurrence
-      listOrdinals = kalends.IRecurrence(context.aq_self).getOccurrenceDays()
       x = self.copyEvent()
       if x:
           # new event gets start date from passed ordinal or original start 
@@ -134,7 +145,8 @@ class OccurrenceEditView(BrowserView):
                            'occurrence on the start date displayed below.' \
                            '  To ensure that an event occurrence exists ' \
                            'on this date, be sure to complete your edits ' \
-                           'and hit the Save button.')
+                           'and hit the Save button. You may also want to ' \
+                           'publish your new event.')
           xurl = x.absolute_url() 
           nextURL = xurl + '/edit'          
 

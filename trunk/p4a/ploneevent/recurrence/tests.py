@@ -171,6 +171,7 @@ class RecurrenceTest(PloneTestCase.FunctionalTestCase):
         form.getControl(name='form_submit').click()
         
         # Make sure it's properly indexed:
+        # The above isn't even creating an event!
         cat = self.portal.portal_catalog
         self.failUnless(len(cat(portal_type='Event', recurrence_days=732950)) == 1)
         

@@ -24,6 +24,7 @@ class RecurrenceSupport(object):
 
     interface.implements(kalends.IRecurrence)
     component.adapts(ATEvent)
+    # needs internationalization
     IDX_YEAR = 0
     IDX_MONTH = 1
     IDX_WEEK = 2
