@@ -1,4 +1,3 @@
-from zope.i18n import translate
 from Products.Five.browser import BrowserView
 from dateable.kalends import IRecurringEvent, IRecurrence
 from p4a.common.dtutils import dt2DT
@@ -14,8 +13,8 @@ FREQ = {0: 'year',
         5: 'minute',
         6: 'second',
     }
-    
-    
+
+
 CALVOCAB = {0: (_(u'year'), _(u'years')),
             1: (_(u'month'), _(u'months')),
             2: (_(u'week'), _(u'weeks')),
@@ -23,36 +22,27 @@ CALVOCAB = {0: (_(u'year'), _(u'years')),
             }
 
 class EventView(BrowserView):
-    
+
     def same_day(self):
         return self.context.start().Date() == self.context.end().Date()
 
     def short_start_date(self):
         return self.context.toLocalizedTime(self.context.start(), long_format=0)
-        
+
     def long_start_date(self):
         return self.context.toLocalizedTime(self.context.start(), long_format=1)
-    
+
     def start_time(self):
-        return self.context.start().strftime(self.time_format().replace('${', '%').replace('}', ''))
+        return self.context.toLocalizedTime(self.context.start(), long_format=0, time_only=1)
 
     def short_end_date(self):
         return self.context.toLocalizedTime(self.context.end(), long_format=0)
-    
+
     def long_end_date(self):
         return self.context.toLocalizedTime(self.context.end(), long_format=1)
 
     def end_time(self):
-        return self.context.end().strftime(self.time_format().replace('${', '%').replace('}', ''))
-
-    def datetime_format(self):
-        return translate(u'date_format_long', 'plonelocales', {}, self.request)
-
-    def date_format(self):
-        return translate(u'date_format_short', 'plonelocales', {}, self.request)
-    
-    def time_format(self):
-        return translate(u'time_format', 'plonelocales', {}, self.request)
+        return self.context.toLocalizedTime(self.context.end(), long_format=0, time_only=1)
 
     def isRecurring(self):
         if not IRecurringEvent.providedBy(self.context):
@@ -74,13 +64,13 @@ class EventView(BrowserView):
             return freq[0]
         else:
             return freq[1]
-                                        
+
     def rrule_interval(self):
         rrule = self.rrule()
         if rrule is not None:
             return rrule._interval
         return 0
-        
+
     def rrule_count(self):
         rrule = self.rrule()
         if rrule is not None:
@@ -116,13 +106,13 @@ class RecurrenceView(KSSView):
             caltext = 'day/week/month/year.'
             interval = ''
             display = 'block'
-        else: 
+        else:
             caltext = CALVOCAB[frequency][0]
-            interval = '' 
+            interval = ''
             display = 'block'
-         
+
         core.setStyle('#archetypes-fieldname-interval', name='display', value=display)
         core.setStyle('#archetypes-fieldname-until', name='display', value=display)
         core.setStyle('#archetypes-fieldname-count', name='display', value=display)
-        content = content % (interval, caltext)         
+        content = content % (interval, caltext)
         core.replaceInnerHTML('#interval_help', content)
