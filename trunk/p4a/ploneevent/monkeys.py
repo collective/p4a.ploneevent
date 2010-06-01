@@ -36,3 +36,38 @@ def getEvents(self, start=None, stop=None, **kw):
     return self._getEvents(start=start, stop=stop, **kw)
 
 TopicEventProvider.getEvents = getEvents
+
+
+# Use portal's time formatting property for title_and_time
+def eventDisplayInit(self, event, view):
+    """Creates and calculates render information"""
+
+    self.event = event
+    self.view = view
+
+    # XXX Check permissions
+    self.viewable = True
+    # TODO: Here we could calculate short titles that fit into one row
+    # and how much of the decription fits and stuff like that as well.
+    if self.viewable:
+        self.title = event.title
+        self.description = event.description
+        self.url = event.url
+    else:
+        self.title = self.description = _('Private Event')
+        self.url = ''
+
+    event_begins = event.start
+    event_ends = event.end
+    site_properties = self.view.context.portal_properties.site_properties
+    tf = site_properties.getProperty('localTimeOnlyFormat')
+    
+    #remove prefixed zeros which won't work with just strftime on some systems
+    import re
+    beginsStr = re.sub(r"\b0","",event_begins.strftime(tf))
+    endsStr = re.sub(r"\b0","",event_ends.strftime(tf))
+    self.title_and_time = "%s %s - %s" % (self.title, beginsStr, endsStr)
+    
+    
+    
+    

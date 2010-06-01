@@ -37,6 +37,7 @@ setup(name='p4a.ploneevent',
           'python-dateutil',
           'archetypes.schemaextender',
           'dateable.kalends >= 0.3',
+          'collective.monkeypatcher',
       ],
       entry_points="""
       # -*- Entry points: -*-

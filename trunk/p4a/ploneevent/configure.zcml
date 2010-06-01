@@ -3,6 +3,7 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
     i18n_domain="Plone4Artists">
 
   <five:registerPackage package="." />
@@ -25,5 +26,14 @@
       class="Products.ATContentTypes.content.event.ATEvent"
       interface="dateable.kalends.IEvent"
       />
+      
+  <include package="collective.monkeypatcher" />    
+      
+  <monkey:patch
+      description="Patch dateable.chronos' eventdisplay to use portal's time string formatting property for display time_and_time"
+      class="dateable.chronos.browser.eventdisplay.EventDisplay"
+      original="__init__"
+      replacement=".monkeys.eventDisplayInit"
+      />      
 
 </configure>
