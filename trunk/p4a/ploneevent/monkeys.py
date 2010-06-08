@@ -61,6 +61,7 @@ def eventDisplayInit(self, event, view):
     event_ends = event.end
     site_properties = self.view.context.portal_properties.site_properties
     tf = site_properties.getProperty('localTimeOnlyFormat')
+    tf = tf or site_properties.getProperty('localLongTimeFormat')
     
     #remove prefixed zeros which won't work with just strftime on some systems
     import re
