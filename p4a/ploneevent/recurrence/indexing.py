@@ -1,8 +1,11 @@
 from zope.component import ComponentLookupError
-from Products.CMFPlone.CatalogTool import registerIndexableAttribute
+from plone.indexer.decorator import indexer
+import zope.interface
+
 from dateable import kalends
 
-def recurrence_days(object, portal, **kwargs):
+@indexer(kalends.IRecurringEvent)
+def recurrence_days(object, **kwargs):
     """Return the dates of recurrences as ordinals
     """
     try:
@@ -12,4 +15,3 @@ def recurrence_days(object, portal, **kwargs):
         # The catalog expects AttributeErrors when a value can't be found
         raise AttributeError
 
-registerIndexableAttribute('recurrence_days', recurrence_days)

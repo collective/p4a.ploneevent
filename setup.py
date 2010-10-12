@@ -38,6 +38,7 @@ setup(name='p4a.ploneevent',
           'archetypes.schemaextender',
           'dateable.kalends >= 0.3',
           'plone.app.locales > 3.3.5',
+          'plone.indexer',
       ],
       entry_points="""
       # -*- Entry points: -*-

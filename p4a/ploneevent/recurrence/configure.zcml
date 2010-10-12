@@ -9,6 +9,7 @@
   <adapter factory=".schemaextender.RecurrenceExtension" />
 
   <adapter factory=".recurrence.RecurrenceSupport" />
+  <adapter name="recurrence_days" factory=".indexing.recurrence_days" />
 
   <!-- Mark Archetype events as IEvents /-->
   <five:implements

@@ -2,7 +2,11 @@ import datetime
 from dateutil import rrule, tz
 from zope import interface
 from zope import component
-from zope.app.annotation import interfaces as annointerfaces
+
+try:
+    from zope.annotation import interfaces as annointerfaces
+except ImportError:
+    from zope.app.annotation import interfaces as annointerfaces
 
 from persistent.dict import PersistentDict
 

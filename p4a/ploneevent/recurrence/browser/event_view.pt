@@ -176,7 +176,7 @@
                 </tr>
                 <tr>
                     <th i18n:translate="heading_add_to_calendar">Add event to calendar</th>
-                    <td>
+                    <td tal:define="here_url here/absolute_url">
                         <a href="#"
                            tal:attributes="href string:$here_url/vcs_view"
                            title="Add this item to your vCal calendar"
