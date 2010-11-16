@@ -7,7 +7,11 @@ p4a.ploneevent Changes
 p4a.ploneevent 0.x.x (Unreleased)
 =================================
 
-* Fix translation issue with times in event view on English sites. Now uses toLocalizedTime for displaying times to suit all locales.  (rockdj)
+* Merged german translation from locales-included branch.  (saily)
+
+* Fix translation issue with times in event view on English sites. Now uses 
+  toLocalizedTime for displaying times to suit all locales.  (rockdj)
+  
 * Corrected one failing unit test. (rockdj)
 
 p4a.ploneevent 0.7.3 (2009-11-27)
