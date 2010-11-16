@@ -7,6 +7,8 @@ p4a.ploneevent Changes
 p4a.ploneevent 0.x.x (Unreleased)
 =================================
 
+* Added script to rebuild pot and resync all po files.  (saily)
+
 * Merged german translation from locales-included branch.  (saily)
 
 * Fix translation issue with times in event view on English sites. Now uses 
