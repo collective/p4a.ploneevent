@@ -9,7 +9,7 @@ from dateable.kalends import IRecurringEvent
 from p4a.ploneevent.interfaces import IEventSchemaExtension
 from dateutil.rrule import YEARLY, MONTHLY, WEEKLY, DAILY
 from p4a.ploneevent import PloneEventMessageFactory as _
-
+from Products.Archetypes.utils import IntDisplayList
 class TextField(ExtensionField, atapi.TextField):
      pass
 
@@ -22,6 +22,12 @@ class IntegerField(ExtensionField, atapi.IntegerField):
 class StringField(ExtensionField, atapi.StringField):
      pass
 
+freqDisplayList = IntDisplayList([(-1, _(u'Does not repeat')),
+                                  (YEARLY, _(u'Yearly')),
+                                  (MONTHLY, _(u'Monthly')),
+                                  (WEEKLY, _(u'Weekly')),
+                                  (DAILY, _(u'Daily'))])
+
 class RecurrenceExtension(object):
      component.adapts(IOrderableSchemaExtender, IRecurringEvent)
      interface.implements(IEventSchemaExtension)
@@ -30,12 +36,7 @@ class RecurrenceExtension(object):
           IntegerField('frequency',
                schemata='recurrence',
                required=True,
-               vocabulary={-1: _(u'Does not repeat'),
-                           YEARLY: _(u'Yearly'),
-                           MONTHLY: _(u'Monthly'),
-                           WEEKLY: _(u'Weekly'),
-                           DAILY: _(u'Daily'),
-                           }.items(),
+               vocabulary=freqDisplayList,
                default=-1,
                widget=atapi.SelectionWidget(label=_(u'Repeats'))
                ),
