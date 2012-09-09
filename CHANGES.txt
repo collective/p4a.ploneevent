@@ -4,8 +4,10 @@
 p4a.ploneevent Changes
 ======================
 
-p4a.ploneevent 0.x.x (Unreleased)
+p4a.ploneevent 0.7.4 (2012-09-09)
 =================================
+
+* Plone 4 compat (dimo)
 
 * Changed frequency DisplayList to an IntDisplayList for plone 4. (ggozad)
 
@@ -17,6 +19,8 @@ p4a.ploneevent 0.x.x (Unreleased)
   toLocalizedTime for displaying times to suit all locales.  (rockdj)
   
 * Corrected one failing unit test. (rockdj)
+
+* Add manifest (aclark)
 
 p4a.ploneevent 0.7.3 (2009-11-27)
 =================================
