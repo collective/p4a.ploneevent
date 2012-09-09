@@ -1,4 +1,3 @@
-;-*-rst-*-
 
 ======================
 p4a.ploneevent Changes
